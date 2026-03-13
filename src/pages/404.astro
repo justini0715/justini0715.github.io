@@ -2,16 +2,17 @@
 import MainLayout from '../layouts/MainLayout.astro';
 ---
 
-<MainLayout title="404" description="Page not found.">
+<MainLayout title="404" description="Page not found." noindex={true}>
   <section class="page-hero">
     <div class="container narrow-flow">
       <p class="eyebrow">404</p>
-      <h1>This page is missing, but the site is still on track.</h1>
+      <h1>This page is missing, but the rest of the site is still reachable.</h1>
       <p>
-        Try the homepage, projects, or blog index to continue exploring the rebuilt portfolio and writing archive.
+        Try the homepage, projects page, or blog index to continue exploring the rebuilt portfolio and writing archive.
       </p>
       <div class="hero__actions">
         <a class="button" href="/">Go home</a>
+        <a class="button button--ghost" href="/projects">Open projects</a>
         <a class="button button--ghost" href="/blog">Read the blog</a>
       </div>
     </div>

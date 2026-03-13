@@ -7,8 +7,8 @@
 - Domain target: `https://changwpa.kro.kr`
 
 ## Current Phase
-- Phase: Phase 3 — Blog System
-- Branch: `phase/3-blog-system`
+- Phase: Phase 4 — Polish and Deployment
+- Branch: `phase/4-polish-deployment`
 - Status: Complete
 
 ## Official Phase List
@@ -18,14 +18,14 @@
 4. Phase 4 — Polish and Deployment
 
 ## Current Phase Scope
-- Populate the blog collection with launch-ready technical posts and 42 entries.
-- Make the blog index and post pages feel intentional, including tags and series navigation.
-- Represent the 42 writing flow explicitly so assignments can be published one-by-one without restructuring the site.
+- Finalize SEO and metadata basics.
+- Tighten deployment docs/checklists and align the Pages workflow with current Astro guidance.
+- Keep the site launch-ready on `github.io` while documenting the exact custom-domain cutover steps for `changwpa.kro.kr`.
 
 ## Current Phase Non-Scope
-- Final visual polish, 404 refinements, and custom-domain activation steps.
 - Final custom domain activation in GitHub Pages settings and DNS.
 - Publishing phase branches or merge/PR operations that require GitHub auth.
+- Any registrar-side or GitHub account action that requires the user to log in manually.
 
 ## Architecture Summary
 - Astro static output with content collections for blog posts and projects.
@@ -38,16 +38,16 @@
 - blog taxonomy: `42`, `project`, `devlog`, `setup`, `retrospective`.
 
 ## Deliverables Checklist
-- [x] At least 2 technical posts added to the blog collection
-- [x] At least 2 42 posts or strong structured stubs added with series metadata
-- [x] Blog index and post pages updated for readable post browsing
-- [x] 42 taxonomy / series structure represented in the site
-- [x] Phase 3 verification completed
+- [x] SEO basics finalized (metadata, canonical handling, robots/sitemap sanity)
+- [x] 404 page and launch copy polished
+- [x] GitHub Pages deploy workflow aligned with current Astro guidance
+- [x] Deployment runbook and launch checklist updated with exact commands and DNS steps
+- [x] Phase 4 verification completed
 
 ## Verification Plan
-1. Run a local Astro build after adding the launch posts and post-page refinements.
-2. Verify built output contains all four launch posts and that the 42 series navigation renders.
-3. Re-run project-wide TypeScript diagnostics after blog/template changes.
+1. Run local build, preview, and route checks after polish/deployment updates.
+2. Verify the built output and preview server serve `/`, `/about`, `/projects`, `/blog`, at least one blog post, and `/404`.
+3. Re-run project-wide TypeScript diagnostics and confirm deployment docs/checklists match the implemented workflow.
 
 ## Work Log
 - Cloned the remote user-site repository into the writable workspace.
@@ -64,6 +64,11 @@
 - Prepared the launch-post roster: one migration/devlog, one 42-repository-quality post, and two 42 systems-series entries for push_swap and philosopher.
 - Added four launch posts to the blog collection: two technical posts plus two 42 systems-series posts.
 - Updated the blog index and post template to show tags, category metadata, and previous/next series navigation.
+- Branched `phase/4-polish-deployment` from the verified blog-system commit.
+- Identified final-phase tasks: SEO polish, workflow alignment, preview verification, and explicit custom-domain/DNS runbook steps.
+- Updated metadata handling for theme color, robots directives, canonical tags, and article pages.
+- Aligned the deploy workflow with Astro’s current GitHub Pages action pattern and documented the user-site/no-`base` rule.
+- Expanded the README, deployment runbook, and launch checklist with explicit local commands, GitHub Pages setup, and custom-domain cutover steps.
 
 ## Verification Results
 - `npm install -D astro @astrojs/sitemap @astrojs/check typescript` → dependencies installed successfully.
@@ -74,10 +79,13 @@
 - `grep` checks against `dist/index.html` and `dist/projects/index.html` → confirmed Inception, cub3d, philosopher, and push_swap content is present in built output.
 - `npm run build` after blog updates → success; built all four blog post routes plus `/blog`.
 - `grep` checks against `dist/blog/index.html` and `dist/blog/42-philosopher/index.html` → confirmed all launch post titles render and the 42 series navigation links philosopher back to push_swap.
+- `npm run build` after polish/deployment updates → success; built `/`, `/about`, `/projects`, `/blog`, all four posts, `404`, and `sitemap-index.xml`.
+- `npm run preview -- --host 127.0.0.1 --port 4321` (outside sandbox with telemetry disabled) → preview server started successfully.
+- `curl http://127.0.0.1:4321/{,/about,/projects,/blog,/blog/42-push-swap,/404}` → all routes returned HTML with the expected page-specific metadata and content.
 
 ## Known Blockers / User-Action-Required Items
 - GitHub push/PR and Pages settings updates will require the user's GitHub auth later.
 - Custom domain DNS changes must wait until the end and will require registrar/DNS access.
 
 ## Next Phase Preview
-- Phase 4 will focus on final polish, 404, deployment docs, launch checklist, and custom-domain readiness.
+- Final step is architect/verifier sign-off plus handoff of the exact GitHub/DNS actions the user still needs to perform.

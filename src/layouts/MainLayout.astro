@@ -7,15 +7,18 @@ import '../styles/global.css';
 interface Props {
   title?: string;
   description?: string;
+  ogType?: 'website' | 'article';
+  noindex?: boolean;
+  publishedTime?: string;
 }
 
-const { title, description } = Astro.props;
+const { title, description, ogType, noindex, publishedTime } = Astro.props;
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
-    <BaseHead title={title} description={description} />
+    <BaseHead title={title} description={description} ogType={ogType} noindex={noindex} publishedTime={publishedTime} />
   </head>
   <body>
     <div class="site-shell">

@@ -15,7 +15,7 @@ const { previous, next } = getAdjacentSeriesPosts(allPosts, post);
 const formattedDate = new Intl.DateTimeFormat('en', { dateStyle: 'long' }).format(post.data.pubDate);
 ---
 
-<MainLayout title={post.data.title} description={post.data.description}>
+<MainLayout title={post.data.title} description={post.data.description} ogType="article" publishedTime={post.data.pubDate.toISOString()}>
   <section class="page-hero">
     <div class="container narrow-flow">
       <p class="eyebrow">{post.data.category}</p>
