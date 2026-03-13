@@ -11,9 +11,9 @@ const projects = await getProjects();
   <section class="page-hero">
     <div class="container narrow-flow">
       <p class="eyebrow">Projects</p>
-      <h1>Projects with enough context to matter.</h1>
+      <h1>Meaningful entries instead of a flat repository list.</h1>
       <p>
-        Launch entries will summarize the scope, stack, and technical highlight for each project instead of presenting a flat link dump.
+        The launch set is built from existing repositories with clear technical angles: infrastructure, graphics, concurrency, and constrained algorithm design.
       </p>
     </div>
   </section>
@@ -21,21 +21,12 @@ const projects = await getProjects();
   <section class="section">
     <div class="container">
       <SectionTitle
-        eyebrow="Case studies"
-        title="Repository-backed project summaries"
-        description="The collection is live in the scaffold and will be populated in Phase 2."
+        eyebrow="Selected work"
+        title="Repository-backed case studies"
+        description="Each card focuses on scope, stack, and one high-signal implementation highlight drawn from the current project materials."
       />
       <div class="card-grid">
-        {projects.length ? (
-          projects.map((project) => <ProjectCard project={project} />)
-        ) : (
-          <article class="card empty-state">
-            <h3>No project entries yet</h3>
-            <p>
-              The phase-1 scaffold is ready for Markdown-based project cards. Phase 2 will add the launch set from real repositories.
-            </p>
-          </article>
-        )}
+        {projects.map((project) => <ProjectCard project={project} />)}
       </div>
     </div>
   </section>

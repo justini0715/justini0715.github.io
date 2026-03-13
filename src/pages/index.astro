@@ -3,7 +3,7 @@ import MainLayout from '../layouts/MainLayout.astro';
 import SectionTitle from '../components/SectionTitle.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import PostCard from '../components/PostCard.astro';
-import { focusAreas, siteMeta, writingPrinciples } from '../data/site';
+import { focusAreas, siteMeta, strengths, writingPrinciples } from '../data/site';
 import { getFeaturedProjects, getRecentPosts } from '../lib/content';
 
 const featuredProjects = await getFeaturedProjects(3);
@@ -14,12 +14,12 @@ const recentPosts = await getRecentPosts(4);
   <section class="hero">
     <div class="container hero__grid">
       <div>
-        <p class="eyebrow">Astro portfolio + technical writing home</p>
-        <h1>Build log, project showcase, and 42 series — all in one source-first site.</h1>
+        <p class="eyebrow">Portfolio, blog, and 42 archive</p>
+        <h1>Project case studies, technical posts, and 42 writeups in one static site.</h1>
         <p class="hero__lede">{siteMeta.intro}</p>
         <div class="hero__actions">
-          <a class="button" href="/projects">See projects</a>
-          <a class="button button--ghost" href="/blog">Read the blog</a>
+          <a class="button" href="/projects">See featured projects</a>
+          <a class="button button--ghost" href="/blog">Browse the blog</a>
         </div>
       </div>
       <aside class="panel">
@@ -33,12 +33,21 @@ const recentPosts = await getRecentPosts(4);
   </section>
 
   <section class="section">
-    <div class="container feature-grid">
-      {writingPrinciples.map((item) => (
-        <article class="card stat-card">
-          <p>{item}</p>
-        </article>
-      ))}
+    <div class="container two-column">
+      <article class="panel">
+        <p class="eyebrow">What you can expect here</p>
+        <h2>Less template filler, more implementation context.</h2>
+        <p>
+          The goal is a launch-ready site that feels like a real developer home: useful project summaries, honest blog posts, and a 42 series that can keep growing without being reorganized every month.
+        </p>
+      </article>
+      <div class="feature-grid">
+        {strengths.map((item) => (
+          <article class="card stat-card">
+            <p>{item}</p>
+          </article>
+        ))}
+      </div>
     </div>
   </section>
 
@@ -46,20 +55,11 @@ const recentPosts = await getRecentPosts(4);
     <div class="container">
       <SectionTitle
         eyebrow="Featured work"
-        title="Project case studies built for readability"
-        description="Phase 2 will flesh out the portfolio grid with launch-ready entries backed by repository evidence."
+        title="A portfolio mix with infrastructure, graphics, concurrency, and algorithms"
+        description="These entries are grounded in the existing 42 repositories and chosen to show range rather than one repeated project shape."
       />
       <div class="card-grid">
-        {featuredProjects.length ? (
-          featuredProjects.map((project) => <ProjectCard project={project} />)
-        ) : (
-          <article class="card empty-state">
-            <h3>Project entries are being prepared</h3>
-            <p>
-              The rebuilt site already supports structured project content. Launch entries will be added from real 42 repositories in the next phase.
-            </p>
-          </article>
-        )}
+        {featuredProjects.map((project) => <ProjectCard project={project} />)}
       </div>
     </div>
   </section>
@@ -68,21 +68,31 @@ const recentPosts = await getRecentPosts(4);
     <div class="container">
       <SectionTitle
         eyebrow="Recent writing"
-        title="Technical notes that explain the work, not just the result"
-        description="The blog route is live now and will be populated with technical + 42 posts in Phase 3."
+        title="The blog system is ready for launch posts"
+        description="Phase 3 will populate the archive with technical posts and 42 writeups while keeping the one-post-at-a-time flow intact."
       />
       <div class="card-grid">
         {recentPosts.length ? (
           recentPosts.map((post) => <PostCard post={post} />)
         ) : (
           <article class="card empty-state">
-            <h3>Starter posts are next</h3>
+            <h3>Launch posts are next</h3>
             <p>
-              The site already supports content collections, tags, categories, and 42 series metadata. Launch posts arrive in the blog-system phase.
+              The structure already supports categories, tags, series ordering, and draft control. The next phase fills it with technical and 42 content.
             </p>
           </article>
         )}
       </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container feature-grid">
+      {writingPrinciples.map((item) => (
+        <article class="card stat-card">
+          <p>{item}</p>
+        </article>
+      ))}
     </div>
   </section>
 </MainLayout>

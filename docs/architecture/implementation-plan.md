@@ -7,8 +7,8 @@
 - Domain target: `https://changwpa.kro.kr`
 
 ## Current Phase
-- Phase: Phase 1 — Foundation
-- Branch: `phase/1-foundation`
+- Phase: Phase 2 — Portfolio Structure
+- Branch: `phase/2-portfolio-structure`
 - Status: Complete
 
 ## Official Phase List
@@ -18,12 +18,12 @@
 4. Phase 4 — Polish and Deployment
 
 ## Current Phase Scope
-- Audit the legacy Hexo-generated repository and preserve recovery access before replacement.
-- Seed the required repo-local manual/docs files for the rebuilt site.
-- Create the Astro static project scaffold, route skeleton, content system foundation, and GitHub Pages deployment baseline.
+- Add the launch-ready home/about/projects experience on top of the Astro scaffold.
+- Create structured project entries backed by real 42 repository evidence.
+- Tighten the responsive layout so the site reads like a personal developer site instead of a starter shell.
 
 ## Current Phase Non-Scope
-- Final visual polish and launch content completeness.
+- Blog launch posts and final blog-system polish.
 - Final custom domain activation in GitHub Pages settings and DNS.
 - Publishing phase branches or merge/PR operations that require GitHub auth.
 
@@ -38,16 +38,16 @@
 - blog taxonomy: `42`, `project`, `devlog`, `setup`, `retrospective`.
 
 ## Deliverables Checklist
-- [x] Recovery branch created before replacement (`recovery/legacy-site-20260313`)
-- [x] Repo-local manual/docs files seeded into the site repository
-- [x] Astro scaffold, routes, and base content system created
-- [x] GitHub Pages workflow skeleton added
-- [x] Phase 1 verification completed
+- [x] Homepage updated with a strong hero, featured projects, and recent-writing blocks
+- [x] About page updated with biography, focus, and stack summary sections
+- [x] Projects page populated with at least 3 meaningful entries
+- [x] Responsive layout tuned for portfolio-first browsing
+- [x] Phase 2 verification completed
 
 ## Verification Plan
-1. Install dependencies successfully.
-2. Run a local Astro build and confirm key routes exist in output.
-3. Confirm deployment config/workflow aligns with Astro GitHub Pages guidance.
+1. Run a local Astro build after the portfolio pages and project content are updated.
+2. Check the rendered project cards and home-page sections in built output / preview.
+3. Re-run project-wide TypeScript diagnostics after content and layout changes.
 
 ## Work Log
 - Cloned the remote user-site repository into the writable workspace.
@@ -56,16 +56,22 @@
 - Seeded the required manual/docs files into the working branch.
 - Replaced the generated Hexo output with an Astro v6 static scaffold, base layout, route skeleton, content-collection schema, global styles, and public assets.
 - Installed Astro dependencies locally and verified the scaffold with `npm run build`, `npm run check`, output-route inspection, and project-wide TypeScript diagnostics.
+- Branched `phase/2-portfolio-structure` from the verified foundation commit.
+- Collected the launch-content roster from brownfield sources: featured projects should center on Inception, cub3d, philosopher, and push_swap.
+- Added four repository-backed project entries sourced from the current 42 workspace remotes and README material.
+- Updated the home, about, and projects pages to reflect a coherent portfolio-first experience with responsive content blocks.
 
 ## Verification Results
 - `npm install -D astro @astrojs/sitemap @astrojs/check typescript` → dependencies installed successfully.
 - `npm run build` → success; built `/`, `/about`, `/projects`, `/blog`, `404`, and `sitemap-index.xml`.
 - `npm run check` → success (`tsc --noEmit`).
 - `npx tsc --noEmit --project tsconfig.json` via LSP diagnostics → 0 errors, 0 warnings.
+- `npm run build` after portfolio updates → success; featured project content rendered into `/` and `/projects`.
+- `grep` checks against `dist/index.html` and `dist/projects/index.html` → confirmed Inception, cub3d, philosopher, and push_swap content is present in built output.
 
 ## Known Blockers / User-Action-Required Items
 - GitHub push/PR and Pages settings updates will require the user's GitHub auth later.
 - Custom domain DNS changes must wait until the end and will require registrar/DNS access.
 
 ## Next Phase Preview
-- Phase 2 will turn the scaffold into a coherent portfolio experience with home/about/projects pages, navigation, and responsive layout.
+- Phase 3 will populate the blog system with technical posts, 42 series entries, and post-level reading flows.
