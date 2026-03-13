@@ -103,19 +103,18 @@ export function normalizeTags(input: string[] | string) {
 }
 
 export function createPostTemplate(kind: StudioTemplateKind, seedTitle = ''): StudioPost {
-  const baseTitle =
-    kind === '42' ? `42 - ${seedTitle || '새 과제'}` : seedTitle || (kind === 'tech' ? '새 기술 글' : '새 글');
-  const slug = slugifyTitle(baseTitle);
+  const baseTitle = kind === '42' ? (seedTitle ? `42 - ${seedTitle}` : '') : seedTitle;
+  const slug = baseTitle ? slugifyTitle(baseTitle) : `post-${compactTimestamp()}`;
 
   return {
     slug,
     originalSlug: '',
     title: baseTitle,
-    description: kind === '42' ? '한 줄 요약을 적어주세요.' : '짧은 설명을 적어주세요.',
+    description: '',
     pubDate: currentDate(),
     updatedDate: '',
     category: kind === '42' ? '42' : 'devlog',
-    tags: kind === '42' ? ['42', 'c'] : ['devlog'],
+    tags: kind === '42' ? ['42'] : [],
     series: kind === '42' ? '42-core' : '',
     seriesTitle: kind === '42' ? '42 Core' : '',
     seriesOrder: '',
@@ -253,7 +252,7 @@ export function validatePost(post: StudioPost, posts: StudioPost[]): ValidationI
     issues.push({ level: 'warning', field: 'series', message: '42 글은 series를 채우는 것을 권장합니다.' });
   }
   if (post.featured && post.draft) {
-    issues.push({ level: 'warning', field: 'featured', message: 'draft 글은 featured여도 공개 목록에 나오지 않습니다.' });
+    issues.push({ level: 'warning', field: 'featured', message: '비공개 글은 추천 영역에 표시되지 않습니다.' });
   }
   if (post.seriesOrder && Number.isNaN(Number(post.seriesOrder))) {
     issues.push({ level: 'error', field: 'seriesOrder', message: 'seriesOrder는 숫자여야 합니다.' });
