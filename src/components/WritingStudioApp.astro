@@ -32,7 +32,7 @@ const { initialPosts = [] } = Astro.props;
       <div class="studio-topbar__identity">
         <p class="eyebrow">Night desk</p>
         <div>
-          <h2>Writing Studio</h2>
+          <h1>Writing Studio</h1>
           <p>원고부터 바로 쓰고, 라이브러리와 설정은 필요할 때만 여는 간결한 집필 화면입니다.</p>
         </div>
       </div>
@@ -78,6 +78,8 @@ const { initialPosts = [] } = Astro.props;
     </header>
 
     <div id="studio-layout" class="studio-layout">
+      <button id="studio-overlay" class="studio-overlay" type="button" hidden aria-label="열린 패널 닫기"></button>
+
       <aside id="studio-library-shell" class="studio-library-shell" hidden>
         <div class="studio-library-head">
           <div>
@@ -122,15 +124,17 @@ const { initialPosts = [] } = Astro.props;
             <button id="studio-notes-toggle" class="studio-command" type="button">점검</button>
           </div>
 
-          <div class="studio-command-strip__group studio-command-strip__group--format">
-            <span class="studio-command-strip__label">빠른 삽입</span>
-            <button class="studio-command studio-toolbar" data-snippet="h2" type="button">H2</button>
-            <button class="studio-command studio-toolbar" data-snippet="h3" type="button">H3</button>
-            <button class="studio-command studio-toolbar" data-snippet="list" type="button">리스트</button>
-            <button class="studio-command studio-toolbar" data-snippet="quote" type="button">인용</button>
-            <button class="studio-command studio-toolbar" data-snippet="code" type="button">코드</button>
-            <button class="studio-command studio-toolbar" data-snippet="divider" type="button">구분선</button>
-          </div>
+          <details class="studio-inline-tools">
+            <summary class="studio-inline-tools__summary">빠른 삽입</summary>
+            <div class="studio-inline-tools__panel">
+              <button class="studio-command studio-toolbar" data-snippet="h2" type="button">H2</button>
+              <button class="studio-command studio-toolbar" data-snippet="h3" type="button">H3</button>
+              <button class="studio-command studio-toolbar" data-snippet="list" type="button">리스트</button>
+              <button class="studio-command studio-toolbar" data-snippet="quote" type="button">인용</button>
+              <button class="studio-command studio-toolbar" data-snippet="code" type="button">코드</button>
+              <button class="studio-command studio-toolbar" data-snippet="divider" type="button">구분선</button>
+            </div>
+          </details>
         </div>
 
         <form id="studio-form" class="studio-editor-form" autocomplete="off">
@@ -184,7 +188,7 @@ const { initialPosts = [] } = Astro.props;
       <aside id="studio-sidepanel" class="studio-sidepanel" hidden>
         <div class="studio-sidepanel__header">
           <div>
-            <p class="eyebrow">패널</p>
+            <p class="eyebrow">Context drawer</p>
             <h3 id="studio-sidepanel-title">미리보기</h3>
           </div>
           <button id="studio-sidepanel-close" class="button button--ghost" type="button">닫기</button>
@@ -319,15 +323,15 @@ const { initialPosts = [] } = Astro.props;
         <div id="studio-panel-notes" class="studio-sidepanel__body" hidden>
           <section class="studio-settings-card">
             <div class="studio-settings-card__head">
-              <p class="eyebrow">Validation</p>
+              <p class="eyebrow">Checks</p>
               <p>지금 글이 저장 가능한 상태인지 바로 확인합니다.</p>
             </div>
             <ul id="studio-validation" class="studio-validation"></ul>
           </section>
           <section class="studio-settings-card">
             <div class="studio-settings-card__head">
-              <p class="eyebrow">Usage</p>
-              <p>지금 스튜디오가 어떻게 동작하는지 한 눈에 요약합니다.</p>
+              <p class="eyebrow">Flow</p>
+              <p>원고 흐름을 끊지 않도록 꼭 필요한 사용 힌트만 남겨둡니다.</p>
             </div>
             <ul class="studio-checklist">
               <li>Chromium 데스크톱에서 로컬 폴더 쓰기가 가장 안정적입니다.</li>
@@ -387,6 +391,7 @@ const { initialPosts = [] } = Astro.props;
 
   const elements = {
     app: $('#studio-app'),
+    overlay: $('#studio-overlay'),
     hostBadge: $('#studio-host-badge'),
     connectionBadge: $('#studio-connection-badge'),
     dirtyBadge: $('#studio-dirty-badge'),
@@ -658,6 +663,7 @@ const { initialPosts = [] } = Astro.props;
 
   function selectPost(id) {
     state.currentId = id;
+    state.libraryOpen = false;
     renderAll();
   }
 
@@ -665,6 +671,7 @@ const { initialPosts = [] } = Astro.props;
     const record = makeRecord(createPostTemplate(kind));
     state.posts.unshift(record);
     state.currentId = record.id;
+    state.libraryOpen = false;
     saveSnapshot();
     renderAll();
     toast(kind === '42' ? '42 템플릿 새 글을 만들었습니다.' : '새 글 초안을 만들었습니다.', 'ok');
@@ -1018,6 +1025,7 @@ const { initialPosts = [] } = Astro.props;
     if (existingIndex >= 0) state.posts.splice(existingIndex, 1, restored);
     else state.posts.unshift(restored);
     state.currentId = restored.id;
+    state.libraryOpen = false;
     state.snapshotAvailable = true;
     renderAll();
     toast('브라우저 임시저장을 복원했습니다.', 'ok');
@@ -1027,14 +1035,31 @@ const { initialPosts = [] } = Astro.props;
     const hasSidepanel = Boolean(state.sideMode);
     const hasLibrary = state.libraryOpen;
 
+    elements.overlay.hidden = !(hasLibrary || hasSidepanel);
     elements.libraryShell.hidden = !hasLibrary;
     elements.sidepanel.hidden = !hasSidepanel;
     elements.layout.classList.toggle('has-library', hasLibrary);
     elements.layout.classList.toggle('has-sidepanel', hasSidepanel);
   }
 
+  function closeChrome() {
+    state.libraryOpen = false;
+    state.sideMode = '';
+    elements.panelPreview.hidden = true;
+    elements.panelSettings.hidden = true;
+    elements.panelNotes.hidden = true;
+    elements.sidepanelTitle.textContent = '패널';
+    elements.previewToggle.classList.remove('is-active');
+    elements.settingsToggle.classList.remove('is-active');
+    elements.notesToggle.classList.remove('is-active');
+    updateLayout();
+    updateBadges();
+  }
+
   function setSideMode(mode) {
-    state.sideMode = state.sideMode === mode ? '' : mode;
+    const nextMode = state.sideMode === mode ? '' : mode;
+    state.libraryOpen = false;
+    state.sideMode = nextMode;
     elements.panelPreview.hidden = state.sideMode !== 'preview';
     elements.panelSettings.hidden = state.sideMode !== 'settings';
     elements.panelNotes.hidden = state.sideMode !== 'notes';
@@ -1048,6 +1073,7 @@ const { initialPosts = [] } = Astro.props;
     elements.settingsToggle.classList.toggle('is-active', state.sideMode === 'settings');
     elements.notesToggle.classList.toggle('is-active', state.sideMode === 'notes');
     updateLayout();
+    updateBadges();
   }
 
   function toggleMarkdownOutput() {
@@ -1058,6 +1084,16 @@ const { initialPosts = [] } = Astro.props;
 
   function toggleLibrary() {
     state.libraryOpen = !state.libraryOpen;
+    if (state.libraryOpen) {
+      state.sideMode = '';
+      elements.panelPreview.hidden = true;
+      elements.panelSettings.hidden = true;
+      elements.panelNotes.hidden = true;
+      elements.sidepanelTitle.textContent = '패널';
+      elements.previewToggle.classList.remove('is-active');
+      elements.settingsToggle.classList.remove('is-active');
+      elements.notesToggle.classList.remove('is-active');
+    }
     updateLayout();
     updateBadges();
   }
@@ -1105,6 +1141,7 @@ const { initialPosts = [] } = Astro.props;
 
   function bindEvents() {
     elements.libraryToggle.addEventListener('click', toggleLibrary);
+    elements.overlay.addEventListener('click', closeChrome);
     elements.connect.addEventListener('click', () => connectRepo(true));
     elements.reconnect.addEventListener('click', () => connectRepo(true));
     elements.save.addEventListener('click', saveCurrent);
@@ -1154,6 +1191,10 @@ const { initialPosts = [] } = Astro.props;
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 's') {
         event.preventDefault();
         saveCurrent();
+        return;
+      }
+      if (event.key === 'Escape' && (state.libraryOpen || state.sideMode)) {
+        closeChrome();
       }
     });
     wireFieldUpdates();
@@ -1223,7 +1264,7 @@ const { initialPosts = [] } = Astro.props;
     gap: 0.85rem;
   }
 
-  .studio-topbar__identity h2 {
+  .studio-topbar__identity h1 {
     margin: 0;
     font-size: clamp(1.45rem, 1.8vw, 1.9rem);
   }
@@ -1389,6 +1430,18 @@ const { initialPosts = [] } = Astro.props;
     grid-template-columns: minmax(0, minmax(0, 1fr)) minmax(300px, 360px);
   }
 
+  .studio-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 14;
+    border: 0;
+    padding: 0;
+    background: rgba(3, 4, 8, 0.42);
+    backdrop-filter: blur(3px);
+    border-radius: 32px;
+    cursor: pointer;
+  }
+
   .studio-library-shell,
   .studio-sidepanel,
   .studio-editor-shell {
@@ -1501,6 +1554,47 @@ const { initialPosts = [] } = Astro.props;
     color: rgba(237, 242, 255, 0.58);
   }
 
+  .studio-inline-tools {
+    position: relative;
+    margin-left: auto;
+  }
+
+  .studio-inline-tools__summary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 34px;
+    padding: 0 0.85rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text);
+    font-size: 0.92rem;
+    font: inherit;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .studio-inline-tools__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .studio-inline-tools__panel {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 0.55rem);
+    z-index: 16;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    min-width: min(420px, calc(100vw - 3rem));
+    padding: 0.9rem;
+    border-radius: 20px;
+    background: rgba(16, 14, 13, 0.98);
+    border: 1px solid rgba(214, 184, 128, 0.14);
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.35);
+  }
+
   .studio-command,
   .studio-mini-button {
     cursor: pointer;
@@ -1510,7 +1604,8 @@ const { initialPosts = [] } = Astro.props;
   .studio-mini-button:hover,
   .studio-chip--library:hover,
   .studio-series:hover,
-  .studio-tool-menu__summary:hover {
+  .studio-tool-menu__summary:hover,
+  .studio-inline-tools__summary:hover {
     border-color: rgba(198, 160, 95, 0.32);
     background: rgba(198, 160, 95, 0.12);
   }
@@ -1936,6 +2031,16 @@ const { initialPosts = [] } = Astro.props;
       min-width: 0;
     }
 
+    .studio-inline-tools {
+      margin-left: 0;
+    }
+
+    .studio-inline-tools__panel {
+      position: static;
+      min-width: 0;
+      margin-top: 0.55rem;
+    }
+
     .studio-layout.has-sidepanel {
       grid-template-columns: minmax(0, 1fr);
     }
@@ -1966,18 +2071,24 @@ const { initialPosts = [] } = Astro.props;
     .studio-topbar__status,
     .studio-command-strip,
     .studio-command-strip__group,
-    .studio-tool-menu__actions {
+    .studio-tool-menu__actions,
+    .studio-inline-tools {
       width: 100%;
     }
 
     .studio-topbar__actions .button,
-    .studio-tool-menu__summary {
+    .studio-tool-menu__summary,
+    .studio-inline-tools__summary {
       width: 100%;
     }
 
     .studio-command-strip {
       display: grid;
       gap: 0.8rem;
+    }
+
+    .studio-inline-tools__panel {
+      width: 100%;
     }
 
     .studio-inline-input,
