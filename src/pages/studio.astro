@@ -14,12 +14,14 @@ const studioEnabled = import.meta.env.DEV;
     <div class="container narrow-flow">
       <p class="eyebrow">Local writing desk</p>
       <h1>Writing Studio</h1>
-      <p>
-        이 페이지는 Markdown 구조는 그대로 두고, 글쓰기 경험만 velog처럼 훨씬 덜 거칠게 만들기 위한 개인용 작업실입니다.
-      </p>
-      <p>
-        실제 편집 UI는 <strong>localhost에서만 활성화</strong>됩니다. 가장 잘 맞는 환경은 <strong>Chrome / Edge / Brave 데스크톱</strong>이며,
-        여기서 로컬 레포 폴더를 연결하면 `src/content/blog/*.md`를 직접 읽고 쓸 수 있습니다.
+      <ol class="studio-intro-steps">
+        <li><strong>1.</strong> 작업 폴더 열기</li>
+        <li><strong>2.</strong> 제목 · 태그 · 본문 작성</li>
+        <li><strong>3.</strong> 공개/비공개 선택</li>
+        <li><strong>4.</strong> 저장 후 git 반영</li>
+      </ol>
+      <p class="studio-intro-note">
+        편집 UI는 localhost에서만 활성화됩니다. 브라우저는 Chrome / Edge / Brave 데스크톱을 권장합니다.
       </p>
     </div>
   </section>
@@ -49,6 +51,28 @@ const studioEnabled = import.meta.env.DEV;
 </MainLayout>
 
 <style>
+  .studio-intro-steps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .studio-intro-steps li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-height: 40px;
+    padding: 0 0.95rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: var(--text);
+  }
+
+  .studio-intro-note {
+    max-width: 56ch;
+  }
+
   .studio-locked-page__card {
     display: grid;
     gap: 1rem;
@@ -70,5 +94,11 @@ const studioEnabled = import.meta.env.DEV;
     display: flex;
     gap: 0.75rem;
     flex-wrap: wrap;
+  }
+
+  @media (max-width: 720px) {
+    .studio-intro-steps {
+      display: grid;
+    }
   }
 </style>
