@@ -7,8 +7,8 @@
 - Domain target: `https://changwpa.kro.kr`
 
 ## Current Phase
-- Phase: Phase 4 — Polish and Deployment
-- Branch: `phase/4-polish-deployment`
+- Phase: Phase 5 — Writing Studio
+- Branch: `phase/5-writing-studio`
 - Status: Complete
 
 ## Official Phase List
@@ -16,16 +16,17 @@
 2. Phase 2 — Portfolio Structure
 3. Phase 3 — Blog System
 4. Phase 4 — Polish and Deployment
+5. Phase 5 — Writing Studio
 
 ## Current Phase Scope
-- Finalize SEO and metadata basics.
-- Tighten deployment docs/checklists and align the Pages workflow with current Astro guidance.
-- Keep the site launch-ready on `github.io` while documenting the exact custom-domain cutover steps for `changwpa.kro.kr`.
+- Add a local-first personal writing UI that drastically simplifies blog post CRUD without introducing backend/auth.
+- Support creating, editing, deleting, and saving blog Markdown files inside `src/content/blog`.
+- Add tag/series assistance and document browser/workflow limits clearly.
 
 ## Current Phase Non-Scope
-- Final custom domain activation in GitHub Pages settings and DNS.
-- Publishing phase branches or merge/PR operations that require GitHub auth.
-- Any registrar-side or GitHub account action that requires the user to log in manually.
+- Replacing the static content architecture with a hosted CMS.
+- Adding external backend, database, or authentication.
+- Changing the public blog rendering routes or deployment model.
 
 ## Architecture Summary
 - Astro static output with content collections for blog posts and projects.
@@ -38,16 +39,16 @@
 - blog taxonomy: `42`, `project`, `devlog`, `setup`, `retrospective`.
 
 ## Deliverables Checklist
-- [x] SEO basics finalized (metadata, canonical handling, robots/sitemap sanity)
-- [x] 404 page and launch copy polished
-- [x] GitHub Pages deploy workflow aligned with current Astro guidance
-- [x] Deployment runbook and launch checklist updated with exact commands and DNS steps
-- [x] Phase 4 verification completed
+- [x] `/studio` personal writing route added
+- [x] Local post create/update/delete flow implemented
+- [x] Tag/series suggestions and template presets implemented
+- [x] Writing-studio usage docs added
+- [x] Phase 5 verification completed
 
 ## Verification Plan
-1. Run local build, preview, and route checks after polish/deployment updates.
-2. Verify the built output and preview server serve `/`, `/about`, `/projects`, `/blog`, at least one blog post, and `/404`.
-3. Re-run project-wide TypeScript diagnostics and confirm deployment docs/checklists match the implemented workflow.
+1. Run local build and type checks after adding the writing studio.
+2. Verify the `/studio` route builds and client-side UI loads with expected controls.
+3. Confirm the writing workflow docs match the implemented browser limitations and save flow.
 
 ## Work Log
 - Cloned the remote user-site repository into the writable workspace.
@@ -69,6 +70,11 @@
 - Updated metadata handling for theme color, robots directives, canonical tags, and article pages.
 - Aligned the deploy workflow with Astro’s current GitHub Pages action pattern and documented the user-site/no-`base` rule.
 - Expanded the README, deployment runbook, and launch checklist with explicit local commands, GitHub Pages setup, and custom-domain cutover steps.
+- Started `phase/5-writing-studio` from the merged `main` branch after the GitHub Pages launch was confirmed on the default domain.
+- Chosen direction: no-backend personal writing studio built on top of the existing Markdown content structure rather than introducing a CMS.
+- Added `src/pages/studio.astro` plus a large client-side writing UI component that handles local post CRUD, preview, tag reuse, and series helpers.
+- Added `src/lib/studio/blogStudio.ts` for frontmatter parsing/serialization, validation, slug generation, simple preview rendering, and tag/series aggregation.
+- Added `docs/runbooks/writing-studio.md` and README guidance so the new authoring flow is documented.
 
 ## Verification Results
 - `npm install -D astro @astrojs/sitemap @astrojs/check typescript` → dependencies installed successfully.
@@ -82,10 +88,14 @@
 - `npm run build` after polish/deployment updates → success; built `/`, `/about`, `/projects`, `/blog`, all four posts, `404`, and `sitemap-index.xml`.
 - `npm run preview -- --host 127.0.0.1 --port 4321` (outside sandbox with telemetry disabled) → preview server started successfully.
 - `curl http://127.0.0.1:4321/{,/about,/projects,/blog,/blog/42-push-swap,/404}` → all routes returned HTML with the expected page-specific metadata and content.
+- `npm run check` after writing-studio implementation → success.
+- `npm run build` after writing-studio implementation → success; built `/studio` in addition to the existing public routes.
+- `grep dist/studio/index.html` → confirmed Writing Studio UI text, connect button, quick presets, tag library, and series helper are present in built output.
+- `curl http://127.0.0.1:4321/studio` via preview → returned the expected Writing Studio HTML and metadata.
 
 ## Known Blockers / User-Action-Required Items
 - GitHub push/PR and Pages settings updates will require the user's GitHub auth later.
 - Custom domain DNS changes must wait until the end and will require registrar/DNS access.
 
 ## Next Phase Preview
-- Final step is architect/verifier sign-off plus handoff of the exact GitHub/DNS actions the user still needs to perform.
+- If phase 5 lands well, the next likely follow-up is lightweight authoring automation (post generators / bulk utilities), not backend infrastructure.

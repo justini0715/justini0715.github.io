@@ -1,0 +1,27 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import WritingStudioApp from '../components/WritingStudioApp.astro';
+---
+
+<MainLayout
+  title="Writing Studio"
+  description="No-backend personal writing UI for creating and editing Markdown posts in the Astro blog."
+  noindex={true}
+>
+  <section class="page-hero">
+    <div class="container narrow-flow">
+      <p class="eyebrow">Internal tool</p>
+      <h1>Writing Studio</h1>
+      <p>
+        개인용 글쓰기 UI입니다. 외부 백엔드 없이 기존 `src/content/blog/*.md` 구조를 그대로 유지하면서, 브라우저에서 새 글 생성/수정/삭제를
+        훨씬 쉽게 하도록 만든 도구입니다.
+      </p>
+      <p>
+        가장 잘 맞는 환경은 <strong>Chrome / Edge / Brave 데스크톱</strong>입니다. 이 브라우저들에서는 로컬 레포 폴더를 연결해서 파일을 직접 저장할 수
+        있습니다. 그 외 브라우저에서는 Markdown 다운로드 중심으로 사용할 수 있습니다.
+      </p>
+    </div>
+  </section>
+
+  <WritingStudioApp />
+</MainLayout>

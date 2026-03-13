@@ -1,0 +1,1373 @@
+---
+import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/blogStudio';
+---
+
+<section class="section">
+  <div class="container studio-shell">
+    <aside class="panel studio-sidebar">
+      <div class="studio-sidebar__section">
+        <p class="eyebrow">Workspace</p>
+        <h2>Writing Studio</h2>
+        <p>
+          Markdown를 직접 손으로 만지지 않고도 글을 만들고 수정할 수 있는 개인용 에디터입니다. 연결 버튼으로 로컬 레포를 잡으면
+          `src/content/blog` 파일을 바로 읽고 쓸 수 있습니다.
+        </p>
+        <div class="studio-actions studio-actions--stack">
+          <button id="studio-connect" class="button" type="button">레포 연결</button>
+          <button id="studio-reconnect" class="button button--ghost" type="button">폴더 다시 선택</button>
+        </div>
+        <p id="studio-folder" class="studio-hint">아직 로컬 폴더를 연결하지 않았습니다.</p>
+      </div>
+
+      <div class="studio-sidebar__section">
+        <p class="eyebrow">Quick start</p>
+        <div class="studio-actions studio-actions--grid">
+          <button class="button button--ghost studio-preset" data-template="tech" type="button">새 기술 글</button>
+          <button class="button button--ghost studio-preset" data-template="42" type="button">새 42 글</button>
+          <button class="button button--ghost studio-preset" data-template="blank" type="button">빈 글</button>
+          <button id="studio-duplicate" class="button button--ghost" type="button">현재 글 복제</button>
+        </div>
+        <div class="studio-actions studio-actions--grid studio-actions--secondary">
+          <button id="studio-download" class="button button--ghost" type="button">Markdown 다운로드</button>
+          <button id="studio-restore" class="button button--ghost" type="button">임시저장 복원</button>
+        </div>
+      </div>
+
+      <div class="studio-sidebar__section">
+        <p class="eyebrow">Library</p>
+        <div class="studio-filters">
+          <input id="studio-search" class="studio-input" type="search" placeholder="제목 / slug 검색" />
+          <select id="studio-filter-category" class="studio-select">
+            <option value="all">모든 카테고리</option>
+            {BLOG_CATEGORIES.map((category) => (
+              <option value={category}>{CATEGORY_LABELS[category]}</option>
+            ))}
+          </select>
+          <select id="studio-filter-draft" class="studio-select">
+            <option value="all">전체 상태</option>
+            <option value="published">공개 글</option>
+            <option value="draft">드래프트</option>
+          </select>
+        </div>
+        <div id="studio-library" class="studio-library"></div>
+      </div>
+    </aside>
+
+    <div class="studio-main">
+      <div id="studio-status" class="panel studio-status studio-status--info">
+        <strong>시작 준비 완료</strong>
+        <p>
+          브라우저에서 바로 새 글을 만들 수 있습니다. 레포를 연결하면 저장/수정/삭제까지 로컬 폴더에 직접 반영됩니다.
+        </p>
+      </div>
+
+      <div class="studio-grid">
+        <form id="studio-form" class="panel studio-editor" autocomplete="off">
+          <div class="studio-editor__header">
+            <div>
+              <p class="eyebrow">Editor</p>
+              <h2 id="studio-editor-title">새 글</h2>
+            </div>
+            <div class="studio-actions">
+              <button id="studio-save" class="button" type="button">저장</button>
+              <button id="studio-soft-delete" class="button button--ghost" type="button">draft로 보내기</button>
+              <button id="studio-hard-delete" class="button button--ghost studio-danger" type="button">완전 삭제</button>
+            </div>
+          </div>
+
+          <div class="studio-form-grid">
+            <label class="studio-field studio-field--span-2">
+              <span>제목</span>
+              <input id="studio-title" class="studio-input" type="text" placeholder="글 제목" />
+            </label>
+
+            <label class="studio-field">
+              <span>slug</span>
+              <div class="studio-inline-input">
+                <input id="studio-slug" class="studio-input" type="text" placeholder="post-slug" />
+                <button id="studio-slugify" class="button button--ghost" type="button">자동</button>
+              </div>
+            </label>
+
+            <label class="studio-field">
+              <span>카테고리</span>
+              <select id="studio-category" class="studio-select">
+                {BLOG_CATEGORIES.map((category) => (
+                  <option value={category}>{CATEGORY_LABELS[category]}</option>
+                ))}
+              </select>
+            </label>
+
+            <label class="studio-field studio-field--span-2">
+              <span>설명</span>
+              <input id="studio-description" class="studio-input" type="text" placeholder="리스트에 보일 한 줄 설명" />
+            </label>
+
+            <label class="studio-field">
+              <span>발행일</span>
+              <input id="studio-pubDate" class="studio-input" type="date" />
+            </label>
+
+            <label class="studio-field">
+              <span>수정일</span>
+              <input id="studio-updatedDate" class="studio-input" type="date" />
+            </label>
+
+            <label class="studio-field">
+              <span>시리즈</span>
+              <select id="studio-series" class="studio-select">
+                <option value="">시리즈 없음</option>
+                {SERIES_PRESETS.map((series) => (
+                  <option value={series.value}>{series.title}</option>
+                ))}
+              </select>
+            </label>
+
+            <label class="studio-field">
+              <span>시리즈 표시명</span>
+              <input id="studio-series-title" class="studio-input" type="text" placeholder="예: 42 Systems" />
+            </label>
+
+            <label class="studio-field">
+              <span>시리즈 순서</span>
+              <input id="studio-series-order" class="studio-input" type="number" min="1" step="1" placeholder="1" />
+            </label>
+
+            <label class="studio-field">
+              <span>난이도 / 메모</span>
+              <input id="studio-difficulty" class="studio-input" type="text" placeholder="예: concurrency and timing" />
+            </label>
+          </div>
+
+          <div class="studio-meta-row">
+            <label class="studio-checkbox">
+              <input id="studio-featured" type="checkbox" />
+              <span>Featured</span>
+            </label>
+            <label class="studio-checkbox">
+              <input id="studio-draft" type="checkbox" />
+              <span>Draft</span>
+            </label>
+            <span id="studio-route" class="studio-route">/blog/post-slug/</span>
+          </div>
+
+          <div class="studio-tags">
+            <div class="studio-tags__header">
+              <div>
+                <p class="eyebrow">Tags</p>
+                <p>기존 태그를 재사용하거나 새 태그를 바로 추가할 수 있습니다.</p>
+              </div>
+              <div class="studio-inline-input studio-inline-input--compact">
+                <input id="studio-tag-input" class="studio-input" type="text" list="studio-tag-options" placeholder="태그 입력 후 추가" />
+                <button id="studio-add-tag" class="button button--ghost" type="button">추가</button>
+              </div>
+            </div>
+            <datalist id="studio-tag-options"></datalist>
+            <div id="studio-tag-chips" class="studio-chip-list"></div>
+          </div>
+
+          <label class="studio-field studio-field--body">
+            <span>본문</span>
+            <textarea id="studio-body" class="studio-textarea" placeholder="Markdown 본문을 입력하세요."></textarea>
+          </label>
+        </form>
+
+        <aside class="panel studio-inspector">
+          <div class="studio-preview-switch">
+            <button class="studio-tab is-active" data-preview="rendered" type="button">렌더 미리보기</button>
+            <button class="studio-tab" data-preview="markdown" type="button">Markdown 출력</button>
+          </div>
+
+          <div id="studio-preview-rendered" class="studio-preview-pane">
+            <article class="studio-preview-card">
+              <p id="studio-preview-category" class="eyebrow">devlog</p>
+              <h2 id="studio-preview-title">새 글</h2>
+              <p id="studio-preview-description"></p>
+              <div id="studio-preview-meta" class="studio-preview-meta"></div>
+              <div id="studio-preview-tags" class="studio-chip-list"></div>
+              <div id="studio-preview-body" class="studio-prose"></div>
+            </article>
+          </div>
+
+          <div id="studio-preview-markdown" class="studio-preview-pane" hidden>
+            <textarea id="studio-markdown-output" class="studio-output" readonly></textarea>
+          </div>
+
+          <div class="studio-inspector__section">
+            <p class="eyebrow">Validation</p>
+            <ul id="studio-validation" class="studio-validation"></ul>
+          </div>
+
+          <div class="studio-inspector__section">
+            <div class="studio-panel-head">
+              <div>
+                <p class="eyebrow">태그 라이브러리</p>
+                <p>기존 글에서 쓰는 태그를 클릭해서 현재 글에 붙이거나 뗄 수 있습니다.</p>
+              </div>
+            </div>
+            <div id="studio-tag-library" class="studio-suggestion-list"></div>
+          </div>
+
+          <div class="studio-inspector__section">
+            <div class="studio-panel-head">
+              <div>
+                <p class="eyebrow">시리즈 도우미</p>
+                <p>42 시리즈는 미리 등록된 프리셋을 바로 적용할 수 있습니다.</p>
+              </div>
+            </div>
+            <div id="studio-series-library" class="studio-series-list"></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script type="module">
+  import {
+    BLOG_CATEGORIES,
+    CATEGORY_LABELS,
+    SERIES_PRESETS,
+    clonePost,
+    collectSeriesStats,
+    collectTagStats,
+    createPostTemplate,
+    parsePostFile,
+    renderMarkdownPreview,
+    serializePost,
+    seriesTitleFor,
+    slugifyTitle,
+    validatePost,
+    normalizeTags
+  } from '../lib/studio/blogStudio';
+
+  /** @typedef {import('../lib/studio/blogStudio').StudioPost} StudioPost */
+
+  const STATUS_TONES = ['info', 'success', 'warning', 'error'];
+  const HANDLE_DB = 'writing-studio-handles';
+  const HANDLE_STORE = 'handles';
+  const HANDLE_KEY = 'repo-root';
+  const SNAPSHOT_KEY = 'writing-studio-snapshot';
+
+  /** @typedef {StudioPost & { id: string }} StudioRecord */
+
+  const state = {
+    repoHandle: /** @type {FileSystemDirectoryHandle | null} */ (null),
+    blogHandle: /** @type {FileSystemDirectoryHandle | null} */ (null),
+    posts: /** @type {StudioRecord[]} */ ([]),
+    currentId: '',
+    search: '',
+    filterCategory: 'all',
+    filterDraft: 'all',
+    previewMode: 'rendered',
+    snapshotAvailable: false
+  };
+
+  const $ = (selector) => document.querySelector(selector);
+
+  const elements = {
+    connect: /** @type {HTMLButtonElement} */ ($('#studio-connect')),
+    reconnect: /** @type {HTMLButtonElement} */ ($('#studio-reconnect')),
+    duplicate: /** @type {HTMLButtonElement} */ ($('#studio-duplicate')),
+    download: /** @type {HTMLButtonElement} */ ($('#studio-download')),
+    restore: /** @type {HTMLButtonElement} */ ($('#studio-restore')),
+    folder: /** @type {HTMLParagraphElement} */ ($('#studio-folder')),
+    library: /** @type {HTMLDivElement} */ ($('#studio-library')),
+    search: /** @type {HTMLInputElement} */ ($('#studio-search')),
+    filterCategory: /** @type {HTMLSelectElement} */ ($('#studio-filter-category')),
+    filterDraft: /** @type {HTMLSelectElement} */ ($('#studio-filter-draft')),
+    status: /** @type {HTMLDivElement} */ ($('#studio-status')),
+    editorTitle: /** @type {HTMLHeadingElement} */ ($('#studio-editor-title')),
+    title: /** @type {HTMLInputElement} */ ($('#studio-title')),
+    slug: /** @type {HTMLInputElement} */ ($('#studio-slug')),
+    slugify: /** @type {HTMLButtonElement} */ ($('#studio-slugify')),
+    category: /** @type {HTMLSelectElement} */ ($('#studio-category')),
+    description: /** @type {HTMLInputElement} */ ($('#studio-description')),
+    pubDate: /** @type {HTMLInputElement} */ ($('#studio-pubDate')),
+    updatedDate: /** @type {HTMLInputElement} */ ($('#studio-updatedDate')),
+    series: /** @type {HTMLSelectElement} */ ($('#studio-series')),
+    seriesTitle: /** @type {HTMLInputElement} */ ($('#studio-series-title')),
+    seriesOrder: /** @type {HTMLInputElement} */ ($('#studio-series-order')),
+    difficulty: /** @type {HTMLInputElement} */ ($('#studio-difficulty')),
+    featured: /** @type {HTMLInputElement} */ ($('#studio-featured')),
+    draft: /** @type {HTMLInputElement} */ ($('#studio-draft')),
+    route: /** @type {HTMLSpanElement} */ ($('#studio-route')),
+    tagInput: /** @type {HTMLInputElement} */ ($('#studio-tag-input')),
+    addTag: /** @type {HTMLButtonElement} */ ($('#studio-add-tag')),
+    tagOptions: /** @type {HTMLDataListElement} */ ($('#studio-tag-options')),
+    tagChips: /** @type {HTMLDivElement} */ ($('#studio-tag-chips')),
+    body: /** @type {HTMLTextAreaElement} */ ($('#studio-body')),
+    save: /** @type {HTMLButtonElement} */ ($('#studio-save')),
+    softDelete: /** @type {HTMLButtonElement} */ ($('#studio-soft-delete')),
+    hardDelete: /** @type {HTMLButtonElement} */ ($('#studio-hard-delete')),
+    previewTabs: /** @type {NodeListOf<HTMLButtonElement>} */ (document.querySelectorAll('.studio-tab')),
+    previewRendered: /** @type {HTMLDivElement} */ ($('#studio-preview-rendered')),
+    previewMarkdown: /** @type {HTMLDivElement} */ ($('#studio-preview-markdown')),
+    previewCategory: /** @type {HTMLParagraphElement} */ ($('#studio-preview-category')),
+    previewTitle: /** @type {HTMLHeadingElement} */ ($('#studio-preview-title')),
+    previewDescription: /** @type {HTMLParagraphElement} */ ($('#studio-preview-description')),
+    previewMeta: /** @type {HTMLDivElement} */ ($('#studio-preview-meta')),
+    previewTags: /** @type {HTMLDivElement} */ ($('#studio-preview-tags')),
+    previewBody: /** @type {HTMLDivElement} */ ($('#studio-preview-body')),
+    markdownOutput: /** @type {HTMLTextAreaElement} */ ($('#studio-markdown-output')),
+    validation: /** @type {HTMLUListElement} */ ($('#studio-validation')),
+    tagLibrary: /** @type {HTMLDivElement} */ ($('#studio-tag-library')),
+    seriesLibrary: /** @type {HTMLDivElement} */ ($('#studio-series-library'))
+  };
+
+  function nowDate() {
+    return new Date().toISOString().slice(0, 10);
+  }
+
+  function makeRecord(post) {
+    return { ...post, id: crypto.randomUUID() };
+  }
+
+  function currentPost() {
+    return state.posts.find((post) => post.id === state.currentId) ?? null;
+  }
+
+  function setStatus(title, body, tone = 'info') {
+    for (const candidate of STATUS_TONES) {
+      elements.status.classList.remove(`studio-status--${candidate}`);
+    }
+    elements.status.classList.add(`studio-status--${tone}`);
+    elements.status.innerHTML = `<strong>${title}</strong><p>${body}</p>`;
+  }
+
+  function loadSnapshot() {
+    try {
+      const raw = localStorage.getItem(SNAPSHOT_KEY);
+      if (!raw) return null;
+      return JSON.parse(raw);
+    } catch {
+      return null;
+    }
+  }
+
+  function saveSnapshot() {
+    const post = currentPost();
+    if (!post) return;
+
+    const snapshot = {
+      savedAt: new Date().toISOString(),
+      post: { ...post, tags: [...post.tags] },
+      folderName: state.repoHandle?.name ?? ''
+    };
+    localStorage.setItem(SNAPSHOT_KEY, JSON.stringify(snapshot));
+    state.snapshotAvailable = true;
+    renderRestoreButton();
+  }
+
+  function clearSnapshot() {
+    localStorage.removeItem(SNAPSHOT_KEY);
+    state.snapshotAvailable = false;
+    renderRestoreButton();
+  }
+
+  function renderRestoreButton() {
+    elements.restore.disabled = !state.snapshotAvailable;
+  }
+
+  async function openHandleDb() {
+    return await new Promise((resolve, reject) => {
+      const request = indexedDB.open(HANDLE_DB, 1);
+      request.onupgradeneeded = () => {
+        request.result.createObjectStore(HANDLE_STORE);
+      };
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  async function saveRepoHandle(handle) {
+    try {
+      const db = /** @type {IDBDatabase} */ (await openHandleDb());
+      await new Promise((resolve, reject) => {
+        const tx = db.transaction(HANDLE_STORE, 'readwrite');
+        tx.objectStore(HANDLE_STORE).put(handle, HANDLE_KEY);
+        tx.oncomplete = () => resolve(undefined);
+        tx.onerror = () => reject(tx.error);
+      });
+      db.close();
+    } catch {
+      // ignore persistence failures
+    }
+  }
+
+  async function loadRepoHandle() {
+    try {
+      const db = /** @type {IDBDatabase} */ (await openHandleDb());
+      const handle = await new Promise((resolve, reject) => {
+        const tx = db.transaction(HANDLE_STORE, 'readonly');
+        const request = tx.objectStore(HANDLE_STORE).get(HANDLE_KEY);
+        request.onsuccess = () => resolve(request.result ?? null);
+        request.onerror = () => reject(request.error);
+      });
+      db.close();
+      return /** @type {FileSystemDirectoryHandle | null} */ (handle);
+    } catch {
+      return null;
+    }
+  }
+
+  async function resolveBlogHandle(rootHandle) {
+    try {
+      const src = await rootHandle.getDirectoryHandle('src');
+      const content = await src.getDirectoryHandle('content');
+      return await content.getDirectoryHandle('blog');
+    } catch {
+      return rootHandle;
+    }
+  }
+
+  async function connectRepo(forcePicker = false) {
+    const picker = /** @type {Window & { showDirectoryPicker?: () => Promise<FileSystemDirectoryHandle> }} */ (window);
+    if (!picker.showDirectoryPicker) {
+      setStatus(
+        '브라우저 제한',
+        '이 브라우저는 폴더 직접 쓰기를 지원하지 않습니다. Chrome/Edge/Brave 데스크톱을 권장합니다. 그래도 Markdown 다운로드 방식은 계속 쓸 수 있습니다.',
+        'warning'
+      );
+      return;
+    }
+
+    try {
+      let repoHandle = null;
+      if (!forcePicker) {
+        repoHandle = await loadRepoHandle();
+        if (repoHandle) {
+          const permission = await repoHandle.queryPermission({ mode: 'readwrite' });
+          if (permission !== 'granted') {
+            repoHandle = null;
+          }
+        }
+      }
+
+      if (!repoHandle) {
+        repoHandle = await picker.showDirectoryPicker();
+      }
+
+      const blogHandle = await resolveBlogHandle(repoHandle);
+      state.repoHandle = repoHandle;
+      state.blogHandle = blogHandle;
+      await saveRepoHandle(repoHandle);
+      await loadPostsFromFolder();
+      elements.folder.textContent = `연결된 폴더: ${repoHandle.name}${blogHandle !== repoHandle ? ' → src/content/blog' : ''}`;
+      setStatus('폴더 연결 완료', '이제 로컬 Markdown 파일을 바로 저장/수정/삭제할 수 있습니다.', 'success');
+    } catch (error) {
+      console.error(error);
+      setStatus('폴더 연결 실패', '레포 루트 또는 `src/content/blog` 폴더를 선택해야 합니다.', 'error');
+    }
+  }
+
+  async function loadPostsFromFolder() {
+    if (!state.blogHandle) return;
+
+    const loaded = [];
+    for await (const [name, handle] of state.blogHandle.entries()) {
+      if (handle.kind !== 'file') continue;
+      if (!name.endsWith('.md') || name === '.gitkeep') continue;
+      const file = await handle.getFile();
+      const text = await file.text();
+      loaded.push(makeRecord(parsePostFile(name, text)));
+    }
+
+    loaded.sort((left, right) => right.pubDate.localeCompare(left.pubDate) || left.title.localeCompare(right.title));
+    state.posts = loaded;
+
+    if (!state.posts.length) {
+      state.posts = [makeRecord(createPostTemplate('tech'))];
+    }
+
+    state.currentId = state.posts[0]?.id ?? '';
+    renderAll();
+  }
+
+  function selectPost(id) {
+    state.currentId = id;
+    renderAll();
+  }
+
+  function createNew(kind) {
+    const record = makeRecord(createPostTemplate(kind));
+    state.posts.unshift(record);
+    state.currentId = record.id;
+    saveSnapshot();
+    renderAll();
+    setStatus('새 글 생성', kind === '42' ? '42 전용 템플릿으로 새 글을 만들었습니다.' : '새 글 초안을 만들었습니다.', 'info');
+  }
+
+  function duplicateCurrentPost() {
+    const post = currentPost();
+    if (!post) return;
+    const duplicate = makeRecord(clonePost(post));
+    state.posts.unshift(duplicate);
+    state.currentId = duplicate.id;
+    saveSnapshot();
+    renderAll();
+    setStatus('복제 완료', '현재 글을 복제해서 새 드래프트로 만들었습니다.', 'success');
+  }
+
+  function syncFromForm() {
+    const post = currentPost();
+    if (!post) return;
+
+    post.title = elements.title.value.trim();
+    post.slug = elements.slug.value.trim();
+    post.category = /** @type {typeof BLOG_CATEGORIES[number]} */ (elements.category.value);
+    post.description = elements.description.value.trim();
+    post.pubDate = elements.pubDate.value;
+    post.updatedDate = elements.updatedDate.value;
+    post.series = elements.series.value.trim();
+    post.seriesTitle = elements.seriesTitle.value.trim();
+    post.seriesOrder = elements.seriesOrder.value.trim();
+    post.difficulty = elements.difficulty.value.trim();
+    post.featured = elements.featured.checked;
+    post.draft = elements.draft.checked;
+    post.body = elements.body.value;
+    post.dirty = true;
+
+    if (post.series && !post.seriesTitle) {
+      post.seriesTitle = seriesTitleFor(post.series) || post.seriesTitle;
+      elements.seriesTitle.value = post.seriesTitle;
+    }
+
+    elements.route.textContent = `/blog/${post.slug || 'post-slug'}/`;
+    saveSnapshot();
+    renderSidePanels();
+    renderLibrary();
+  }
+
+  function fillForm(post) {
+    elements.editorTitle.textContent = post.title || '새 글';
+    elements.title.value = post.title;
+    elements.slug.value = post.slug;
+    elements.category.value = post.category;
+    elements.description.value = post.description;
+    elements.pubDate.value = post.pubDate;
+    elements.updatedDate.value = post.updatedDate;
+    elements.series.value = post.series;
+    elements.seriesTitle.value = post.seriesTitle;
+    elements.seriesOrder.value = post.seriesOrder;
+    elements.difficulty.value = post.difficulty;
+    elements.featured.checked = post.featured;
+    elements.draft.checked = post.draft;
+    elements.body.value = post.body;
+    elements.route.textContent = `/blog/${post.slug || 'post-slug'}/`;
+    renderTagChips(post);
+  }
+
+  function renderTagChips(post) {
+    elements.tagChips.innerHTML = '';
+    if (!post.tags.length) {
+      elements.tagChips.innerHTML = '<span class="studio-chip studio-chip--empty">태그 없음</span>';
+      return;
+    }
+
+    for (const tag of post.tags) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'studio-chip';
+      button.textContent = `#${tag} ×`;
+      button.addEventListener('click', () => {
+        const current = currentPost();
+        if (!current) return;
+        current.tags = current.tags.filter((item) => item !== tag);
+        current.dirty = true;
+        saveSnapshot();
+        renderAll();
+      });
+      elements.tagChips.appendChild(button);
+    }
+  }
+
+  function renderPreview(post) {
+    elements.previewCategory.textContent = CATEGORY_LABELS[post.category] ?? post.category;
+    elements.previewTitle.textContent = post.title || '제목 없음';
+    elements.previewDescription.textContent = post.description || '설명을 아직 입력하지 않았습니다.';
+    elements.previewMeta.innerHTML = `
+      <span>${post.pubDate || '날짜 없음'}</span>
+      <span>${post.draft ? 'Draft' : 'Published'}</span>
+      ${post.seriesTitle ? `<span>${post.seriesTitle}</span>` : ''}
+    `;
+    elements.previewTags.innerHTML = post.tags.length
+      ? post.tags.map((tag) => `<span class="studio-chip studio-chip--static">#${tag}</span>`).join('')
+      : '<span class="studio-chip studio-chip--empty">태그 없음</span>';
+    elements.previewBody.innerHTML = renderMarkdownPreview(post.body || '');
+    elements.markdownOutput.value = serializePost(post);
+  }
+
+  function renderValidation(post) {
+    const issues = validatePost(post, state.posts);
+    elements.validation.innerHTML = '';
+
+    if (!issues.length) {
+      elements.validation.innerHTML = '<li class="studio-validation__ok">저장 가능한 상태입니다.</li>';
+      return issues;
+    }
+
+    for (const issue of issues) {
+      const item = document.createElement('li');
+      item.className = `studio-validation__item studio-validation__item--${issue.level}`;
+      item.textContent = issue.message;
+      elements.validation.appendChild(item);
+    }
+
+    return issues;
+  }
+
+  function renderTagLibrary(current) {
+    const stats = collectTagStats(state.posts);
+    elements.tagOptions.innerHTML = stats.map((stat) => `<option value="${stat.tag}"></option>`).join('');
+    elements.tagLibrary.innerHTML = '';
+
+    if (!stats.length) {
+      elements.tagLibrary.innerHTML = '<p class="studio-hint">아직 저장된 태그가 없습니다.</p>';
+      return;
+    }
+
+    for (const stat of stats) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = `studio-suggestion ${current?.tags.includes(stat.tag) ? 'is-active' : ''}`;
+      button.innerHTML = `<span>#${stat.tag}</span><small>${stat.count}</small>`;
+      button.addEventListener('click', () => toggleTag(stat.tag));
+      elements.tagLibrary.appendChild(button);
+    }
+  }
+
+  function renderSeriesLibrary(current) {
+    const stats = collectSeriesStats(state.posts);
+    const merged = [...SERIES_PRESETS.map((preset) => ({ value: preset.value, title: preset.title, count: 0 })), ...stats]
+      .reduce((accumulator, item) => {
+        if (accumulator.some((candidate) => candidate.value === item.value)) return accumulator.map((candidate) =>
+          candidate.value === item.value ? { ...candidate, count: Math.max(candidate.count, item.count), title: item.title || candidate.title } : candidate
+        );
+        return [...accumulator, item];
+      }, []);
+
+    elements.seriesLibrary.innerHTML = '';
+    for (const item of merged) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = `studio-series ${current?.series === item.value ? 'is-active' : ''}`;
+      button.innerHTML = `<strong>${item.title}</strong><small>${item.value}${item.count ? ` · ${item.count}개 글` : ''}</small>`;
+      button.addEventListener('click', () => {
+        const post = currentPost();
+        if (!post) return;
+        post.series = item.value;
+        post.seriesTitle = item.title;
+        post.dirty = true;
+        fillForm(post);
+        saveSnapshot();
+        renderSidePanels();
+      });
+      elements.seriesLibrary.appendChild(button);
+    }
+  }
+
+  function renderLibrary() {
+    const filtered = state.posts.filter((post) => {
+      if (post.deleted) return false;
+      const search = state.search.trim().toLowerCase();
+      const matchesSearch = !search || post.title.toLowerCase().includes(search) || post.slug.toLowerCase().includes(search);
+      const matchesCategory = state.filterCategory === 'all' || post.category === state.filterCategory;
+      const matchesDraft =
+        state.filterDraft === 'all' ||
+        (state.filterDraft === 'draft' ? post.draft : !post.draft);
+      return matchesSearch && matchesCategory && matchesDraft;
+    });
+
+    elements.library.innerHTML = '';
+
+    if (!filtered.length) {
+      elements.library.innerHTML = '<p class="studio-hint">조건에 맞는 글이 없습니다.</p>';
+      return;
+    }
+
+    for (const post of filtered) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = `studio-post-card ${post.id === state.currentId ? 'is-active' : ''}`;
+      button.innerHTML = `
+        <div class="studio-post-card__meta">
+          <span class="studio-badge">${CATEGORY_LABELS[post.category] ?? post.category}</span>
+          <span class="studio-badge studio-badge--muted">${post.draft ? 'Draft' : 'Live'}</span>
+        </div>
+        <strong>${post.title || '제목 없음'}</strong>
+        <small>${post.pubDate} · /blog/${post.slug || 'post-slug'}/</small>
+        ${post.dirty ? '<span class="studio-post-card__dirty">저장 안 됨</span>' : ''}
+      `;
+      button.addEventListener('click', () => selectPost(post.id));
+      elements.library.appendChild(button);
+    }
+  }
+
+  function renderSidePanels() {
+    const post = currentPost();
+    if (!post) return;
+    renderPreview(post);
+    renderValidation(post);
+    renderTagLibrary(post);
+    renderSeriesLibrary(post);
+  }
+
+  function renderAll() {
+    const post = currentPost();
+    renderRestoreButton();
+    renderLibrary();
+    if (!post) return;
+    fillForm(post);
+    renderSidePanels();
+  }
+
+  function toggleTag(tag) {
+    const post = currentPost();
+    if (!post) return;
+    if (post.tags.includes(tag)) {
+      post.tags = post.tags.filter((item) => item !== tag);
+    } else {
+      post.tags = normalizeTags([...post.tags, tag]);
+    }
+    post.dirty = true;
+    saveSnapshot();
+    renderAll();
+  }
+
+  function addTagFromInput() {
+    const post = currentPost();
+    if (!post) return;
+    const next = elements.tagInput.value.trim();
+    if (!next) return;
+    post.tags = normalizeTags([...post.tags, next]);
+    elements.tagInput.value = '';
+    post.dirty = true;
+    saveSnapshot();
+    renderAll();
+  }
+
+  async function saveCurrent() {
+    const post = currentPost();
+    if (!post) return;
+
+    syncFromForm();
+    const issues = validatePost(post, state.posts).filter((issue) => issue.level === 'error');
+    if (issues.length) {
+      setStatus('저장 실패', issues[0].message, 'error');
+      return;
+    }
+
+    if (!state.blogHandle) {
+      setStatus('폴더 미연결', '레포를 아직 연결하지 않았습니다. 지금은 Markdown 다운로드만 가능합니다.', 'warning');
+      return;
+    }
+
+    const markdown = serializePost(post);
+    const nextFileName = `${post.slug}.md`;
+    const previousFileName = post.originalSlug ? `${post.originalSlug}.md` : null;
+
+    try {
+      const fileHandle = await state.blogHandle.getFileHandle(nextFileName, { create: true });
+      const writable = await fileHandle.createWritable();
+      await writable.write(markdown);
+      await writable.close();
+
+      if (previousFileName && previousFileName !== nextFileName) {
+        await state.blogHandle.removeEntry(previousFileName);
+      }
+
+      post.originalSlug = post.slug;
+      post.dirty = false;
+      clearSnapshot();
+      renderAll();
+      setStatus('저장 완료', `src/content/blog/${nextFileName} 파일에 반영했습니다. 이제 git commit/push만 하면 됩니다.`, 'success');
+    } catch (error) {
+      console.error(error);
+      setStatus('파일 저장 실패', '브라우저 권한 또는 폴더 선택 상태를 확인해주세요.', 'error');
+    }
+  }
+
+  function downloadCurrent() {
+    const post = currentPost();
+    if (!post) return;
+    syncFromForm();
+    const blob = new Blob([serializePost(post)], { type: 'text/markdown;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = `${post.slug || 'post'}.md`;
+    anchor.click();
+    URL.revokeObjectURL(url);
+    setStatus('다운로드 완료', '현재 글을 Markdown 파일로 내려받았습니다.', 'success');
+  }
+
+  async function softDeleteCurrent() {
+    const post = currentPost();
+    if (!post) return;
+    post.draft = true;
+    if (!post.updatedDate) post.updatedDate = nowDate();
+    post.dirty = true;
+    fillForm(post);
+    if (state.blogHandle) {
+      await saveCurrent();
+    } else {
+      saveSnapshot();
+      renderAll();
+      setStatus('draft 전환', '폴더 연결 전이라 브라우저 상태에만 반영했습니다. 저장하거나 다운로드해주세요.', 'warning');
+    }
+  }
+
+  async function hardDeleteCurrent() {
+    const post = currentPost();
+    if (!post) return;
+    if (!window.confirm(`정말 ${post.title || post.slug} 글을 완전히 삭제할까요?`)) return;
+
+    try {
+      if (state.blogHandle && post.originalSlug) {
+        await state.blogHandle.removeEntry(`${post.originalSlug}.md`);
+      }
+      state.posts = state.posts.filter((candidate) => candidate.id !== post.id);
+      if (!state.posts.length) {
+        state.posts = [makeRecord(createPostTemplate('tech'))];
+      }
+      state.currentId = state.posts[0]?.id ?? '';
+      clearSnapshot();
+      renderAll();
+      setStatus('삭제 완료', '현재 글을 목록에서 제거했습니다.', 'success');
+    } catch (error) {
+      console.error(error);
+      setStatus('삭제 실패', '폴더 권한이 없거나 아직 파일이 저장되지 않았습니다.', 'error');
+    }
+  }
+
+  function restoreSnapshot() {
+    const snapshot = loadSnapshot();
+    if (!snapshot?.post) {
+      setStatus('복원할 임시저장 없음', '브라우저에 남아 있는 작업 중인 글이 없습니다.', 'warning');
+      return;
+    }
+
+    const restored = makeRecord({ ...snapshot.post, tags: [...(snapshot.post.tags ?? [])], dirty: true });
+    const existingIndex = state.posts.findIndex((post) => post.slug === restored.slug && !post.deleted);
+    if (existingIndex >= 0) {
+      state.posts.splice(existingIndex, 1, restored);
+    } else {
+      state.posts.unshift(restored);
+    }
+    state.currentId = restored.id;
+    state.snapshotAvailable = true;
+    renderAll();
+    setStatus('임시저장 복원', `${snapshot.savedAt ?? '방금'} 저장된 브라우저 임시저장을 복원했습니다.`, 'success');
+  }
+
+  function setPreviewMode(mode) {
+    state.previewMode = mode;
+    elements.previewRendered.hidden = mode !== 'rendered';
+    elements.previewMarkdown.hidden = mode !== 'markdown';
+    elements.previewTabs.forEach((button) => {
+      button.classList.toggle('is-active', button.dataset.preview === mode);
+    });
+  }
+
+  function wireFieldUpdates() {
+    [
+      elements.title,
+      elements.slug,
+      elements.category,
+      elements.description,
+      elements.pubDate,
+      elements.updatedDate,
+      elements.series,
+      elements.seriesTitle,
+      elements.seriesOrder,
+      elements.difficulty,
+      elements.body
+    ].forEach((element) => {
+      element.addEventListener('input', () => {
+        syncFromForm();
+      });
+      element.addEventListener('change', () => {
+        syncFromForm();
+      });
+    });
+
+    [elements.featured, elements.draft].forEach((element) => {
+      element.addEventListener('change', () => syncFromForm());
+    });
+  }
+
+  function bindEvents() {
+    elements.connect.addEventListener('click', () => connectRepo(false));
+    elements.reconnect.addEventListener('click', () => connectRepo(true));
+    elements.duplicate.addEventListener('click', duplicateCurrentPost);
+    elements.download.addEventListener('click', downloadCurrent);
+    elements.restore.addEventListener('click', restoreSnapshot);
+    elements.search.addEventListener('input', () => {
+      state.search = elements.search.value;
+      renderLibrary();
+    });
+    elements.filterCategory.addEventListener('change', () => {
+      state.filterCategory = elements.filterCategory.value;
+      renderLibrary();
+    });
+    elements.filterDraft.addEventListener('change', () => {
+      state.filterDraft = elements.filterDraft.value;
+      renderLibrary();
+    });
+    document.querySelectorAll('.studio-preset').forEach((button) => {
+      button.addEventListener('click', () => createNew(button.dataset.template));
+    });
+    elements.slugify.addEventListener('click', () => {
+      const post = currentPost();
+      if (!post) return;
+      post.slug = slugifyTitle(elements.title.value.trim() || post.title);
+      post.dirty = true;
+      fillForm(post);
+      saveSnapshot();
+      renderSidePanels();
+      renderLibrary();
+    });
+    elements.series.addEventListener('change', () => {
+      const post = currentPost();
+      if (!post) return;
+      if (elements.series.value) {
+        elements.seriesTitle.value = seriesTitleFor(elements.series.value) || elements.seriesTitle.value;
+      }
+      syncFromForm();
+    });
+    elements.addTag.addEventListener('click', addTagFromInput);
+    elements.tagInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        addTagFromInput();
+      }
+    });
+    elements.save.addEventListener('click', saveCurrent);
+    elements.softDelete.addEventListener('click', softDeleteCurrent);
+    elements.hardDelete.addEventListener('click', hardDeleteCurrent);
+    elements.previewTabs.forEach((button) => {
+      button.addEventListener('click', () => setPreviewMode(button.dataset.preview));
+    });
+    wireFieldUpdates();
+  }
+
+  async function init() {
+    bindEvents();
+    state.posts = [makeRecord(createPostTemplate('tech'))];
+    state.currentId = state.posts[0].id;
+    state.snapshotAvailable = Boolean(loadSnapshot());
+    renderAll();
+    setPreviewMode('rendered');
+
+    if ('showDirectoryPicker' in window) {
+      await connectRepo(false);
+    } else {
+      setStatus(
+        '브라우저 호환성 안내',
+        '폴더 직접 저장은 Chromium 계열 데스크톱 브라우저에서 가장 잘 동작합니다. 이 브라우저에서는 다운로드 기반으로 초안을 만드는 정도로 사용할 수 있습니다.',
+        'warning'
+      );
+    }
+  }
+
+  init();
+</script>
+
+<style>
+  .studio-shell {
+    display: grid;
+    grid-template-columns: minmax(280px, 320px) minmax(0, 1fr);
+    gap: 1.25rem;
+    align-items: start;
+  }
+
+  .studio-sidebar,
+  .studio-main,
+  .studio-editor,
+  .studio-inspector {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .studio-sidebar {
+    position: sticky;
+    top: 6rem;
+    max-height: calc(100vh - 7rem);
+    overflow: auto;
+  }
+
+  .studio-sidebar__section,
+  .studio-inspector__section {
+    display: grid;
+    gap: 0.8rem;
+  }
+
+  .studio-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+  }
+
+  .studio-actions--stack {
+    flex-direction: column;
+  }
+
+  .studio-actions--grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .studio-actions--secondary .button {
+    min-height: 42px;
+  }
+
+  .studio-filters,
+  .studio-form-grid,
+  .studio-meta-row,
+  .studio-tags,
+  .studio-tags__header,
+  .studio-preview-meta,
+  .studio-panel-head {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .studio-form-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .studio-field {
+    display: grid;
+    gap: 0.45rem;
+  }
+
+  .studio-field > span,
+  .studio-meta-row,
+  .studio-hint,
+  .studio-panel-head p:last-child,
+  .studio-status p {
+    color: var(--muted);
+  }
+
+  .studio-field--span-2,
+  .studio-field--body {
+    grid-column: 1 / -1;
+  }
+
+  .studio-input,
+  .studio-select,
+  .studio-textarea,
+  .studio-output {
+    width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(6, 12, 24, 0.9);
+    color: var(--text);
+    border-radius: 18px;
+    padding: 0.9rem 1rem;
+    font: inherit;
+  }
+
+  .studio-input:focus,
+  .studio-select:focus,
+  .studio-textarea:focus,
+  .studio-output:focus {
+    outline: 2px solid rgba(137, 168, 255, 0.42);
+    outline-offset: 2px;
+  }
+
+  .studio-inline-input {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.65rem;
+  }
+
+  .studio-inline-input--compact {
+    align-items: stretch;
+  }
+
+  .studio-editor__header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: start;
+  }
+
+  .studio-meta-row {
+    grid-template-columns: repeat(3, auto);
+    align-items: center;
+  }
+
+  .studio-route {
+    display: inline-flex;
+    align-items: center;
+    min-height: 42px;
+    padding: 0 0.9rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--accent-strong);
+  }
+
+  .studio-checkbox {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+  }
+
+  .studio-textarea,
+  .studio-output {
+    min-height: 24rem;
+    resize: vertical;
+    line-height: 1.65;
+  }
+
+  .studio-output {
+    font-family: 'SFMono-Regular', ui-monospace, SFMono-Regular, Consolas, monospace;
+  }
+
+  .studio-library {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .studio-post-card {
+    text-align: left;
+    display: grid;
+    gap: 0.4rem;
+    border-radius: 22px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.02);
+    padding: 1rem;
+    color: var(--text);
+  }
+
+  .studio-post-card.is-active {
+    border-color: rgba(137, 168, 255, 0.45);
+    background: rgba(137, 168, 255, 0.12);
+  }
+
+  .studio-post-card__meta {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .studio-post-card__dirty {
+    color: var(--success);
+    font-size: 0.84rem;
+  }
+
+  .studio-badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+    padding: 0 0.65rem;
+    border-radius: 999px;
+    background: rgba(137, 168, 255, 0.18);
+    color: var(--accent-strong);
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+
+  .studio-badge--muted {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--muted);
+  }
+
+  .studio-status {
+    gap: 0.35rem;
+  }
+
+  .studio-status--success {
+    border-color: rgba(144, 243, 196, 0.28);
+    background: rgba(33, 74, 54, 0.42);
+  }
+
+  .studio-status--warning {
+    border-color: rgba(255, 213, 120, 0.24);
+    background: rgba(78, 56, 19, 0.42);
+  }
+
+  .studio-status--error {
+    border-color: rgba(255, 116, 116, 0.24);
+    background: rgba(81, 24, 24, 0.45);
+  }
+
+  .studio-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.9fr);
+    gap: 1rem;
+    align-items: start;
+  }
+
+  .studio-preview-switch {
+    display: inline-flex;
+    gap: 0.4rem;
+    padding: 0.35rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .studio-tab {
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+    padding: 0.65rem 0.95rem;
+    border-radius: 999px;
+    font: inherit;
+    font-weight: 700;
+  }
+
+  .studio-tab.is-active {
+    background: rgba(137, 168, 255, 0.18);
+    color: var(--text);
+  }
+
+  .studio-preview-card {
+    display: grid;
+    gap: 0.8rem;
+  }
+
+  .studio-chip-list,
+  .studio-suggestion-list,
+  .studio-series-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .studio-chip,
+  .studio-suggestion,
+  .studio-series {
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text);
+    border-radius: 999px;
+    padding: 0.5rem 0.75rem;
+    font: inherit;
+  }
+
+  .studio-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .studio-chip--static,
+  .studio-chip--empty {
+    pointer-events: none;
+  }
+
+  .studio-suggestion,
+  .studio-series {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .studio-suggestion.is-active,
+  .studio-series.is-active {
+    border-color: rgba(137, 168, 255, 0.42);
+    background: rgba(137, 168, 255, 0.15);
+  }
+
+  .studio-series {
+    flex-direction: column;
+    align-items: start;
+    border-radius: 20px;
+  }
+
+  .studio-validation {
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .studio-validation__item,
+  .studio-validation__ok {
+    padding: 0.8rem 0.9rem;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .studio-validation__item--error {
+    border: 1px solid rgba(255, 116, 116, 0.28);
+    color: #ffd9d9;
+  }
+
+  .studio-validation__item--warning {
+    border: 1px solid rgba(255, 213, 120, 0.22);
+    color: #ffe7b0;
+  }
+
+  .studio-validation__ok {
+    border: 1px solid rgba(144, 243, 196, 0.22);
+    color: #d9ffec;
+  }
+
+  .studio-prose {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .studio-prose h1,
+  .studio-prose h2,
+  .studio-prose h3 {
+    margin: 0;
+  }
+
+  .studio-prose p,
+  .studio-prose li {
+    color: var(--muted);
+  }
+
+  .studio-prose ul {
+    padding-left: 1.2rem;
+    list-style: disc;
+  }
+
+  .studio-prose blockquote {
+    border-left: 3px solid rgba(137, 168, 255, 0.45);
+    padding-left: 1rem;
+  }
+
+  .studio-prose pre {
+    overflow: auto;
+    border-radius: 18px;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .studio-danger {
+    border-color: rgba(255, 116, 116, 0.32);
+    color: #ffd6d6;
+  }
+
+  @media (max-width: 1200px) {
+    .studio-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 960px) {
+    .studio-shell {
+      grid-template-columns: 1fr;
+    }
+
+    .studio-sidebar {
+      position: static;
+      max-height: none;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .studio-form-grid,
+    .studio-actions--grid,
+    .studio-inline-input,
+    .studio-meta-row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

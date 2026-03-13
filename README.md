@@ -34,6 +34,19 @@ npm run check
 - `docs/checklists/launch-checklist.md` — launch and cutover checklist
 - `public/CNAME.example` — custom-domain marker file to copy from during cutover
 
+
+## Writing Studio
+- route: `/studio`
+- purpose: personal-only writing UI for blog post CRUD without backend/auth
+- recommended browser: Chrome / Edge / Brave desktop
+- docs: `docs/runbooks/writing-studio.md`
+
+Typical flow:
+```bash
+npm run dev
+```
+Then open `http://localhost:4321/studio`, connect the repo folder, write/save the post, and finish with normal git commit/push.
+
 ## Deployment notes
 - `astro.config.mjs` defaults `site` to `https://justini0715.github.io` so the fallback GitHub Pages URL stays correct before the custom domain is connected.
 - `.github/workflows/deploy.yml` follows the official Astro GitHub Pages workflow pattern.
