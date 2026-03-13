@@ -12,6 +12,9 @@
     "preview": "astro preview",
     "check": "tsc --noEmit"
   },
+  "overrides": {
+    "tinyexec": "1.0.4"
+  },
   "devDependencies": {
     "@astrojs/check": "^0.9.7",
     "@astrojs/sitemap": "^3.7.1",
