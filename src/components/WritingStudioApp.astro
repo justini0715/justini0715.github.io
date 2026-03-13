@@ -29,22 +29,22 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
         <p class="eyebrow">Writing desk</p>
         <div>
           <h2>Writing Studio</h2>
-          <p>제목 · 태그 · 본문부터 쓰고, 나머지는 필요할 때만 여는 글쓰기 작업실.</p>
+          <p>제목, 설명, 태그, 본문부터 쓰고 나머지는 필요할 때만 여는 글쓰기 화면.</p>
         </div>
       </div>
 
       <div class="studio-topbar__status-block">
-        <p class="studio-topbar__label">현재 상태</p>
+        <p class="studio-topbar__label">상태</p>
         <div class="studio-topbar__status">
           <span id="studio-host-badge" class="studio-pill studio-pill--ok">로컬 전용</span>
-          <span id="studio-connection-badge" class="studio-pill">파일로 받기</span>
+          <span id="studio-connection-badge" class="studio-pill">폴더 연결 필요</span>
           <span id="studio-dirty-badge" class="studio-pill">파일 저장됨</span>
         </div>
         <p id="studio-folder" class="studio-topbar__hint">저장 위치: 폴더 미연결</p>
       </div>
 
       <div class="studio-topbar__actions-block">
-        <p class="studio-topbar__label">바로 작업</p>
+        <p class="studio-topbar__label">동작</p>
         <div class="studio-topbar__actions">
           <button id="studio-connect" class="button" type="button">작업 폴더 열기</button>
           <button id="studio-library-toggle" class="button button--ghost" type="button">기존 글 보기</button>
@@ -92,10 +92,10 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
       <main class="studio-editor-shell">
         <div class="studio-command-strip">
           <div class="studio-command-strip__group studio-command-strip__group--tools">
-            <span class="studio-command-strip__label">보조 도구</span>
+            <span class="studio-command-strip__label">파일 작업</span>
             <button id="studio-duplicate" class="studio-command" type="button">복제</button>
             <button id="studio-download" class="studio-command" type="button">파일로 받기</button>
-            <button id="studio-restore" class="studio-command" type="button">임시저장 복원</button>
+            <button id="studio-restore" class="studio-command" type="button">임시저장 불러오기</button>
           </div>
 
           <div class="studio-command-strip__group studio-command-strip__group--format">
@@ -131,7 +131,7 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
             <div class="studio-tag-zone__head">
               <div>
                 <p class="eyebrow">Tags</p>
-                <p>입력한 태그는 Enter로 바로 붙고, 추천 태그는 클릭으로 추가됩니다.</p>
+                <p>태그는 입력해서 추가하거나, 아래 추천 태그를 눌러 바로 붙일 수 있습니다.</p>
               </div>
               <div class="studio-tag-entry">
                 <input id="studio-tag-input" class="studio-input studio-tag-input" type="text" placeholder="태그 입력 후 Enter" />
@@ -166,9 +166,11 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
 
       <aside id="studio-sidepanel" class="studio-sidepanel" hidden>
         <div class="studio-sidepanel__header">
-          <button class="studio-side-tab is-active" data-side="preview" type="button">Preview</button>
-          <button class="studio-side-tab" data-side="settings" type="button">공개 설정</button>
-          <button class="studio-side-tab" data-side="notes" type="button">검사</button>
+          <div>
+            <p class="eyebrow">패널</p>
+            <h3 id="studio-sidepanel-title">미리보기</h3>
+          </div>
+          <button id="studio-sidepanel-close" class="button button--ghost" type="button">닫기</button>
         </div>
 
         <div id="studio-panel-preview" class="studio-sidepanel__body">
@@ -410,8 +412,9 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
     previewToggle: $('#studio-preview-toggle'),
     settingsToggle: $('#studio-settings-toggle'),
     notesToggle: $('#studio-notes-toggle'),
-    titleTabs: document.querySelectorAll('.studio-side-tab'),
     sidepanel: $('#studio-sidepanel'),
+    sidepanelTitle: $('#studio-sidepanel-title'),
+    sidepanelClose: $('#studio-sidepanel-close'),
     panelPreview: $('#studio-panel-preview'),
     panelSettings: $('#studio-panel-settings'),
     panelNotes: $('#studio-panel-notes'),
@@ -553,7 +556,7 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
   async function connectRepo(forcePicker = false, silent = false) {
     if (!state.isLocalHost) return;
     if (!('showDirectoryPicker' in window)) {
-      setPill(elements.connectionBadge, '파일로 받기', 'warn');
+      setPill(elements.connectionBadge, '폴더 연결 불가', 'warn');
       if (!silent) {
         toast('이 브라우저는 폴더 직접 쓰기를 지원하지 않습니다. 다운로드 방식으로만 사용 가능합니다.', 'warn');
       }
@@ -569,7 +572,7 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
           if (permission !== 'granted') repoHandle = null;
         }
         if (!repoHandle && silent) {
-          setPill(elements.connectionBadge, '파일로 받기', 'warn');
+          setPill(elements.connectionBadge, '폴더 연결 필요', 'warn');
           return;
         }
       }
@@ -581,13 +584,13 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
       state.blogHandle = blogHandle;
       await saveRepoHandle(repoHandle);
       await loadPostsFromFolder();
-      elements.folder.textContent = `연결됨: ${repoHandle.name}${blogHandle !== repoHandle ? ' → src/content/blog' : ''}`;
+      elements.folder.textContent = `저장 위치: ${repoHandle.name}${blogHandle !== repoHandle ? ' → src/content/blog' : ''}`;
       setPill(elements.connectionBadge, '폴더 연결됨', 'ok');
       toast('레포 폴더 연결 완료. 이제 저장이 실제 Markdown 파일에 반영됩니다.', 'ok');
     } catch (error) {
       console.error(error);
       if (silent) {
-        setPill(elements.connectionBadge, '파일로 받기', 'warn');
+        setPill(elements.connectionBadge, '폴더 연결 필요', 'warn');
         return;
       }
       setPill(elements.connectionBadge, '연결 실패', 'error');
@@ -614,7 +617,7 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
   function updateBadges() {
     const post = currentPost();
     setPill(elements.hostBadge, state.isLocalHost ? '로컬 전용' : '공개 잠금', state.isLocalHost ? 'ok' : 'warn');
-    setPill(elements.connectionBadge, state.blogHandle ? '폴더 연결됨' : '파일로 받기', state.blogHandle ? 'ok' : 'warn');
+    setPill(elements.connectionBadge, state.blogHandle ? '폴더 연결됨' : '폴더 연결 필요', state.blogHandle ? 'ok' : 'warn');
     setPill(elements.dirtyBadge, post?.dirty ? '임시저장' : '파일 저장됨', post?.dirty ? 'warn' : 'ok');
     elements.fileChip.textContent = `src/content/blog/${post?.slug || 'post-slug'}.md`;
     elements.folder.textContent = state.blogHandle ? `저장 위치: 연결됨` : '저장 위치: 폴더 미연결';
@@ -696,7 +699,7 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
   function renderSelectedTags(post) {
     elements.tagChips.innerHTML = '';
     if (!post.tags.length) {
-      elements.tagChips.innerHTML = '<span class="studio-chip studio-chip--empty">아직 태그가 없습니다.</span>';
+      elements.tagChips.innerHTML = '<span class="studio-chip studio-chip--empty">아직 태그 없음</span>';
       return;
     }
     for (const tag of post.tags) {
@@ -887,6 +890,9 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
     const post = currentPost();
     if (!post) return;
     syncFromForm();
+    if (!post.slug.trim() && post.title.trim()) {
+      post.slug = slugifyTitle(post.title);
+    }
     const errors = validatePost(post, state.posts).filter((issue) => issue.level === 'error');
     if (errors.length) {
       toast(errors[0].message, 'error');
@@ -1001,7 +1007,15 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
     elements.panelPreview.hidden = state.sideMode !== 'preview';
     elements.panelSettings.hidden = state.sideMode !== 'settings';
     elements.panelNotes.hidden = state.sideMode !== 'notes';
-    elements.titleTabs.forEach((button) => button.classList.toggle('is-active', button.dataset.side === state.sideMode));
+    const titles = {
+      preview: '미리보기',
+      settings: '공개 설정',
+      notes: '검사'
+    };
+    elements.sidepanelTitle.textContent = titles[state.sideMode] ?? '패널';
+    elements.previewToggle.classList.toggle('is-active', state.sideMode === 'preview');
+    elements.settingsToggle.classList.toggle('is-active', state.sideMode === 'settings');
+    elements.notesToggle.classList.toggle('is-active', state.sideMode === 'notes');
     updateLayout();
   }
 
@@ -1110,7 +1124,7 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
     elements.previewToggle.addEventListener('click', () => setSideMode('preview'));
     elements.settingsToggle.addEventListener('click', () => setSideMode('settings'));
     elements.notesToggle.addEventListener('click', () => setSideMode('notes'));
-    elements.titleTabs.forEach((button) => button.addEventListener('click', () => setSideMode(button.dataset.side)));
+    elements.sidepanelClose.addEventListener('click', () => setSideMode(state.sideMode));
     elements.markdownToggle.addEventListener('click', toggleMarkdownOutput);
     elements.toolbars.forEach((button) => button.addEventListener('click', () => applySnippet(button.dataset.snippet)));
     document.addEventListener('keydown', (event) => {
@@ -1220,7 +1234,6 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
 
   .studio-topbar__status,
   .studio-topbar__actions,
-  .studio-meta-strip,
   .studio-library-actions,
   .studio-filter-row,
   .studio-command-strip,
@@ -1258,6 +1271,10 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
 
   .studio-topbar__actions {
     justify-content: flex-start;
+  }
+
+  .studio-topbar__actions .button {
+    min-height: 42px;
   }
 
   .studio-pill,
@@ -1454,6 +1471,11 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
     background: rgba(198, 160, 95, 0.12);
   }
 
+  .studio-command.is-active {
+    border-color: rgba(198, 160, 95, 0.32);
+    background: rgba(198, 160, 95, 0.18);
+  }
+
   .studio-title-field,
   .studio-subtitle-field,
   .studio-body-field,
@@ -1522,12 +1544,13 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
   .studio-tag-zone {
     padding: 1rem 1rem 1.1rem;
     border-radius: 24px;
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(255, 255, 255, 0.025);
     border: 1px solid rgba(255, 255, 255, 0.06);
   }
 
   .studio-tag-zone__head {
     grid-template-columns: minmax(0, 1fr);
+    align-items: end;
   }
 
   .studio-tag-zone h4 {
@@ -1549,6 +1572,7 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
   .studio-tag-library-box {
     display: grid;
     gap: 0.55rem;
+    margin-top: 0.2rem;
   }
 
   .studio-tag-library-box summary {
@@ -1617,12 +1641,10 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
   }
 
   .studio-sidepanel__header {
-    display: inline-flex;
-    gap: 0.35rem;
-    padding: 0.3rem;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
   }
 
   .studio-side-tab {
@@ -1917,6 +1939,10 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
     .studio-topbar__actions,
     .studio-topbar__status,
     .studio-locked-actions {
+      width: 100%;
+    }
+
+    .studio-topbar__actions .button {
       width: 100%;
     }
 
