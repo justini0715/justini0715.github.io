@@ -71,3 +71,4 @@ Then open the localhost URL printed by `npm run dev`, add `/studio`, connect the
 - `phase/13-content-copy-seo-polish`
 - `phase/14-public-reading-typography-polish`
 - `phase/15-route-ui-separation`
+- `phase/16-layout-component-split`

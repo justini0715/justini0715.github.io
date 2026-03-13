@@ -1,0 +1,52 @@
+---
+import UtilityListPanel from './UtilityListPanel.astro';
+
+interface Props {
+  sectionClass?: string;
+  eyebrow: string;
+  title: string;
+  description: string;
+  kicker?: string;
+  panelEyebrow: string;
+  panelTitle?: string;
+  panelDescription?: string;
+  panelItems?: string[];
+  panelClassName?: string;
+}
+
+const {
+  sectionClass = 'page-hero',
+  eyebrow,
+  title,
+  description,
+  kicker,
+  panelEyebrow,
+  panelTitle,
+  panelDescription,
+  panelItems = [],
+  panelClassName = 'panel utility-panel'
+} = Astro.props;
+---
+
+<section class={sectionClass}>
+  <div class="container hero__grid">
+    <div class="narrow-flow">
+      <p class="eyebrow">{eyebrow}</p>
+      <h1>{title}</h1>
+      <p>{description}</p>
+      {kicker && <p class="page-kicker">{kicker}</p>}
+      <slot name="body" />
+      <slot name="actions" />
+    </div>
+
+    <UtilityListPanel
+      eyebrow={panelEyebrow}
+      title={panelTitle}
+      description={panelDescription}
+      items={panelItems}
+      className={panelClassName}
+    >
+      <slot name="panel" />
+    </UtilityListPanel>
+  </div>
+</section>

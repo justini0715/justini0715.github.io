@@ -1,8 +1,9 @@
 ---
-import MainLayout from '../layouts/MainLayout.astro';
+import HubLayout from '../layouts/HubLayout.astro';
 import SectionTitle from '../components/SectionTitle.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import PostCard from '../components/PostCard.astro';
+import SplitHero from '../components/site/SplitHero.astro';
 import { currentFocus, siteMeta, stackSummary, strengths } from '../data/site';
 import { getFeaturedProjects, getPublishedPosts } from '../lib/content';
 
@@ -12,31 +13,19 @@ const recentGeneralPosts = allPosts.filter((post) => post.data.category !== '42'
 const recent42Posts = allPosts.filter((post) => post.data.category === '42').slice(0, 3);
 ---
 
-<MainLayout
+<HubLayout
   title="Home"
   description="Personal home for changwpa with current focus, featured projects, recent technical notes, and recent 42 entries."
 >
-  <section class="page-hero page-hero--home-hub">
-    <div class="container hero__grid">
-      <div class="narrow-flow">
-        <p class="eyebrow">Personal home</p>
-        <h1>지금 무엇을 만들고 있고, 무엇을 배우고 있으며, 어디를 먼저 보면 되는지 한 페이지에서 정리한 허브.</h1>
-        <p>
-          이 페이지는 나만의 홈 역할을 한다. 전체 사이트의 주요 흐름을 한 번에 보고, 필요한 영역으로 바로 이동할 수 있게 만든다.
-        </p>
-        <p class="page-kicker">
-          Projects는 진행 중인 개발 프로젝트, 42는 과제 흐름, Blog는 개발하며 공부한 개념 정리 중심으로 읽으면 된다.
-        </p>
-      </div>
-
-      <aside class="panel utility-panel">
-        <p class="eyebrow">Current focus</p>
-        <ul class="utility-list">
-          {currentFocus.map((item) => <li>{item}</li>)}
-        </ul>
-      </aside>
-    </div>
-  </section>
+  <SplitHero
+    sectionClass="page-hero page-hero--home-hub"
+    eyebrow="Personal home"
+    title="지금 무엇을 만들고 있고, 무엇을 배우고 있으며, 어디를 먼저 보면 되는지 한 페이지에서 정리한 허브."
+    description="이 페이지는 나만의 홈 역할을 한다. 전체 사이트의 주요 흐름을 한 번에 보고, 필요한 영역으로 바로 이동할 수 있게 만든다."
+    kicker="Projects는 진행 중인 개발 프로젝트, 42는 과제 흐름, Blog는 개발하며 공부한 개념 정리 중심으로 읽으면 된다."
+    panelEyebrow="Current focus"
+    panelItems={currentFocus}
+  />
 
   <section class="section">
     <div class="container">
@@ -102,4 +91,4 @@ const recent42Posts = allPosts.filter((post) => post.data.category === '42').sli
       </aside>
     </div>
   </section>
-</MainLayout>
+</HubLayout>

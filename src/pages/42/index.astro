@@ -1,40 +1,35 @@
 ---
-import MainLayout from '../../layouts/MainLayout.astro';
+import ArchiveLayout from '../../layouts/ArchiveLayout.astro';
 import PostCard from '../../components/PostCard.astro';
 import SectionTitle from '../../components/SectionTitle.astro';
+import SplitHero from '../../components/site/SplitHero.astro';
 import { seriesOverview } from '../../data/site';
 import { get42Posts } from '../../lib/content';
 
 const posts = await get42Posts();
 ---
 
-<MainLayout
+<ArchiveLayout
   title="42 hub"
   description="Dedicated 42 archive with assignment writeups, systems programming notes, and series-linked project posts."
 >
-  <section class="page-hero page-hero--blog">
-    <div class="container hero__grid">
-      <div class="narrow-flow">
-        <p class="eyebrow">42 hub</p>
-        <h1>Assignment writeups and systems notes collected in one dedicated 42 archive.</h1>
-        <p>
-          This route is reserved for 42 content only: project-by-project writeups, systems programming lessons, and series-linked notes that belong to the curriculum track.
-        </p>
-        <p class="page-kicker">
-          For general web, tooling, setup, and retrospective posts, head back to <a href="/blog">the technical blog</a>.
-        </p>
-      </div>
-
-      <aside class="panel archive-panel">
-        <p class="eyebrow">What the hub covers</p>
-        <ul class="utility-list">
-          <li>42 assignment posts grouped into long-running series lanes</li>
-          <li>Project lessons grounded in repository structure and implementation tradeoffs</li>
-          <li>Dedicated routing so 42 reading stays separate from the general blog archive</li>
-        </ul>
-      </aside>
-    </div>
-  </section>
+  <SplitHero
+    sectionClass="page-hero page-hero--blog"
+    eyebrow="42 hub"
+    title="Assignment writeups and systems notes collected in one dedicated 42 archive."
+    description="This route is reserved for 42 content only: project-by-project writeups, systems programming lessons, and series-linked notes that belong to the curriculum track."
+    panelEyebrow="What the hub covers"
+    panelItems={[
+      '42 assignment posts grouped into long-running series lanes',
+      'Project lessons grounded in repository structure and implementation tradeoffs',
+      'Dedicated routing so 42 reading stays separate from the general blog archive'
+    ]}
+    panelClassName="panel archive-panel"
+  >
+    <p slot="body" class="page-kicker">
+      For general web, tooling, setup, and retrospective posts, head back to <a href="/blog">the technical blog</a>.
+    </p>
+  </SplitHero>
 
   <section class="section">
     <div class="container">
@@ -66,4 +61,4 @@ const posts = await get42Posts();
       </div>
     </div>
   </section>
-</MainLayout>
+</ArchiveLayout>

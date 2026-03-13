@@ -1,6 +1,6 @@
 ---
 import { render } from 'astro:content';
-import MainLayout from '../../layouts/MainLayout.astro';
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
 import { get42Posts, getAdjacentSeriesPosts, getPostPath } from '../../lib/content';
 
 export async function getStaticPaths() {
@@ -18,10 +18,9 @@ const seriesContext = post.data.seriesTitle
   : '42 카테고리에서 읽을 수 있는 독립적인 과제 기록입니다.';
 ---
 
-<MainLayout
+<ArticleLayout
   title={post.data.title}
   description={post.data.description}
-  ogType="article"
   publishedTime={post.data.pubDate.toISOString()}
   updatedTime={post.data.updatedDate?.toISOString()}
 >
@@ -76,4 +75,4 @@ const seriesContext = post.data.seriesTitle
       </div>
     </section>
   )}
-</MainLayout>
+</ArticleLayout>

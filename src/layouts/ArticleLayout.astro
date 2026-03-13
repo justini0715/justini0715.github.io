@@ -1,29 +1,26 @@
 ---
-import PublicShell from './PublicShell.astro';
+import MainLayout from './MainLayout.astro';
 
 interface Props {
   title?: string;
   description?: string;
-  ogType?: 'website' | 'article';
-  noindex?: boolean;
   publishedTime?: string;
   updatedTime?: string;
   image?: string;
   imageAlt?: string;
 }
 
-const { title, description, ogType, noindex, publishedTime, updatedTime, image, imageAlt } = Astro.props;
+const { title, description, publishedTime, updatedTime, image, imageAlt } = Astro.props;
 ---
 
-<PublicShell
+<MainLayout
   title={title}
   description={description}
-  ogType={ogType}
-  noindex={noindex}
+  ogType="article"
   publishedTime={publishedTime}
   updatedTime={updatedTime}
   image={image}
   imageAlt={imageAlt}
 >
   <slot />
-</PublicShell>
+</MainLayout>

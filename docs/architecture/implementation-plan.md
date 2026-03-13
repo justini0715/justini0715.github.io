@@ -7,8 +7,8 @@
 - Domain target: `https://changwpa.kro.kr`
 
 ## Current Phase
-- Phase: Phase 15 — Route / UI Separation
-- Branch: `phase/15-route-ui-separation`
+- Phase: Phase 16 — Layout / Component Split
+- Branch: `phase/16-layout-component-split`
 - Status: Complete
 
 ## Official Phase List
@@ -27,11 +27,12 @@
 13. Phase 13 — Content / Copy / SEO Polish
 14. Phase 14 — Public Reading & Typography Polish
 15. Phase 15 — Route / UI Separation
+16. Phase 16 — Layout / Component Split
 
 ## Current Phase Scope
-- Split the public front-end into clearer route-level jobs for landing, home, projects, 42, and general blog surfaces.
-- Add a dedicated `/42` route family and stop treating 42 content as only a blog category in the public URL layer.
-- Introduce a separate `/home` route so `/` can act as the strongest landing/showcase page.
+- Reduce repetition across the new route families by extracting role-based layouts and shared route hero/panel components.
+- Move the public shell responsibilities out of a single catch-all layout and introduce clearer route-level wrappers.
+- Keep the route split from phase 15 intact while making future iterations cheaper to maintain.
 
 ## Current Phase Non-Scope
 - Replacing the static content architecture with a hosted CMS.
@@ -42,6 +43,7 @@
 - Rebuilding the public UI system again immediately after phase 12.
 - Another large copy/SEO rewrite immediately after phase 13.
 - Splitting the underlying content collection into separate physical `blog` and `forty-two` collections in this phase.
+- Reworking the route map again immediately after phase 15.
 
 ## Architecture Summary
 - Astro static output with content collections for blog posts and projects.
@@ -54,17 +56,17 @@
 - blog taxonomy: `42`, `project`, `devlog`, `setup`, `retrospective`.
 
 ## Deliverables Checklist
-- [x] `/` landing and `/home` overview split
-- [x] dedicated `/42` and `/42/[slug]` public routes
-- [x] `/blog` limited to non-42 technical content
-- [x] navigation and route helpers aligned to the new public structure
-- [x] Phase 15 verification completed
+- [x] `PublicShell` 추출
+- [x] `LandingLayout` / `HubLayout` / `ArchiveLayout` / `ArticleLayout` 도입
+- [x] route hero / utility panel 공통 컴포넌트 추출
+- [x] landing entry card 공통 컴포넌트 추출
+- [x] Phase 16 verification completed
 
 ## Verification Plan
-1. Run local build and type checks after the route split pass.
-2. Verify `/`, `/home`, `/projects`, `/42`, `/42/[slug]`, `/blog`, and `/blog/[slug]` all render the intended content families.
-3. Confirm 42 posts no longer appear in the main `/blog` archive.
-4. Re-check `/studio` after any shared layout or routing helper changes for compatibility.
+1. Run local build and type checks after the layout/component split.
+2. Verify landing/home/archive/article route families still render their intended surfaces.
+3. Confirm the new shared layout files are in use by the appropriate routes.
+4. Re-check `/studio` after shared layout extraction for compatibility.
 5. Confirm production `/studio` remains locked and the public routes remain static-output compatible.
 
 ## Work Log
@@ -145,6 +147,9 @@
 - Added a dedicated `/42` hub and `/42/[slug]` article route without splitting the underlying content collection yet; 42 routing is now derived from `category === '42'`.
 - Limited `/blog` and `/blog/[slug]` to non-42 technical posts and updated shared post links/helpers so 42 entries route to `/42/...` instead of `/blog/...`.
 - Updated shared navigation and route-class logic so the public shell now understands `/home`, `/42`, and the landing route as separate surfaces.
+- Started `phase/16-layout-component-split` immediately after the route split to stop the new route families from duplicating the same hero/aside patterns in each page file.
+- Extracted `PublicShell` out of the old `MainLayout` and introduced role-based wrappers (`LandingLayout`, `HubLayout`, `ArchiveLayout`, `ArticleLayout`) so the route families now have clearer structural boundaries.
+- Extracted shared route-building blocks (`SplitHero`, `UtilityListPanel`, `LandingEntryCard`) to reduce repeated landing/home/archive/article page markup and make later UI iteration cheaper.
 
 ## Verification Results
 - `npm install -D astro @astrojs/sitemap @astrojs/check typescript` → dependencies installed successfully.
@@ -214,6 +219,12 @@
 - `grep dist/index.html dist/home/index.html` after phase-15 route split → confirmed the new landing selection surface and the separate personal home hub.
 - `grep dist/42/index.html dist/blog/index.html` after phase-15 route split → confirmed `/42` is its own hub and `/blog` points 42 readers to `/42` while listing only non-42 posts.
 - `grep dist/studio/index.html` after phase-15 route split → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- `npm run check` after phase-16 layout/component split → success (`tsc --noEmit`).
+- `npm run build` after phase-16 layout/component split → success; built `/`, `/home`, `/projects`, `/42`, `/42/[slug]`, `/blog`, `/blog/[slug]`, `/about`, `404`, and `/studio`.
+- `npx tsc --noEmit --project tsconfig.json` via LSP diagnostics after phase-16 layout/component split → 0 errors, 0 warnings.
+- `find src/layouts -maxdepth 1 -type f` after phase-16 → confirmed `PublicShell`, `LandingLayout`, `HubLayout`, `ArchiveLayout`, and `ArticleLayout` now exist alongside `MainLayout`.
+- `grep dist/index.html dist/home/index.html dist/42/index.html dist/blog/index.html` after phase-16 → confirmed landing/home/archive routes still render their intended split surfaces after component extraction.
+- `grep dist/studio/index.html` after phase-16 layout/component split → production output still contains the locked `/studio` notice and excludes the active editor markers.
 
 ## Known Blockers / User-Action-Required Items
 - GitHub push/PR and Pages settings updates will require the user's GitHub auth later.

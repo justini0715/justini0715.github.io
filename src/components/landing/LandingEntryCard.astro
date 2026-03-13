@@ -1,0 +1,17 @@
+---
+interface Props {
+  href: string;
+  eyebrow: string;
+  title: string;
+  description: string;
+}
+
+const { href, eyebrow, title, description } = Astro.props;
+---
+
+<a class="landing-card" href={href}>
+  <p class="eyebrow">{eyebrow}</p>
+  <h2>{title}</h2>
+  <p>{description}</p>
+  <span class="landing-card__link">열기 →</span>
+</a>

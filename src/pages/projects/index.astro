@@ -1,39 +1,31 @@
 ---
-import MainLayout from '../../layouts/MainLayout.astro';
+import ArchiveLayout from '../../layouts/ArchiveLayout.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
 import SectionTitle from '../../components/SectionTitle.astro';
+import SplitHero from '../../components/site/SplitHero.astro';
 import { getProjects } from '../../lib/content';
 
 const projects = await getProjects();
 ---
 
-<MainLayout
+<ArchiveLayout
   title="Projects and 42 case studies"
   description="Developer portfolio projects and 42 case studies covering infrastructure, graphics, concurrency, algorithms, and source-first engineering work."
 >
-  <section class="page-hero page-hero--projects">
-    <div class="container hero__grid">
-      <div class="narrow-flow">
-        <p class="eyebrow">Developer projects · 42 case studies</p>
-        <h1>Project case studies across infrastructure, graphics, concurrency, and algorithms.</h1>
-        <p>
-          This directory is built from existing repositories and shaped for technical readers: what the project covered, which constraints mattered, and why the implementation is worth reviewing.
-        </p>
-        <p class="page-kicker">
-          Expect 42 projects, Docker and web infrastructure work, graphics experiments, and operation-constrained algorithm cases.
-        </p>
-      </div>
-
-      <aside class="panel archive-panel">
-        <p class="eyebrow">What each case tracks</p>
-        <ul class="utility-list">
-          <li>Project role and current status</li>
-          <li>One implementation highlight instead of generic marketing copy</li>
-          <li>Stack markers plus repository access</li>
-        </ul>
-      </aside>
-    </div>
-  </section>
+  <SplitHero
+    sectionClass="page-hero page-hero--projects"
+    eyebrow="Developer projects · 42 case studies"
+    title="Project case studies across infrastructure, graphics, concurrency, and algorithms."
+    description="This directory is built from existing repositories and shaped for technical readers: what the project covered, which constraints mattered, and why the implementation is worth reviewing."
+    kicker="Expect 42 projects, Docker and web infrastructure work, graphics experiments, and operation-constrained algorithm cases."
+    panelEyebrow="What each case tracks"
+    panelItems={[
+      'Project role and current status',
+      'One implementation highlight instead of generic marketing copy',
+      'Stack markers plus repository access'
+    ]}
+    panelClassName="panel archive-panel"
+  />
 
   <section class="section">
     <div class="container">
@@ -47,4 +39,4 @@ const projects = await getProjects();
       </div>
     </div>
   </section>
-</MainLayout>
+</ArchiveLayout>
