@@ -10,9 +10,25 @@ const byProjectOrder = (a: ProjectEntry, b: ProjectEntry) => {
   return left - right || a.data.title.localeCompare(b.data.title);
 };
 
+export function is42Post(post: BlogEntry) {
+  return post.data.category === '42';
+}
+
+export function getPostPath(post: BlogEntry) {
+  return is42Post(post) ? `/42/${post.id}/` : `/blog/${post.id}/`;
+}
+
 export async function getPublishedPosts() {
   const posts: BlogEntry[] = await getCollection('blog');
   return posts.filter((post) => !post.data.draft).sort(byNewest);
+}
+
+export async function get42Posts() {
+  return (await getPublishedPosts()).filter(is42Post);
+}
+
+export async function getGeneralPosts() {
+  return (await getPublishedPosts()).filter((post) => !is42Post(post));
 }
 
 export async function getRecentPosts(limit = 3) {

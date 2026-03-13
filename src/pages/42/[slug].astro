@@ -1,21 +1,21 @@
 ---
 import { render } from 'astro:content';
 import MainLayout from '../../layouts/MainLayout.astro';
-import { getAdjacentSeriesPosts, getGeneralPosts, getPostPath } from '../../lib/content';
+import { get42Posts, getAdjacentSeriesPosts, getPostPath } from '../../lib/content';
 
 export async function getStaticPaths() {
-  const posts = await getGeneralPosts();
+  const posts = await get42Posts();
   return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
 }
 
 const { post } = Astro.props;
 const { Content } = await render(post);
-const allPosts = await getGeneralPosts();
+const allPosts = await get42Posts();
 const { previous, next } = getAdjacentSeriesPosts(allPosts, post);
 const formattedDate = new Intl.DateTimeFormat('en', { dateStyle: 'long' }).format(post.data.pubDate);
 const seriesContext = post.data.seriesTitle
   ? `${post.data.seriesTitle} 시리즈의 한 글로, 같은 학습 흐름 안에서 앞뒤 글과 연결됩니다.`
-  : `${post.data.category} 카테고리에서 읽을 수 있는 독립적인 기술 글입니다.`;
+  : '42 카테고리에서 읽을 수 있는 독립적인 과제 기록입니다.';
 ---
 
 <MainLayout
@@ -28,7 +28,7 @@ const seriesContext = post.data.seriesTitle
   <section class="page-hero page-hero--post">
     <div class="container hero__grid">
       <div class="reading-surface narrow-flow">
-        <p class="eyebrow">Technical blog</p>
+        <p class="eyebrow">42 hub</p>
         <h1>{post.data.title}</h1>
         <p>{post.data.description}</p>
         <div class="post-meta-row">
@@ -63,7 +63,7 @@ const seriesContext = post.data.seriesTitle
           <a class="series-card" href={getPostPath(previous)}>
             <p class="eyebrow">Previous in series</p>
             <strong>{previous.data.title}</strong>
-            <span class="muted">Continue backward through the linked notes.</span>
+            <span class="muted">Continue backward through the assignment log.</span>
           </a>
         ) : <div class="series-nav__empty"></div>}
         {next ? (

@@ -1,0 +1,69 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+import SectionTitle from '../../components/SectionTitle.astro';
+import { seriesOverview } from '../../data/site';
+import { get42Posts } from '../../lib/content';
+
+const posts = await get42Posts();
+---
+
+<MainLayout
+  title="42 hub"
+  description="Dedicated 42 archive with assignment writeups, systems programming notes, and series-linked project posts."
+>
+  <section class="page-hero page-hero--blog">
+    <div class="container hero__grid">
+      <div class="narrow-flow">
+        <p class="eyebrow">42 hub</p>
+        <h1>Assignment writeups and systems notes collected in one dedicated 42 archive.</h1>
+        <p>
+          This route is reserved for 42 content only: project-by-project writeups, systems programming lessons, and series-linked notes that belong to the curriculum track.
+        </p>
+        <p class="page-kicker">
+          For general web, tooling, setup, and retrospective posts, head back to <a href="/blog">the technical blog</a>.
+        </p>
+      </div>
+
+      <aside class="panel archive-panel">
+        <p class="eyebrow">What the hub covers</p>
+        <ul class="utility-list">
+          <li>42 assignment posts grouped into long-running series lanes</li>
+          <li>Project lessons grounded in repository structure and implementation tradeoffs</li>
+          <li>Dedicated routing so 42 reading stays separate from the general blog archive</li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionTitle
+        eyebrow="Series lanes"
+        title="Long-term 42 tracks"
+        description="Each assignment can stand alone while still belonging to a larger systems-learning arc."
+      />
+      <div class="feature-grid">
+        {seriesOverview.map((series) => (
+          <article class="card stat-card">
+            <h3>{series.title}</h3>
+            <p>{series.description}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tint">
+    <div class="container">
+      <SectionTitle
+        eyebrow="42 posts"
+        title="Assignment archive"
+        description="Browse 42 posts with dates, tags, and series context visible at a glance."
+      />
+      <div class="card-grid">
+        {posts.map((post) => <PostCard post={post} />)}
+      </div>
+    </div>
+  </section>
+</MainLayout>

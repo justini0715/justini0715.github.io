@@ -18,20 +18,26 @@ interface Props {
 const { title, description, ogType, noindex, publishedTime, updatedTime, image, imageAlt } = Astro.props;
 const pathname = Astro.url.pathname;
 const bodyClass = pathname === '/'
-  ? 'route-home'
-  : pathname === '/about/'
+  ? 'route-landing'
+  : pathname === '/home/'
+    ? 'route-home'
+    : pathname === '/about/'
     ? 'route-about'
     : pathname === '/projects/'
       ? 'route-projects'
-      : pathname === '/blog/'
-        ? 'route-blog-index'
-        : pathname.startsWith('/blog/')
-          ? 'route-blog-post'
-          : pathname === '/studio/'
-            ? 'route-studio'
-            : pathname === '/404/'
-              ? 'route-not-found'
-              : 'route-generic';
+      : pathname === '/42/'
+        ? 'route-forty-two-index'
+        : pathname.startsWith('/42/')
+          ? 'route-forty-two-post'
+          : pathname === '/blog/'
+            ? 'route-blog-index'
+            : pathname.startsWith('/blog/')
+              ? 'route-blog-post'
+              : pathname === '/studio/'
+                ? 'route-studio'
+                : pathname === '/404/'
+                  ? 'route-not-found'
+                  : 'route-generic';
 ---
 
 <!doctype html>

@@ -13,10 +13,11 @@ export const siteMeta = {
   github: 'https://github.com/justini0715',
   repo: 'https://github.com/justini0715/justini0715.github.io',
   nav: [
-    { href: '/', label: 'Home' },
-    { href: '/about', label: 'About' },
+    { href: '/home', label: 'Home' },
     { href: '/projects', label: 'Projects' },
-    { href: '/blog', label: 'Blog' }
+    { href: '/42', label: '42' },
+    { href: '/blog', label: 'Blog' },
+    { href: '/about', label: 'About' }
   ]
 } as const;
 

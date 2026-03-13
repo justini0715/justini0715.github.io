@@ -2,55 +2,36 @@
 import MainLayout from '../../layouts/MainLayout.astro';
 import PostCard from '../../components/PostCard.astro';
 import SectionTitle from '../../components/SectionTitle.astro';
-import { seriesOverview } from '../../data/site';
-import { getPublishedPosts } from '../../lib/content';
+import { getGeneralPosts } from '../../lib/content';
 
-const posts = await getPublishedPosts();
+const posts = await getGeneralPosts();
 ---
 
 <MainLayout
-  title="Technical blog and 42 writeups"
-  description="Technical blog archive with 42 assignment writeups, debugging notes, setup guides, retrospectives, and source-first development posts."
+  title="Technical blog"
+  description="Technical blog archive for non-42 posts: debugging notes, setup guides, retrospectives, and source-first development writeups."
 >
   <section class="page-hero page-hero--blog">
     <div class="container hero__grid">
       <div class="narrow-flow">
-        <p class="eyebrow">Technical blog · 42 writeups</p>
-        <h1>Technical posts, setup notes, and 42 assignment writeups in one archive.</h1>
+        <p class="eyebrow">Technical blog</p>
+        <h1>Technical posts, setup notes, and retrospectives outside the 42 track.</h1>
         <p>
-          The blog mixes debugging notes, setup guides, project retrospectives, and assignment-by-assignment 42 posts. Categories, tags, and series ordering help the archive grow without losing context.
+          This archive is now the general technical notebook: Astro rebuild notes, tooling writeups, debugging logs, setup guides, and retrospective posts that are not part of the dedicated 42 hub.
         </p>
         <p class="page-kicker">
-          If you are looking for systems programming notes, 42 project lessons, or source-first web workflow writeups, this is the main reading index.
+          Looking for assignment-by-assignment 42 writeups instead? Visit <a href="/42">the 42 hub</a> for project-specific reading lanes.
         </p>
       </div>
 
       <aside class="panel archive-panel">
-        <p class="eyebrow">What the archive covers</p>
+        <p class="eyebrow">What lives here</p>
         <ul class="utility-list">
           <li>Standalone technical posts with concrete implementation notes</li>
-          <li>42 series entries linked by project order and shared context</li>
-          <li>Setup, retrospective, and debugging content alongside project work</li>
+          <li>Setup, retrospective, and debugging entries outside the 42 curriculum</li>
+          <li>Source-first workflow notes for the site and related tooling</li>
         </ul>
       </aside>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="container">
-      <SectionTitle
-        eyebrow="42 tracks"
-        title="Series lanes for long-term writing"
-        description="Each assignment can stand alone while still belonging to a larger learning arc."
-      />
-      <div class="feature-grid">
-        {seriesOverview.map((series) => (
-          <article class="card stat-card">
-            <h3>{series.title}</h3>
-            <p>{series.description}</p>
-          </article>
-        ))}
-      </div>
     </div>
   </section>
 
@@ -58,8 +39,8 @@ const posts = await getPublishedPosts();
     <div class="container">
       <SectionTitle
         eyebrow="Published posts"
-        title="Launch archive"
-        description="Browse technical blog entries and 42 writeups with dates, tags, and series context visible at a glance."
+        title="Technical archive"
+        description="Browse non-42 technical blog entries with dates, tags, and context visible at a glance."
       />
       <div class="card-grid">
         {posts.map((post) => <PostCard post={post} />)}

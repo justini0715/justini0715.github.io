@@ -7,8 +7,8 @@
 - Domain target: `https://changwpa.kro.kr`
 
 ## Current Phase
-- Phase: Phase 14 — Public Reading & Typography Polish
-- Branch: `phase/14-public-reading-typography-polish`
+- Phase: Phase 15 — Route / UI Separation
+- Branch: `phase/15-route-ui-separation`
 - Status: Complete
 
 ## Official Phase List
@@ -26,11 +26,12 @@
 12. Phase 12 — Sitewide UI System Polish
 13. Phase 13 — Content / Copy / SEO Polish
 14. Phase 14 — Public Reading & Typography Polish
+15. Phase 15 — Route / UI Separation
 
 ## Current Phase Scope
-- Improve the reading experience on the public site with cleaner technical typography and calmer page surfaces.
-- Refine the main page, portfolio pages, and article reading layouts so content feels more static, precise, and technical.
-- Introduce a cleaner public font system and adjust supporting spacing/rhythm around visible content blocks.
+- Split the public front-end into clearer route-level jobs for landing, home, projects, 42, and general blog surfaces.
+- Add a dedicated `/42` route family and stop treating 42 content as only a blog category in the public URL layer.
+- Introduce a separate `/home` route so `/` can act as the strongest landing/showcase page.
 
 ## Current Phase Non-Scope
 - Replacing the static content architecture with a hosted CMS.
@@ -40,6 +41,7 @@
 - Reworking the already-polished studio beyond compatibility checks after global style changes.
 - Rebuilding the public UI system again immediately after phase 12.
 - Another large copy/SEO rewrite immediately after phase 13.
+- Splitting the underlying content collection into separate physical `blog` and `forty-two` collections in this phase.
 
 ## Architecture Summary
 - Astro static output with content collections for blog posts and projects.
@@ -52,16 +54,17 @@
 - blog taxonomy: `42`, `project`, `devlog`, `setup`, `retrospective`.
 
 ## Deliverables Checklist
-- [x] public font system refinement for cleaner technical reading
-- [x] article/prose reading surface polish
-- [x] homepage/projects/blog content block readability improvements
-- [x] Phase 14 verification completed
+- [x] `/` landing and `/home` overview split
+- [x] dedicated `/42` and `/42/[slug]` public routes
+- [x] `/blog` limited to non-42 technical content
+- [x] navigation and route helpers aligned to the new public structure
+- [x] Phase 15 verification completed
 
 ## Verification Plan
-1. Run local build and type checks after the reading/typography polish pass.
-2. Verify the public routes `/`, `/about`, `/projects`, `/blog`, `/blog/[slug]`, and `/404` still render with the refined typography and spacing.
-3. Confirm cards, prose blocks, and route intros feel calmer, cleaner, and more technical than before.
-4. Re-check `/studio` after any shared typography/style adjustments for compatibility.
+1. Run local build and type checks after the route split pass.
+2. Verify `/`, `/home`, `/projects`, `/42`, `/42/[slug]`, `/blog`, and `/blog/[slug]` all render the intended content families.
+3. Confirm 42 posts no longer appear in the main `/blog` archive.
+4. Re-check `/studio` after any shared layout or routing helper changes for compatibility.
 5. Confirm production `/studio` remains locked and the public routes remain static-output compatible.
 
 ## Work Log
@@ -137,6 +140,11 @@
 - Shifted the public reading system toward a cleaner technical sans/mono pairing and flatter surfaces so the main page, project pages, and article pages feel more static, precise, and less glossy.
 - Tightened shared chrome labels (`systems notes · project logs · static publishing`, `GitHub ↗`, `Open note →`, `status · ...`) so metadata and navigation read more like a technical publication.
 - Reworked the global spacing, radii, shadows, and prose surfaces in `global.css` so the visible reading routes feel quieter and more legible without touching the studio-specific local writing tool.
+- Started `phase/15-route-ui-separation` after the user approved the route split plan and explicitly clarified distinct jobs for landing, home, projects, 42, and blog.
+- Split `/` and `/home` so `/` now works as a stronger showcase landing page while `/home` becomes the personal overview hub with featured projects, recent technical notes, and recent 42 entries.
+- Added a dedicated `/42` hub and `/42/[slug]` article route without splitting the underlying content collection yet; 42 routing is now derived from `category === '42'`.
+- Limited `/blog` and `/blog/[slug]` to non-42 technical posts and updated shared post links/helpers so 42 entries route to `/42/...` instead of `/blog/...`.
+- Updated shared navigation and route-class logic so the public shell now understands `/home`, `/42`, and the landing route as separate surfaces.
 
 ## Verification Results
 - `npm install -D astro @astrojs/sitemap @astrojs/check typescript` → dependencies installed successfully.
@@ -200,6 +208,12 @@
 - `npm run dev -- --host 127.0.0.1 --port 4368` outside the sandbox + `curl http://127.0.0.1:4368/studio` → confirmed `/studio` still renders the compact local-only writing surface markers after the shared reading/typography changes.
 - `grep dist/index.html dist/about/index.html dist/projects/index.html dist/blog/index.html dist/blog/42-push-swap/index.html` after phase-14 typography polish → confirmed the new technical reading tone, card labels, and refined public metadata are present in built output.
 - `grep dist/studio/index.html` after phase-14 typography polish → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- `npm run check` after phase-15 route split → success (`tsc --noEmit`).
+- `npm run build` after phase-15 route split → success; built `/`, `/home`, `/projects`, `/42`, `/42/[slug]`, `/blog`, `/blog/[slug]`, `/about`, `404`, and `/studio`.
+- `npx tsc --noEmit --project tsconfig.json` via LSP diagnostics after phase-15 route split → 0 errors, 0 warnings.
+- `grep dist/index.html dist/home/index.html` after phase-15 route split → confirmed the new landing selection surface and the separate personal home hub.
+- `grep dist/42/index.html dist/blog/index.html` after phase-15 route split → confirmed `/42` is its own hub and `/blog` points 42 readers to `/42` while listing only non-42 posts.
+- `grep dist/studio/index.html` after phase-15 route split → production output still contains the locked `/studio` notice and excludes the active editor markers.
 
 ## Known Blockers / User-Action-Required Items
 - GitHub push/PR and Pages settings updates will require the user's GitHub auth later.

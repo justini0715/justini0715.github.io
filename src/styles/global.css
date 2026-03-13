@@ -641,9 +641,53 @@
   .archive-panel,
   .utility-panel,
   .reading-surface,
-  .error-panel {
+  .error-panel,
+  .landing-shell__note {
     display: grid;
     gap: 0.95rem;
+  }
+
+  .landing-shell {
+    display: grid;
+    gap: 1.4rem;
+    grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.7fr);
+    align-items: start;
+  }
+
+  .landing-shell__copy {
+    max-width: 58ch;
+  }
+
+  .landing-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .landing-card {
+    display: grid;
+    gap: 0.9rem;
+    min-height: 100%;
+    padding: 1.35rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--line-soft);
+    background: linear-gradient(180deg, rgba(13, 20, 30, 0.92), rgba(9, 14, 22, 0.97));
+    box-shadow: var(--shadow-soft);
+  }
+
+  .landing-card h2 {
+    margin-top: 0;
+  }
+
+  .landing-card__link {
+    color: var(--accent-strong);
+    font-size: 0.92rem;
+    font-weight: 600;
+  }
+
+  .landing-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(171, 193, 255, 0.22);
   }
 
   .utility-list {
@@ -785,13 +829,20 @@
     min-height: 1px;
   }
 
-  .route-home .hero {
+  .route-home .page-hero {
     padding-top: clamp(1.8rem, 4.6vw, 3.9rem);
   }
 
+  .route-landing .hero {
+    padding-top: clamp(2rem, 5vw, 4rem);
+  }
+
+  .route-landing .landing-shell,
   .route-home .hero__grid,
   .route-about .page-hero .hero__grid,
   .route-projects .page-hero .hero__grid,
+  .route-forty-two-index .page-hero .hero__grid,
+  .route-forty-two-post .page-hero .hero__grid,
   .route-blog-index .page-hero .hero__grid,
   .route-blog-post .page-hero .hero__grid,
   .route-not-found .page-hero .hero__grid {
@@ -799,15 +850,19 @@
   }
 
   .route-home .hero__grid,
+  .route-forty-two-index .page-hero .hero__grid,
+  .route-forty-two-post .page-hero .hero__grid,
   .route-blog-post .page-hero .hero__grid {
     grid-template-columns: minmax(0, 1.3fr) minmax(280px, 0.8fr);
   }
 
   .route-blog-post .reading-surface,
+  .route-forty-two-post .reading-surface,
+  .route-forty-two-index .page-hero .narrow-flow,
   .route-blog-index .page-hero .narrow-flow,
   .route-projects .page-hero .narrow-flow,
   .route-about .page-hero .narrow-flow,
-  .route-home .hero .narrow-flow {
+  .route-home .page-hero .narrow-flow {
     padding: clamp(1.2rem, 3vw, 1.8rem);
     border: 1px solid var(--line-soft);
     border-radius: var(--radius-lg);
@@ -833,6 +888,7 @@
   }
 
   @media (max-width: 960px) {
+    .landing-shell,
     .hero__grid,
     .two-column,
     .footer-grid,
@@ -841,6 +897,8 @@
     .feature-grid,
     .feature-grid--compact,
     .route-home .hero__grid,
+    .route-forty-two-index .page-hero .hero__grid,
+    .route-forty-two-post .page-hero .hero__grid,
     .route-blog-post .page-hero .hero__grid {
       grid-template-columns: 1fr;
     }
@@ -882,11 +940,17 @@
       width: min(calc(100% - 1rem), 780px);
     }
 
+    .landing-grid {
+      grid-template-columns: 1fr;
+    }
+
     .route-blog-post .reading-surface,
+    .route-forty-two-post .reading-surface,
+    .route-forty-two-index .page-hero .narrow-flow,
     .route-blog-index .page-hero .narrow-flow,
     .route-projects .page-hero .narrow-flow,
     .route-about .page-hero .narrow-flow,
-    .route-home .hero .narrow-flow {
+    .route-home .page-hero .narrow-flow {
       padding: 1rem;
     }
   }

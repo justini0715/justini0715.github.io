@@ -1,0 +1,105 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import SectionTitle from '../components/SectionTitle.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import PostCard from '../components/PostCard.astro';
+import { currentFocus, siteMeta, stackSummary, strengths } from '../data/site';
+import { getFeaturedProjects, getPublishedPosts } from '../lib/content';
+
+const featuredProjects = await getFeaturedProjects(3);
+const allPosts = await getPublishedPosts();
+const recentGeneralPosts = allPosts.filter((post) => post.data.category !== '42').slice(0, 3);
+const recent42Posts = allPosts.filter((post) => post.data.category === '42').slice(0, 3);
+---
+
+<MainLayout
+  title="Home"
+  description="Personal home for changwpa with current focus, featured projects, recent technical notes, and recent 42 entries."
+>
+  <section class="page-hero page-hero--home-hub">
+    <div class="container hero__grid">
+      <div class="narrow-flow">
+        <p class="eyebrow">Personal home</p>
+        <h1>지금 무엇을 만들고 있고, 무엇을 배우고 있으며, 어디를 먼저 보면 되는지 한 페이지에서 정리한 허브.</h1>
+        <p>
+          이 페이지는 나만의 홈 역할을 한다. 전체 사이트의 주요 흐름을 한 번에 보고, 필요한 영역으로 바로 이동할 수 있게 만든다.
+        </p>
+        <p class="page-kicker">
+          Projects는 진행 중인 개발 프로젝트, 42는 과제 흐름, Blog는 개발하며 공부한 개념 정리 중심으로 읽으면 된다.
+        </p>
+      </div>
+
+      <aside class="panel utility-panel">
+        <p class="eyebrow">Current focus</p>
+        <ul class="utility-list">
+          {currentFocus.map((item) => <li>{item}</li>)}
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionTitle
+        eyebrow="Featured projects"
+        title="지금 기준으로 가장 먼저 보여주고 싶은 프로젝트"
+        description="현재 포트폴리오의 중심이 되는 프로젝트를 먼저 배치해 전체 개발 범위를 빠르게 파악할 수 있게 한다."
+      />
+      <div class="card-grid">
+        {featuredProjects.map((project) => <ProjectCard project={project} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tint">
+    <div class="container two-column">
+      <div>
+        <SectionTitle
+          eyebrow="Recent technical notes"
+          title="최근에 정리한 일반 기술 글"
+          description="알고리즘, 시스템, 웹 개발, 설정, 회고 등 42와 별개의 일반 기술 기록을 모아둔다."
+        />
+        <div class="feature-grid feature-grid--compact">
+          {recentGeneralPosts.map((post) => <PostCard post={post} />)}
+        </div>
+      </div>
+
+      <div>
+        <SectionTitle
+          eyebrow="Recent 42 entries"
+          title="최근 42 흐름에서 정리한 글"
+          description="42 과제 기록은 별도 허브로 분리되지만, 홈에서도 최근 흐름을 바로 확인할 수 있게 한다."
+        />
+        <div class="feature-grid feature-grid--compact">
+          {recent42Posts.map((post) => <PostCard post={post} />)}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container two-column">
+      <div>
+        <SectionTitle
+          eyebrow="Strengths"
+          title="내가 이 사이트에서 보여주고 싶은 작업 방식"
+          description="설명보다 구조, 결과보다 맥락, 스크린샷보다 근거를 우선하는 식으로 사이트를 운영한다."
+        />
+        <div class="feature-grid feature-grid--compact">
+          {strengths.map((item) => (
+            <article class="card stat-card">
+              <p>{item}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+
+      <aside class="panel utility-panel">
+        <p class="eyebrow">Stack snapshot</p>
+        <ul class="utility-list">
+          {stackSummary.map((item) => <li>{item}</li>)}
+        </ul>
+      </aside>
+    </div>
+  </section>
+</MainLayout>
