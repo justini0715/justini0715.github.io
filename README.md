@@ -66,3 +66,4 @@ Then open the localhost URL printed by `npm run dev`, add `/studio`, connect the
 - `phase/8-studio-completion`
 - `phase/9-studio-ui-cleanup`
 - `phase/10-studio-ui-polish`
+- `phase/11-studio-visual-polish`

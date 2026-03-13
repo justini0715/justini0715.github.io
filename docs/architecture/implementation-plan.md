@@ -7,8 +7,8 @@
 - Domain target: `https://changwpa.kro.kr`
 
 ## Current Phase
-- Phase: Phase 10 — Studio UI Polish
-- Branch: `phase/10-studio-ui-polish`
+- Phase: Phase 11 — Studio Visual Polish
+- Branch: `phase/11-studio-visual-polish`
 - Status: Complete
 
 ## Official Phase List
@@ -22,6 +22,7 @@
 8. Phase 8 — Studio Completion
 9. Phase 9 — Studio UI Cleanup
 10. Phase 10 — Studio UI Polish
+11. Phase 11 — Studio Visual Polish
 
 ## Current Phase Scope
 - Polish the cleaned-up studio so the first viewport feels even more writing-first.
@@ -49,7 +50,8 @@
 - [x] library/sidepanel overlay behavior polish
 - [x] quick insert controls를 덜 시끄럽게 정리
 - [x] writer flow 중심 상호작용 polish
-- [x] Phase 10 verification completed
+- [x] visual language / label consistency polish
+- [x] Phase 11 verification completed
 
 ## Verification Plan
 1. Run local build and type checks after the polish pass.
@@ -111,6 +113,10 @@
 - Added an overlay layer plus `Esc` dismissal so the library and contextual side drawer behave like temporary support surfaces instead of competing layout columns.
 - Moved quick-insert formatting buttons behind a compact disclosure to reduce constant control noise above the manuscript area.
 - Tightened the remaining labels and notes so the dev surface reads more like a writing desk than a dashboard.
+- Started `phase/11-studio-visual-polish` from the verified phase-10 branch after the user asked to keep going again.
+- Cleaned up the remaining English-heavy surface labels so the studio now reads more coherently in Korean (`원고 데스크`, `라이브러리`, `오른쪽 패널`, `원본 Markdown`, `시리즈`, `고급`, `주의 영역`, `점검`, `흐름`).
+- Removed the now-dead reconnect button from the visible chrome and kept a single adaptive `폴더 연결 / 폴더 변경` action.
+- Added a save-shortcut hint and tightened the final microcopy so the surface feels calmer without adding new controls.
 
 ## Verification Results
 - `npm install -D astro @astrojs/sitemap @astrojs/check typescript` → dependencies installed successfully.
@@ -152,6 +158,10 @@
 - `npm run build` after phase-10 polish → success; rebuilt all public routes plus `/studio`.
 - `npm run dev -- --host 127.0.0.1 --port 4351` outside the sandbox + `curl http://127.0.0.1:4351/studio` → confirmed dev `/studio` renders the compact `로컬 열기 안내`, `Night desk`, `새 글 · 도구`, `빠른 삽입`, and `studio-overlay` markers.
 - `grep dist/studio/index.html` after phase-10 polish → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- `npm run check` after phase-11 visual polish → success (`tsc --noEmit`).
+- `npm run build` after phase-11 visual polish → success; rebuilt all public routes plus `/studio`.
+- `npm run dev -- --host 127.0.0.1 --port 4354` outside the sandbox + `curl http://127.0.0.1:4354/studio` → confirmed dev `/studio` renders `로컬 열기 안내`, `원고 데스크`, `새 글 · 도구`, `빠른 삽입`, `오른쪽 패널`, and `원본 Markdown`.
+- `grep dist/studio/index.html` after phase-11 visual polish → production output still contains the locked `/studio` notice and excludes the active editor markers.
 
 ## Known Blockers / User-Action-Required Items
 - GitHub push/PR and Pages settings updates will require the user's GitHub auth later.

@@ -30,7 +30,7 @@ const { initialPosts = [] } = Astro.props;
   <div class="container studio-shell studio-shell--editorial">
     <header class="studio-topbar">
       <div class="studio-topbar__identity">
-        <p class="eyebrow">Night desk</p>
+        <p class="eyebrow">원고 데스크</p>
         <div>
           <h1>Writing Studio</h1>
           <p>원고부터 바로 쓰고, 라이브러리와 설정은 필요할 때만 여는 간결한 집필 화면입니다.</p>
@@ -50,7 +50,6 @@ const { initialPosts = [] } = Astro.props;
         <div class="studio-topbar__actions">
           <button id="studio-library-toggle" class="button button--ghost" type="button">라이브러리</button>
           <button id="studio-connect" class="button button--ghost" type="button">폴더 연결</button>
-          <button id="studio-reconnect" class="button button--ghost" type="button" hidden>폴더 변경</button>
           <button id="studio-save" class="button studio-save-button" type="button">저장</button>
         </div>
         <details class="studio-tool-menu">
@@ -83,7 +82,7 @@ const { initialPosts = [] } = Astro.props;
       <aside id="studio-library-shell" class="studio-library-shell" hidden>
         <div class="studio-library-head">
           <div>
-            <p class="eyebrow">Library drawer</p>
+            <p class="eyebrow">라이브러리</p>
             <h3>기존 글과 새 초안</h3>
             <p>필요할 때만 열어 이전 원고를 확인하고 새 문서를 시작합니다.</p>
           </div>
@@ -188,7 +187,7 @@ const { initialPosts = [] } = Astro.props;
       <aside id="studio-sidepanel" class="studio-sidepanel" hidden>
         <div class="studio-sidepanel__header">
           <div>
-            <p class="eyebrow">Context drawer</p>
+            <p class="eyebrow">오른쪽 패널</p>
             <h3 id="studio-sidepanel-title">미리보기</h3>
           </div>
           <button id="studio-sidepanel-close" class="button button--ghost" type="button">닫기</button>
@@ -207,7 +206,7 @@ const { initialPosts = [] } = Astro.props;
           </div>
           <div class="studio-markdown-box">
             <div class="studio-markdown-box__head">
-              <p class="eyebrow">Raw markdown</p>
+              <p class="eyebrow">원본 Markdown</p>
               <button id="studio-markdown-toggle" class="studio-command" type="button">Markdown 보기</button>
             </div>
             <textarea id="studio-markdown-output" class="studio-output" readonly hidden></textarea>
@@ -264,7 +263,7 @@ const { initialPosts = [] } = Astro.props;
 
           <section class="studio-settings-card">
             <div class="studio-settings-card__head">
-              <p class="eyebrow">Series</p>
+              <p class="eyebrow">시리즈</p>
               <p>42 시리즈나 연재 흐름을 부드럽게 유지합니다.</p>
             </div>
             <div class="studio-settings-grid">
@@ -292,7 +291,7 @@ const { initialPosts = [] } = Astro.props;
           <details class="studio-settings-card studio-settings-card--advanced">
             <summary class="studio-settings-summary">고급 설정</summary>
             <div class="studio-settings-card__head">
-              <p class="eyebrow">Advanced</p>
+              <p class="eyebrow">고급</p>
               <p>자주 안 쓰는 옵션은 접어두고 필요할 때만 엽니다.</p>
             </div>
             <div class="studio-settings-grid">
@@ -310,7 +309,7 @@ const { initialPosts = [] } = Astro.props;
 
           <section class="studio-settings-card studio-settings-card--danger">
             <div class="studio-settings-card__head">
-              <p class="eyebrow">Danger zone</p>
+              <p class="eyebrow">주의 영역</p>
               <p>완전 삭제보다 먼저 비공개 전환을 권장합니다.</p>
             </div>
             <div class="studio-danger-row">
@@ -323,19 +322,20 @@ const { initialPosts = [] } = Astro.props;
         <div id="studio-panel-notes" class="studio-sidepanel__body" hidden>
           <section class="studio-settings-card">
             <div class="studio-settings-card__head">
-              <p class="eyebrow">Checks</p>
+              <p class="eyebrow">점검</p>
               <p>지금 글이 저장 가능한 상태인지 바로 확인합니다.</p>
             </div>
             <ul id="studio-validation" class="studio-validation"></ul>
           </section>
           <section class="studio-settings-card">
             <div class="studio-settings-card__head">
-              <p class="eyebrow">Flow</p>
+              <p class="eyebrow">흐름</p>
               <p>원고 흐름을 끊지 않도록 꼭 필요한 사용 힌트만 남겨둡니다.</p>
             </div>
             <ul class="studio-checklist">
               <li>Chromium 데스크톱에서 로컬 폴더 쓰기가 가장 안정적입니다.</li>
               <li>배포본에서는 editor가 잠기고 localhost에서만 활성화됩니다.</li>
+              <li>저장은 <code>⌘/Ctrl + S</code> 단축키로도 가능합니다.</li>
               <li>저장 후 최종 반영은 git commit / push가 필요합니다.</li>
             </ul>
           </section>
@@ -397,7 +397,6 @@ const { initialPosts = [] } = Astro.props;
     dirtyBadge: $('#studio-dirty-badge'),
     libraryToggle: $('#studio-library-toggle'),
     connect: $('#studio-connect'),
-    reconnect: $('#studio-reconnect'),
     save: $('#studio-save'),
     layout: $('#studio-layout'),
     libraryShell: $('#studio-library-shell'),
@@ -658,7 +657,6 @@ const { initialPosts = [] } = Astro.props;
     elements.folder.textContent = state.blogHandle ? `저장 위치: 연결됨` : '저장 위치: 폴더 미연결';
     elements.libraryToggle.textContent = state.libraryOpen ? '라이브러리 닫기' : '라이브러리';
     elements.connect.textContent = state.blogHandle ? '폴더 변경' : '폴더 연결';
-    elements.reconnect.hidden = true;
   }
 
   function selectPost(id) {
@@ -1143,7 +1141,6 @@ const { initialPosts = [] } = Astro.props;
     elements.libraryToggle.addEventListener('click', toggleLibrary);
     elements.overlay.addEventListener('click', closeChrome);
     elements.connect.addEventListener('click', () => connectRepo(true));
-    elements.reconnect.addEventListener('click', () => connectRepo(true));
     elements.save.addEventListener('click', saveCurrent);
     elements.search.addEventListener('input', () => {
       state.search = elements.search.value;
