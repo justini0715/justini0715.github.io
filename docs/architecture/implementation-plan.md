@@ -7,8 +7,8 @@
 - Domain target: `https://changwpa.kro.kr`
 
 ## Current Phase
-- Phase: Phase 6 — Studio Hardening
-- Branch: `phase/6-studio-hardening`
+- Phase: Phase 7 — Studio Usability
+- Branch: `phase/7-studio-usability`
 - Status: Complete
 
 ## Official Phase List
@@ -18,11 +18,12 @@
 4. Phase 4 — Polish and Deployment
 5. Phase 5 — Writing Studio
 6. Phase 6 — Studio Hardening
+7. Phase 7 — Studio Usability
 
 ## Current Phase Scope
-- Make the writing studio meaningfully local-only so the deployed site does not expose an active editor to the public.
-- Redesign the writing experience to feel closer to a polished velog-like editor rather than a raw admin panel.
-- Refine tag/editor interactions and update the documentation for the new local-only behavior.
+- Simplify the writing studio so the editor is much larger and the workflow is more intuitive.
+- Replace raw `draft`-style terminology in the UI with clearer 공개/비공개/임시저장 semantics.
+- Reduce duplicate or noisy controls by hiding panels until the writer explicitly asks for them.
 
 ## Current Phase Non-Scope
 - Replacing the static content architecture with a hosted CMS.
@@ -40,16 +41,16 @@
 - blog taxonomy: `42`, `project`, `devlog`, `setup`, `retrospective`.
 
 ## Deliverables Checklist
-- [x] Studio production exposure reduced to a local-only locked experience
-- [x] Velog-inspired studio UX pass implemented
-- [x] Tag/editor interaction flow improved
-- [x] Documentation updated for the new local-only behavior
-- [x] Phase 6 verification completed
+- [x] Writer area expanded and default clutter reduced
+- [x] 공개/비공개/임시저장 terminology applied in the UI
+- [x] Library / preview / settings panels made optional instead of always open
+- [x] Docs updated for the more intuitive workflow and dynamic localhost port guidance
+- [x] Phase 7 verification completed
 
 ## Verification Plan
-1. Run local build and type checks after hardening the studio.
-2. Verify `/studio` is usable on localhost but presents only a locked informational surface on production.
-3. Confirm the refined editor UI, tag flow, and docs match the intended local-only workflow.
+1. Run local build and type checks after the usability pass.
+2. Verify localhost `/studio` shows the cleaner writer-first layout with larger writing area.
+3. Confirm production `/studio` remains locked and docs match the updated workflow.
 
 ## Work Log
 - Cloned the remote user-site repository into the writable workspace.
@@ -82,6 +83,10 @@
 - Excluded `/studio` from sitemap output and updated the writing-studio docs to reflect the new local-only behavior.
 - Tightened the production story further by rendering the full editor only during `npm run dev`, while production builds output only the locked informational surface.
 - Fixed the local dev runtime by overriding `tinyexec` to `1.0.4`, restoring `npm run dev` for the studio workflow.
+- Started `phase/7-studio-usability` from the latest merged `main`.
+- Hid the library and side panels by default, added explicit toggles, and made the center writing area the primary surface.
+- Replaced draft/live wording with 공개/비공개/임시저장 semantics and removed some confusing default values in new post templates.
+- Updated runbook text so it no longer hardcodes port `4321` and instead follows the actual localhost port shown by `npm run dev`.
 
 ## Verification Results
 - `npm install -D astro @astrojs/sitemap @astrojs/check typescript` → dependencies installed successfully.
@@ -108,6 +113,8 @@
 - `npm run dev -- --host 127.0.0.1 --port 4326` → localhost studio boots successfully again.
 - `playwright screenshot --full-page http://127.0.0.1:4326/studio /tmp/studio-dev-final.png` → verified the localhost dev route shows the refined editor, not the locked production screen.
 - `curl https://justini0715.github.io/studio/` → verified production contains the locked notice, with no `레포 연결`, no `id="studio-app"`, and no studio app bundle reference.
+- `playwright screenshot --full-page http://127.0.0.1:4327/studio /tmp/studio-usability.png` → verified the cleaner default local layout with much larger editor area and optional side panels.
+- `curl http://127.0.0.1:4326/studio` → confirmed the local studio now exposes `레포 연결`, `저장`, and the active editor rather than the production lock screen.
 
 ## Known Blockers / User-Action-Required Items
 - GitHub push/PR and Pages settings updates will require the user's GitHub auth later.

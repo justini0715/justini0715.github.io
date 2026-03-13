@@ -46,7 +46,7 @@ Typical flow:
 ```bash
 npm run dev
 ```
-Then open `http://localhost:4321/studio`, connect the repo folder, write/save the post, and finish with normal git commit/push.
+Then open the localhost URL printed by `npm run dev`, add `/studio`, connect the repo folder, write/save the post, and finish with normal git commit/push.
 
 ## Deployment notes
 - `astro.config.mjs` defaults `site` to `https://justini0715.github.io` so the fallback GitHub Pages URL stays correct before the custom domain is connected.

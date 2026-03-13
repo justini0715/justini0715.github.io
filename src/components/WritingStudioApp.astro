@@ -12,7 +12,7 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
     </p>
     <ol>
       <li>레포에서 <code>npm run dev</code> 실행</li>
-      <li><code>http://localhost:4321/studio</code> 접속</li>
+      <li>터미널에 표시된 localhost 주소 뒤에 <code>/studio</code> 접속</li>
       <li>Chrome / Edge / Brave 데스크톱에서 레포 폴더 연결</li>
     </ol>
     <div class="studio-locked-actions">
@@ -34,13 +34,14 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
       </div>
 
       <div class="studio-topbar__status">
-        <span id="studio-host-badge" class="studio-pill studio-pill--ok">localhost only</span>
-        <span id="studio-connection-badge" class="studio-pill">download only</span>
-        <span id="studio-dirty-badge" class="studio-pill">saved</span>
+        <span id="studio-host-badge" class="studio-pill studio-pill--ok">로컬 전용</span>
+        <span id="studio-connection-badge" class="studio-pill">파일로 받기</span>
+        <span id="studio-dirty-badge" class="studio-pill">파일 저장됨</span>
       </div>
 
       <div class="studio-topbar__actions">
-        <button id="studio-connect" class="button button--ghost" type="button">레포 연결</button>
+        <button id="studio-library-toggle" class="button button--ghost" type="button">글 목록</button>
+        <button id="studio-connect" class="button button--ghost" type="button">폴더 연결</button>
         <button id="studio-reconnect" class="button button--ghost" type="button">폴더 다시 선택</button>
         <button id="studio-focus" class="button button--ghost" type="button">집중 모드</button>
         <button id="studio-save" class="button" type="button">저장</button>
@@ -53,8 +54,8 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
       <span id="studio-route" class="studio-meta-chip">/blog/post-slug/</span>
     </div>
 
-    <div class="studio-layout">
-      <aside class="studio-library-shell">
+    <div id="studio-layout" class="studio-layout">
+      <aside id="studio-library-shell" class="studio-library-shell" hidden>
         <div class="studio-library-head">
           <div>
             <p class="eyebrow">Library</p>
@@ -71,15 +72,15 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
           <input id="studio-search" class="studio-input" type="search" placeholder="제목 / slug 검색" />
           <div class="studio-filter-row">
             <select id="studio-filter-category" class="studio-select">
-              <option value="all">모든 카테고리</option>
+              <option value="all">목록: 모든 카테고리</option>
               {BLOG_CATEGORIES.map((category) => (
                 <option value={category}>{CATEGORY_LABELS[category]}</option>
               ))}
             </select>
             <select id="studio-filter-draft" class="studio-select">
-              <option value="all">전체 상태</option>
-              <option value="published">공개 글</option>
-              <option value="draft">드래프트</option>
+              <option value="all">목록: 전체 상태</option>
+              <option value="public">공개 글</option>
+              <option value="private">비공개 글</option>
             </select>
           </div>
         </div>
@@ -106,7 +107,8 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
 
           <div class="studio-command-strip__group">
             <button id="studio-preview-toggle" class="studio-command" type="button">미리보기</button>
-            <button id="studio-settings-toggle" class="studio-command" type="button">설정</button>
+            <button id="studio-settings-toggle" class="studio-command" type="button">공개 설정</button>
+            <button id="studio-notes-toggle" class="studio-command" type="button">검사</button>
           </div>
         </div>
 
@@ -158,11 +160,11 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
         </form>
       </main>
 
-      <aside id="studio-sidepanel" class="studio-sidepanel">
+      <aside id="studio-sidepanel" class="studio-sidepanel" hidden>
         <div class="studio-sidepanel__header">
           <button class="studio-side-tab is-active" data-side="preview" type="button">Preview</button>
-          <button class="studio-side-tab" data-side="settings" type="button">Publish</button>
-          <button class="studio-side-tab" data-side="notes" type="button">Checks</button>
+          <button class="studio-side-tab" data-side="settings" type="button">공개 설정</button>
+          <button class="studio-side-tab" data-side="notes" type="button">검사</button>
         </div>
 
         <div id="studio-panel-preview" class="studio-sidepanel__body">
@@ -188,10 +190,17 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
         <div id="studio-panel-settings" class="studio-sidepanel__body" hidden>
           <section class="studio-settings-card">
             <div class="studio-settings-card__head">
-              <p class="eyebrow">Publish</p>
-              <p>기본 공개 상태와 날짜를 관리합니다.</p>
+              <p class="eyebrow">공개 상태</p>
+              <p>이 글이 블로그 목록에 보일지, 비공개로 숨길지 정합니다.</p>
             </div>
             <div class="studio-settings-grid">
+              <label class="studio-field">
+                <span>공개 범위</span>
+                <select id="studio-visibility" class="studio-select">
+                  <option value="public">공개</option>
+                  <option value="private">비공개</option>
+                </select>
+              </label>
               <label class="studio-field">
                 <span>카테고리</span>
                 <select id="studio-category" class="studio-select">
@@ -204,15 +213,8 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
                 <span>발행일</span>
                 <input id="studio-pubDate" class="studio-input" type="date" />
               </label>
-              <label class="studio-field">
-                <span>수정일</span>
-                <input id="studio-updatedDate" class="studio-input" type="date" />
-              </label>
-              <div class="studio-toggle-row">
-                <label class="studio-checkbox"><input id="studio-featured" type="checkbox" /><span>Featured</span></label>
-                <label class="studio-checkbox"><input id="studio-draft" type="checkbox" /><span>Draft</span></label>
-              </div>
             </div>
+            <p class="studio-inline-note">비공개 상태면 저장돼도 블로그 목록에는 나타나지 않습니다.</p>
           </section>
 
           <section class="studio-settings-card">
@@ -258,24 +260,32 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
             <div id="studio-series-library" class="studio-series-list"></div>
           </section>
 
-          <section class="studio-settings-card">
+          <details class="studio-settings-card studio-settings-card--advanced">
+            <summary class="studio-settings-summary">고급 설정</summary>
             <div class="studio-settings-card__head">
-              <p class="eyebrow">Notes</p>
-              <p>난이도, 메모, 후속 작업을 짧게 남겨두는 용도입니다.</p>
+              <p class="eyebrow">Advanced</p>
+              <p>자주 안 쓰는 옵션은 접어두고 필요할 때만 엽니다.</p>
+            </div>
+            <div class="studio-settings-grid">
+              <label class="studio-field">
+                <span>수정일</span>
+                <input id="studio-updatedDate" class="studio-input" type="date" />
+              </label>
+              <label class="studio-checkbox"><input id="studio-featured" type="checkbox" /><span>홈/상단 추천에 표시</span></label>
             </div>
             <label class="studio-field">
-              <span>난이도 / 메모</span>
-              <input id="studio-difficulty" class="studio-input" type="text" placeholder="예: concurrency and timing" />
+              <span>추가 메모</span>
+              <input id="studio-difficulty" class="studio-input" type="text" placeholder="예: 이 글의 난이도, 후속 작업, 메모" />
             </label>
-          </section>
+          </details>
 
           <section class="studio-settings-card studio-settings-card--danger">
             <div class="studio-settings-card__head">
               <p class="eyebrow">Danger zone</p>
-              <p>삭제보다 draft 전환을 먼저 권장합니다.</p>
+              <p>완전 삭제보다 먼저 비공개 전환을 권장합니다.</p>
             </div>
             <div class="studio-danger-row">
-              <button id="studio-soft-delete" class="button button--ghost" type="button">draft로 보내기</button>
+              <button id="studio-soft-delete" class="button button--ghost" type="button">비공개로 전환</button>
               <button id="studio-hard-delete" class="button button--ghost studio-danger" type="button">완전 삭제</button>
             </div>
           </section>
@@ -341,7 +351,8 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
     search: '',
     filterCategory: 'all',
     filterDraft: 'all',
-    sideMode: 'preview',
+    sideMode: '',
+    libraryOpen: false,
     focusMode: false,
     markdownVisible: false,
     snapshotAvailable: false,
@@ -357,10 +368,13 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
     hostBadge: $('#studio-host-badge'),
     connectionBadge: $('#studio-connection-badge'),
     dirtyBadge: $('#studio-dirty-badge'),
+    libraryToggle: $('#studio-library-toggle'),
     connect: $('#studio-connect'),
     reconnect: $('#studio-reconnect'),
     focus: $('#studio-focus'),
     save: $('#studio-save'),
+    layout: $('#studio-layout'),
+    libraryShell: $('#studio-library-shell'),
     folder: $('#studio-folder'),
     fileChip: $('#studio-file-chip'),
     route: $('#studio-route'),
@@ -371,10 +385,10 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
     title: $('#studio-title'),
     description: $('#studio-description'),
     category: $('#studio-category'),
+    visibility: $('#studio-visibility'),
     pubDate: $('#studio-pubDate'),
     updatedDate: $('#studio-updatedDate'),
     featured: $('#studio-featured'),
-    draft: $('#studio-draft'),
     slug: $('#studio-slug'),
     slugify: $('#studio-slugify'),
     series: $('#studio-series'),
@@ -389,7 +403,9 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
     hardDelete: $('#studio-hard-delete'),
     previewToggle: $('#studio-preview-toggle'),
     settingsToggle: $('#studio-settings-toggle'),
+    notesToggle: $('#studio-notes-toggle'),
     titleTabs: document.querySelectorAll('.studio-side-tab'),
+    sidepanel: $('#studio-sidepanel'),
     panelPreview: $('#studio-panel-preview'),
     panelSettings: $('#studio-panel-settings'),
     panelNotes: $('#studio-panel-notes'),
@@ -411,7 +427,6 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
     toast: $('#studio-toast'),
     presets: document.querySelectorAll('.studio-preset'),
     toolbars: document.querySelectorAll('.studio-toolbar'),
-    editorShell: $('.studio-editor-shell'),
     shell: $('.studio-shell')
   };
 
@@ -532,7 +547,7 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
   async function connectRepo(forcePicker = false, silent = false) {
     if (!state.isLocalHost) return;
     if (!('showDirectoryPicker' in window)) {
-      setPill(elements.connectionBadge, 'download only', 'warn');
+      setPill(elements.connectionBadge, '파일로 받기', 'warn');
       if (!silent) {
         toast('이 브라우저는 폴더 직접 쓰기를 지원하지 않습니다. 다운로드 방식으로만 사용 가능합니다.', 'warn');
       }
@@ -548,7 +563,7 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
           if (permission !== 'granted') repoHandle = null;
         }
         if (!repoHandle && silent) {
-          setPill(elements.connectionBadge, 'download only', 'warn');
+          setPill(elements.connectionBadge, '파일로 받기', 'warn');
           return;
         }
       }
@@ -561,15 +576,15 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
       await saveRepoHandle(repoHandle);
       await loadPostsFromFolder();
       elements.folder.textContent = `연결됨: ${repoHandle.name}${blogHandle !== repoHandle ? ' → src/content/blog' : ''}`;
-      setPill(elements.connectionBadge, 'repo connected', 'ok');
+      setPill(elements.connectionBadge, '폴더 연결됨', 'ok');
       toast('레포 폴더 연결 완료. 이제 저장이 실제 Markdown 파일에 반영됩니다.', 'ok');
     } catch (error) {
       console.error(error);
       if (silent) {
-        setPill(elements.connectionBadge, 'download only', 'warn');
+        setPill(elements.connectionBadge, '파일로 받기', 'warn');
         return;
       }
-      setPill(elements.connectionBadge, 'connection failed', 'error');
+      setPill(elements.connectionBadge, '연결 실패', 'error');
       toast('폴더 연결에 실패했습니다. 레포 루트 또는 src/content/blog 폴더를 선택해주세요.', 'error');
     }
   }
@@ -592,10 +607,11 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
 
   function updateBadges() {
     const post = currentPost();
-    setPill(elements.hostBadge, state.isLocalHost ? 'localhost only' : 'public locked', state.isLocalHost ? 'ok' : 'warn');
-    setPill(elements.connectionBadge, state.blogHandle ? 'repo connected' : 'download only', state.blogHandle ? 'ok' : 'warn');
-    setPill(elements.dirtyBadge, post?.dirty ? 'unsaved' : 'saved', post?.dirty ? 'warn' : 'ok');
+    setPill(elements.hostBadge, state.isLocalHost ? '로컬 전용' : '공개 잠금', state.isLocalHost ? 'ok' : 'warn');
+    setPill(elements.connectionBadge, state.blogHandle ? '폴더 연결됨' : '파일로 받기', state.blogHandle ? 'ok' : 'warn');
+    setPill(elements.dirtyBadge, post?.dirty ? '임시저장' : '파일 저장됨', post?.dirty ? 'warn' : 'ok');
     elements.fileChip.textContent = `src/content/blog/${post?.slug || 'post-slug'}.md`;
+    elements.libraryToggle.textContent = state.libraryOpen ? '글 목록 닫기' : '글 목록';
   }
 
   function selectPost(id) {
@@ -627,10 +643,10 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
     elements.title.value = post.title;
     elements.description.value = post.description;
     elements.category.value = post.category;
+    elements.visibility.value = post.draft ? 'private' : 'public';
     elements.pubDate.value = post.pubDate;
     elements.updatedDate.value = post.updatedDate;
     elements.featured.checked = post.featured;
-    elements.draft.checked = post.draft;
     elements.slug.value = post.slug;
     elements.series.value = post.series;
     elements.seriesTitle.value = post.seriesTitle;
@@ -647,10 +663,10 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
     post.title = elements.title.value.trim();
     post.description = elements.description.value.trim();
     post.category = elements.category.value;
+    post.draft = elements.visibility.value === 'private';
     post.pubDate = elements.pubDate.value;
     post.updatedDate = elements.updatedDate.value;
     post.featured = elements.featured.checked;
-    post.draft = elements.draft.checked;
     post.slug = elements.slug.value.trim();
     post.series = elements.series.value.trim();
     post.seriesTitle = elements.seriesTitle.value.trim();
@@ -798,7 +814,7 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
       const search = state.search.trim().toLowerCase();
       const searchMatch = !search || post.title.toLowerCase().includes(search) || post.slug.toLowerCase().includes(search);
       const categoryMatch = state.filterCategory === 'all' || post.category === state.filterCategory;
-      const draftMatch = state.filterDraft === 'all' || (state.filterDraft === 'draft' ? post.draft : !post.draft);
+      const draftMatch = state.filterDraft === 'all' || (state.filterDraft === 'private' ? post.draft : !post.draft);
       return searchMatch && categoryMatch && draftMatch;
     });
 
@@ -815,12 +831,12 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
       button.innerHTML = `
         <div class="studio-library-card__top">
           <span class="studio-library-card__category">${CATEGORY_LABELS[post.category] ?? post.category}</span>
-          <span class="studio-library-card__state">${post.draft ? 'Draft' : 'Live'}</span>
+          <span class="studio-library-card__state">${post.draft ? '비공개' : '공개'}</span>
         </div>
         <strong>${post.title || '제목 없음'}</strong>
         <p>${post.description || '설명 없음'}</p>
         <small>${post.pubDate} · /blog/${post.slug || 'post-slug'}/</small>
-        ${post.dirty ? '<span class="studio-library-card__dirty">저장 안 됨</span>' : ''}
+        ${post.dirty ? '<span class="studio-library-card__dirty">임시저장</span>' : ''}
       `;
       button.addEventListener('click', () => selectPost(post.id));
       elements.library.appendChild(button);
@@ -834,6 +850,7 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
     if (!post) return;
     fillForm(post);
     renderPanels();
+    updateLayout();
     updateBadges();
   }
 
@@ -916,13 +933,13 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
     if (!post.updatedDate) post.updatedDate = nowDate();
     post.dirty = true;
     fillForm(post);
-    if (state.blogHandle) {
-      await saveCurrent();
-    } else {
-      saveSnapshot();
-      renderAll();
-      toast('draft 상태로 바꿨습니다. 저장하거나 다운로드해주세요.', 'warn');
-    }
+      if (state.blogHandle) {
+        await saveCurrent();
+      } else {
+        saveSnapshot();
+        renderAll();
+        toast('비공개 상태로 바꿨습니다. 저장하거나 다운로드해주세요.', 'warn');
+      }
   }
 
   async function hardDeleteCurrent() {
@@ -961,12 +978,23 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
     toast('브라우저 임시저장을 복원했습니다.', 'ok');
   }
 
+  function updateLayout() {
+    const hasSidepanel = Boolean(state.sideMode) && !state.focusMode;
+    const hasLibrary = state.libraryOpen && !state.focusMode;
+
+    elements.libraryShell.hidden = !hasLibrary;
+    elements.sidepanel.hidden = !hasSidepanel;
+    elements.layout.classList.toggle('has-library', hasLibrary);
+    elements.layout.classList.toggle('has-sidepanel', hasSidepanel);
+  }
+
   function setSideMode(mode) {
-    state.sideMode = mode;
-    elements.panelPreview.hidden = mode !== 'preview';
-    elements.panelSettings.hidden = mode !== 'settings';
-    elements.panelNotes.hidden = mode !== 'notes';
-    elements.titleTabs.forEach((button) => button.classList.toggle('is-active', button.dataset.side === mode));
+    state.sideMode = state.sideMode === mode ? '' : mode;
+    elements.panelPreview.hidden = state.sideMode !== 'preview';
+    elements.panelSettings.hidden = state.sideMode !== 'settings';
+    elements.panelNotes.hidden = state.sideMode !== 'notes';
+    elements.titleTabs.forEach((button) => button.classList.toggle('is-active', button.dataset.side === state.sideMode));
+    updateLayout();
   }
 
   function toggleMarkdownOutput() {
@@ -979,6 +1007,13 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
     state.focusMode = !state.focusMode;
     elements.shell.classList.toggle('is-focus', state.focusMode);
     elements.focus.textContent = state.focusMode ? '집중 모드 해제' : '집중 모드';
+    updateLayout();
+  }
+
+  function toggleLibrary() {
+    state.libraryOpen = !state.libraryOpen;
+    updateLayout();
+    updateBadges();
   }
 
   function applySnippet(kind) {
@@ -1005,6 +1040,7 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
       elements.title,
       elements.description,
       elements.category,
+      elements.visibility,
       elements.pubDate,
       elements.updatedDate,
       elements.slug,
@@ -1018,10 +1054,11 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
       element.addEventListener('change', syncFromForm);
     });
 
-    [elements.featured, elements.draft].forEach((element) => element.addEventListener('change', syncFromForm));
+    [elements.featured].forEach((element) => element.addEventListener('change', syncFromForm));
   }
 
   function bindEvents() {
+    elements.libraryToggle.addEventListener('click', toggleLibrary);
     elements.connect.addEventListener('click', () => connectRepo(true));
     elements.reconnect.addEventListener('click', () => connectRepo(true));
     elements.focus.addEventListener('click', toggleFocusMode);
@@ -1064,6 +1101,7 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
     elements.hardDelete.addEventListener('click', hardDeleteCurrent);
     elements.previewToggle.addEventListener('click', () => setSideMode('preview'));
     elements.settingsToggle.addEventListener('click', () => setSideMode('settings'));
+    elements.notesToggle.addEventListener('click', () => setSideMode('notes'));
     elements.titleTabs.forEach((button) => button.addEventListener('click', () => setSideMode(button.dataset.side)));
     elements.markdownToggle.addEventListener('click', toggleMarkdownOutput);
     elements.toolbars.forEach((button) => button.addEventListener('click', () => applySnippet(button.dataset.snippet)));
@@ -1092,7 +1130,7 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
     state.snapshotAvailable = Boolean(loadSnapshot());
     elements.restore.disabled = !state.snapshotAvailable;
     renderAll();
-    setSideMode('preview');
+    setSideMode('');
     if ('showDirectoryPicker' in window) {
       await connectRepo(false, true);
     } else {
@@ -1233,15 +1271,32 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
 
   .studio-layout {
     display: grid;
-    grid-template-columns: minmax(260px, 300px) minmax(0, 1fr) minmax(330px, 380px);
+    grid-template-columns: minmax(0, 1fr);
     gap: 1rem;
     align-items: start;
+  }
+
+  .studio-layout.has-library {
+    grid-template-columns: minmax(240px, 280px) minmax(0, 1fr);
+  }
+
+  .studio-layout.has-sidepanel {
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 360px);
+  }
+
+  .studio-layout.has-library.has-sidepanel {
+    grid-template-columns: minmax(240px, 280px) minmax(0, 1fr) minmax(320px, 360px);
   }
 
   .studio-library-shell,
   .studio-sidepanel,
   .studio-editor-shell {
     min-height: 0;
+  }
+
+  .studio-library-shell[hidden],
+  .studio-sidepanel[hidden] {
+    display: none !important;
   }
 
   .studio-library-shell,
@@ -1329,6 +1384,7 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
   .studio-editor-shell {
     display: grid;
     gap: 1rem;
+    width: 100%;
     padding: 1.1rem 1.25rem 1.5rem;
     border-radius: 32px;
     background: linear-gradient(180deg, rgba(14, 16, 21, 0.95), rgba(9, 10, 14, 0.96));
@@ -1477,7 +1533,7 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
 
   .studio-body-textarea,
   .studio-output {
-    min-height: 34rem;
+    min-height: 42rem;
     resize: vertical;
     line-height: 1.78;
     font-size: 1.06rem;
@@ -1526,9 +1582,15 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
   .studio-tag-zone__head p:last-child,
   .studio-topbar__identity p:last-child,
   .studio-settings-card label span,
+  .studio-inline-note,
   .studio-checklist li,
   .studio-validation li {
     color: var(--muted);
+  }
+
+  .studio-inline-note {
+    margin: 0;
+    font-size: 0.92rem;
   }
 
   .studio-settings-grid {
@@ -1681,6 +1743,23 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
     border-color: rgba(255, 116, 116, 0.16);
   }
 
+  .studio-settings-card--advanced summary {
+    cursor: pointer;
+    color: var(--text);
+    font-weight: 700;
+    list-style: none;
+  }
+
+  .studio-settings-card--advanced summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .studio-settings-summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
   .studio-danger-row {
     align-items: stretch;
   }
@@ -1738,22 +1817,18 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
   }
 
   @media (max-width: 1200px) {
-    .studio-layout {
-      grid-template-columns: minmax(240px, 280px) minmax(0, 1fr);
+    .studio-layout.has-sidepanel,
+    .studio-layout.has-library.has-sidepanel {
+      grid-template-columns: minmax(0, 1fr);
     }
 
     .studio-sidepanel {
-      grid-column: 1 / -1;
       position: static;
     }
   }
 
   @media (max-width: 960px) {
     .studio-topbar {
-      grid-template-columns: 1fr;
-    }
-
-    .studio-layout {
       grid-template-columns: 1fr;
     }
 
