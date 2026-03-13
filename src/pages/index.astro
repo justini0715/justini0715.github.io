@@ -1,0 +1,98 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import SectionTitle from '../components/SectionTitle.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import PostCard from '../components/PostCard.astro';
+import { focusAreas, siteMeta, strengths, writingPrinciples } from '../data/site';
+import { getFeaturedProjects, getRecentPosts } from '../lib/content';
+
+const featuredProjects = await getFeaturedProjects(3);
+const recentPosts = await getRecentPosts(4);
+---
+
+<MainLayout title={siteMeta.title} description={siteMeta.description}>
+  <section class="hero">
+    <div class="container hero__grid">
+      <div>
+        <p class="eyebrow">Portfolio, blog, and 42 archive</p>
+        <h1>Project case studies, technical posts, and 42 writeups in one static site.</h1>
+        <p class="hero__lede">{siteMeta.intro}</p>
+        <div class="hero__actions">
+          <a class="button" href="/projects">See featured projects</a>
+          <a class="button button--ghost" href="/blog">Browse the blog</a>
+        </div>
+      </div>
+      <aside class="panel">
+        <p class="eyebrow">Current focus</p>
+        <p>{siteMeta.statusLine}</p>
+        <ul class="stack-list">
+          {focusAreas.map((item) => <li>{item}</li>)}
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container two-column">
+      <article class="panel">
+        <p class="eyebrow">What you can expect here</p>
+        <h2>Less template filler, more implementation context.</h2>
+        <p>
+          The goal is a launch-ready site that feels like a real developer home: useful project summaries, honest blog posts, and a 42 series that can keep growing without being reorganized every month.
+        </p>
+      </article>
+      <div class="feature-grid">
+        {strengths.map((item) => (
+          <article class="card stat-card">
+            <p>{item}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionTitle
+        eyebrow="Featured work"
+        title="A portfolio mix with infrastructure, graphics, concurrency, and algorithms"
+        description="These entries are grounded in the existing 42 repositories and chosen to show range rather than one repeated project shape."
+      />
+      <div class="card-grid">
+        {featuredProjects.map((project) => <ProjectCard project={project} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tint">
+    <div class="container">
+      <SectionTitle
+        eyebrow="Recent writing"
+        title="Technical posts and 42 writeups now share the same archive"
+        description="The launch set already demonstrates both technical blogging and the assignment-by-assignment 42 flow."
+      />
+      <div class="card-grid">
+        {recentPosts.length ? (
+          recentPosts.map((post) => <PostCard post={post} />)
+        ) : (
+          <article class="card empty-state">
+            <h3>Launch posts are next</h3>
+            <p>
+              The structure already supports categories, tags, series ordering, and draft control. The next phase fills it with technical and 42 content.
+            </p>
+          </article>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container feature-grid">
+      {writingPrinciples.map((item) => (
+        <article class="card stat-card">
+          <p>{item}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+</MainLayout>

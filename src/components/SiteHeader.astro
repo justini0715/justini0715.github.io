@@ -1,0 +1,41 @@
+---
+import { siteMeta } from '../data/site';
+
+interface Props {
+  pathname: string;
+}
+
+const { pathname } = Astro.props;
+const isActive = (href: string) => {
+  if (href === '/') return pathname === '/';
+  return pathname === href || pathname.startsWith(`${href}/`);
+};
+---
+
+<header class="site-shell__header">
+  <div class="container site-nav">
+    <a class="site-brand" href="/">
+      <span class="site-brand__mark">42</span>
+      <span>
+        <strong>{siteMeta.shortTitle}</strong>
+        <small>developer portfolio & log</small>
+      </span>
+    </a>
+
+    <nav aria-label="Primary navigation">
+      <ul class="site-nav__links">
+        {siteMeta.nav.map((item) => (
+          <li>
+            <a class:list={{ 'is-active': isActive(item.href) }} href={item.href}>
+              {item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <a class="button button--ghost site-nav__cta" href={siteMeta.github} target="_blank" rel="noreferrer">
+      GitHub
+    </a>
+  </div>
+</header>

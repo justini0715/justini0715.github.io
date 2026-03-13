@@ -1,0 +1,52 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+import SectionTitle from '../../components/SectionTitle.astro';
+import { seriesOverview } from '../../data/site';
+import { getPublishedPosts } from '../../lib/content';
+
+const posts = await getPublishedPosts();
+---
+
+<MainLayout title="Blog" description="Technical writing, project notes, and an assignment-by-assignment 42 series.">
+  <section class="page-hero">
+    <div class="container narrow-flow">
+      <p class="eyebrow">Blog</p>
+      <h1>A writing system built for shipping posts one-by-one.</h1>
+      <p>
+        The archive mixes technical notes, setup writeups, and 42 assignment posts. Categories, tags, and series ordering keep the flow close to a velog-style publishing habit without losing structure.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionTitle
+        eyebrow="42 tracks"
+        title="Series lanes for long-term writing"
+        description="Each assignment can stand alone while still belonging to a larger learning arc."
+      />
+      <div class="feature-grid">
+        {seriesOverview.map((series) => (
+          <article class="card stat-card">
+            <h3>{series.title}</h3>
+            <p>{series.description}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tint">
+    <div class="container">
+      <SectionTitle
+        eyebrow="Published posts"
+        title="Launch archive"
+        description="Technical posts and 42 entries are both first-class citizens in the same collection."
+      />
+      <div class="card-grid">
+        {posts.map((post) => <PostCard post={post} />)}
+      </div>
+    </div>
+  </section>
+</MainLayout>

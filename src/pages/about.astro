@@ -1,0 +1,80 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import SectionTitle from '../components/SectionTitle.astro';
+import { currentFocus, focusAreas, siteMeta, stackSummary, strengths } from '../data/site';
+---
+
+<MainLayout title="About" description="About the changwpa developer site and the working style behind it.">
+  <section class="page-hero">
+    <div class="container narrow-flow">
+      <p class="eyebrow">About</p>
+      <h1>A personal site for turning real project work into durable writing.</h1>
+      <p>
+        This site is organized around one simple rule: if a project or post cannot stay useful after launch day, it needs a better structure. That is why the rebuild centers on Astro, Markdown content, and repository-backed case studies.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container two-column">
+      <div>
+        <SectionTitle
+          eyebrow="Short biography"
+          title="A systems-minded developer journal anchored in 42 work"
+          description="The site focuses on C projects, infrastructure exercises, and practical notes about rebuilding and shipping source-first websites."
+        />
+        <p>
+          Instead of separating portfolio, blog, and assignment notes into different silos, this site keeps them in one place. The result should feel coherent whether you arrive looking for a project summary, a build note, or the next entry in the 42 series.
+        </p>
+      </div>
+      <div class="panel">
+        <p class="eyebrow">Interests and strengths</p>
+        <ul class="stack-list">
+          {strengths.map((item) => <li>{item}</li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tint">
+    <div class="container two-column">
+      <div class="panel">
+        <p class="eyebrow">Current focus</p>
+        <ul class="stack-list">
+          {currentFocus.map((item) => <li>{item}</li>)}
+        </ul>
+      </div>
+      <div>
+        <SectionTitle
+          eyebrow="Stack summary"
+          title="Chosen for maintainability over novelty"
+          description="Static output, structured content, and GitHub Pages deployment keep the workflow lightweight enough to update often."
+        />
+        <div class="feature-grid feature-grid--compact">
+          {stackSummary.map((item) => (
+            <article class="card stat-card">
+              <p>{item}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionTitle
+        eyebrow="What will show up in the archive"
+        title="Portfolio entries, technical notes, and assignment-by-assignment 42 posts"
+        description="The content model is designed so the archive can grow one meaningful entry at a time without turning into a dumping ground."
+      />
+      <div class="feature-grid">
+        {focusAreas.map((item) => (
+          <article class="card stat-card">
+            <p>{item}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+</MainLayout>
