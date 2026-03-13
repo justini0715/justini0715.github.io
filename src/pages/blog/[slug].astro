@@ -13,23 +13,39 @@ const { Content } = await render(post);
 const allPosts = await getPublishedPosts();
 const { previous, next } = getAdjacentSeriesPosts(allPosts, post);
 const formattedDate = new Intl.DateTimeFormat('en', { dateStyle: 'long' }).format(post.data.pubDate);
+const seriesContext = post.data.seriesTitle
+  ? `${post.data.seriesTitle} 시리즈의 한 글로, 같은 학습 흐름 안에서 앞뒤 글과 연결됩니다.`
+  : `${post.data.category} 카테고리에서 읽을 수 있는 독립적인 기술 글입니다.`;
 ---
 
-<MainLayout title={post.data.title} description={post.data.description} ogType="article" publishedTime={post.data.pubDate.toISOString()}>
-  <section class="page-hero">
-    <div class="container narrow-flow">
-      <p class="eyebrow">{post.data.category}</p>
-      <h1>{post.data.title}</h1>
-      <p>{post.data.description}</p>
-      <div class="post-meta-row">
-        <span>{formattedDate}</span>
-        {post.data.seriesTitle && <span>{post.data.seriesTitle}</span>}
+<MainLayout
+  title={post.data.title}
+  description={post.data.description}
+  ogType="article"
+  publishedTime={post.data.pubDate.toISOString()}
+  updatedTime={post.data.updatedDate?.toISOString()}
+>
+  <section class="page-hero page-hero--post">
+    <div class="container hero__grid">
+      <div class="reading-surface narrow-flow">
+        <p class="eyebrow">{post.data.category}</p>
+        <h1>{post.data.title}</h1>
+        <p>{post.data.description}</p>
+        <div class="post-meta-row">
+          <span class="chip">{formattedDate}</span>
+          {post.data.seriesTitle && <span class="muted">Series · {post.data.seriesTitle}</span>}
+        </div>
       </div>
-      {post.data.tags.length > 0 && (
-        <ul class="inline-tags">
-          {post.data.tags.map((tag) => <li>{tag}</li>)}
-        </ul>
-      )}
+
+      <aside class="panel utility-panel">
+        <p class="eyebrow">Entry context</p>
+        <p class="meta-note">{seriesContext}</p>
+        {post.data.tags.length > 0 && (
+          <ul class="inline-tags">
+            {post.data.tags.map((tag) => <li>{tag}</li>)}
+          </ul>
+        )}
+      </aside>
     </div>
   </section>
 
@@ -43,17 +59,19 @@ const formattedDate = new Intl.DateTimeFormat('en', { dateStyle: 'long' }).forma
     <section class="section section--tint">
       <div class="container series-nav">
         {previous ? (
-          <a class="card" href={`/blog/${previous.id}/`}>
+          <a class="series-card" href={`/blog/${previous.id}/`}>
             <p class="eyebrow">Previous in series</p>
             <strong>{previous.data.title}</strong>
+            <span class="muted">Continue backward through the assignment log.</span>
           </a>
-        ) : <div />}
+        ) : <div class="series-nav__empty"></div>}
         {next ? (
-          <a class="card" href={`/blog/${next.id}/`}>
+          <a class="series-card" href={`/blog/${next.id}/`}>
             <p class="eyebrow">Next in series</p>
             <strong>{next.data.title}</strong>
+            <span class="muted">Move forward to the next linked writeup.</span>
           </a>
-        ) : <div />}
+        ) : <div class="series-nav__empty"></div>}
       </div>
     </section>
   )}

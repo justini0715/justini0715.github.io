@@ -10,22 +10,32 @@ const featuredProjects = await getFeaturedProjects(3);
 const recentPosts = await getRecentPosts(4);
 ---
 
-<MainLayout title={siteMeta.title} description={siteMeta.description}>
-  <section class="hero">
+<MainLayout
+  title="Developer portfolio, 42 projects, and technical blog"
+  description="Developer portfolio and technical blog with 42 project writeups, systems programming notes, concurrency lessons, infrastructure work, and source-first Astro publishing."
+>
+  <section class="hero hero--home">
     <div class="container hero__grid">
-      <div>
-        <p class="eyebrow">Portfolio, blog, and 42 archive</p>
-        <h1>Project case studies, technical posts, and 42 writeups in one static site.</h1>
+      <div class="narrow-flow">
+        <p class="eyebrow">Developer portfolio · 42 projects · technical blog</p>
+        <h1>Developer portfolio, 42 project writeups, and technical posts in one source-first site.</h1>
         <p class="hero__lede">{siteMeta.intro}</p>
+        <p class="hero-microcopy">{siteMeta.statusLine}</p>
         <div class="hero__actions">
-          <a class="button" href="/projects">See featured projects</a>
-          <a class="button button--ghost" href="/blog">Browse the blog</a>
+          <a class="button" href="/projects">View projects</a>
+          <a class="button button--ghost" href="/blog">Read technical posts</a>
         </div>
       </div>
-      <aside class="panel">
-        <p class="eyebrow">Current focus</p>
-        <p>{siteMeta.statusLine}</p>
-        <ul class="stack-list">
+
+      <aside class="hero-note archive-panel">
+        <div>
+          <p class="eyebrow">What you will find here</p>
+          <h2>Case studies and writeups grounded in real repository work.</h2>
+          <p class="page-kicker">
+            Expect 42 assignments, C and systems programming notes, debugging lessons, infrastructure work, and source-first web publishing experiments.
+          </p>
+        </div>
+        <ul class="utility-list">
           {focusAreas.map((item) => <li>{item}</li>)}
         </ul>
       </aside>
@@ -34,14 +44,15 @@ const recentPosts = await getRecentPosts(4);
 
   <section class="section">
     <div class="container two-column">
-      <article class="panel">
-        <p class="eyebrow">What you can expect here</p>
-        <h2>Less template filler, more implementation context.</h2>
+      <article class="panel utility-panel">
+        <p class="eyebrow">What this site optimizes for</p>
+        <h2>Fast context for developers who want technical signal, not filler.</h2>
         <p>
-          The goal is a launch-ready site that feels like a real developer home: useful project summaries, honest blog posts, and a 42 series that can keep growing without being reorganized every month.
+          Each page aims to answer the practical questions quickly: what the project was, what constraints mattered, what broke, and what changed after the first pass.
         </p>
       </article>
-      <div class="feature-grid">
+
+      <div class="feature-grid feature-grid--compact">
         {strengths.map((item) => (
           <article class="card stat-card">
             <p>{item}</p>
@@ -55,8 +66,8 @@ const recentPosts = await getRecentPosts(4);
     <div class="container">
       <SectionTitle
         eyebrow="Featured work"
-        title="A portfolio mix with infrastructure, graphics, concurrency, and algorithms"
-        description="These entries are grounded in the existing 42 repositories and chosen to show range rather than one repeated project shape."
+        title="Repository-backed project cases with different technical textures"
+        description="Infrastructure, graphics, concurrency, and algorithmic work presented as focused developer case studies rather than a flat repo grid."
       />
       <div class="card-grid">
         {featuredProjects.map((project) => <ProjectCard project={project} />)}
@@ -68,8 +79,8 @@ const recentPosts = await getRecentPosts(4);
     <div class="container">
       <SectionTitle
         eyebrow="Recent writing"
-        title="Technical posts and 42 writeups now share the same archive"
-        description="The launch set already demonstrates both technical blogging and the assignment-by-assignment 42 flow."
+        title="Technical posts and 42 writeups collected in one readable blog archive"
+        description="Setup notes, retrospectives, debugging lessons, and assignment writeups stay connected without losing their own context."
       />
       <div class="card-grid">
         {recentPosts.length ? (
@@ -87,12 +98,19 @@ const recentPosts = await getRecentPosts(4);
   </section>
 
   <section class="section">
-    <div class="container feature-grid">
-      {writingPrinciples.map((item) => (
-        <article class="card stat-card">
-          <p>{item}</p>
-        </article>
-      ))}
+    <div class="container">
+      <SectionTitle
+        eyebrow="Writing principles"
+        title="Editorial rules for what makes it into the archive"
+        description="Each entry should earn its place by clarifying a real implementation detail, technical decision, or lesson."
+      />
+      <div class="feature-grid">
+        {writingPrinciples.map((item) => (
+          <article class="card stat-card">
+            <p>{item}</p>
+          </article>
+        ))}
+      </div>
     </div>
   </section>
 </MainLayout>

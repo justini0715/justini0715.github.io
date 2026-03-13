@@ -5,24 +5,34 @@ const year = new Date().getFullYear();
 
 <footer class="site-shell__footer">
   <div class="container footer-grid">
-    <div>
-      <p class="eyebrow">Source-first publishing</p>
+    <div class="footer-column">
+      <p class="eyebrow">Public notebook</p>
       <h2>{siteMeta.shortTitle}</h2>
       <p>
-        Built for project case studies, technical posts, and a long-running 42 series that stays readable on launch day.
+        A static developer archive for 42 project records, implementation notes, and technical writing kept close to the source repository.
       </p>
     </div>
 
-    <div>
-      <p class="eyebrow">Links</p>
+    <div class="footer-column">
+      <p class="eyebrow">Routes</p>
+      <ul class="footer-nav">
+        {siteMeta.nav.map((item) => (
+          <li><a href={item.href}>{item.label}</a></li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="footer-column">
+      <p class="eyebrow">Source</p>
       <ul class="footer-links">
         <li><a href={siteMeta.github} target="_blank" rel="noreferrer">GitHub profile</a></li>
         <li><a href={siteMeta.repo} target="_blank" rel="noreferrer">Site repository</a></li>
-        <li><a href="/blog">Latest writing</a></li>
+        <li><a href="/blog">Latest notes</a></li>
       </ul>
     </div>
   </div>
   <div class="container footer-meta">
-    <small>© {year} {siteMeta.shortTitle}. Built with Astro and deployed to GitHub Pages.</small>
+    <small>© {year} {siteMeta.shortTitle}. Built with Astro static output and deployed via GitHub Pages.</small>
+    <small>Public reading routes stay static; <code>/studio</code> remains a locked local-only writing tool in production.</small>
   </div>
 </footer>

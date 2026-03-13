@@ -7,14 +7,31 @@ import { getProjects } from '../../lib/content';
 const projects = await getProjects();
 ---
 
-<MainLayout title="Projects" description="Structured project entries for 42 work and other development projects.">
-  <section class="page-hero">
-    <div class="container narrow-flow">
-      <p class="eyebrow">Projects</p>
-      <h1>Meaningful entries instead of a flat repository list.</h1>
-      <p>
-        The launch set is built from existing repositories with clear technical angles: infrastructure, graphics, concurrency, and constrained algorithm design.
-      </p>
+<MainLayout
+  title="Projects and 42 case studies"
+  description="Developer portfolio projects and 42 case studies covering infrastructure, graphics, concurrency, algorithms, and source-first engineering work."
+>
+  <section class="page-hero page-hero--projects">
+    <div class="container hero__grid">
+      <div class="narrow-flow">
+        <p class="eyebrow">Developer projects · 42 case studies</p>
+        <h1>Project case studies across infrastructure, graphics, concurrency, and algorithms.</h1>
+        <p>
+          This directory is built from existing repositories and shaped for technical readers: what the project covered, which constraints mattered, and why the implementation is worth reviewing.
+        </p>
+        <p class="page-kicker">
+          Expect 42 projects, Docker and web infrastructure work, graphics experiments, and operation-constrained algorithm cases.
+        </p>
+      </div>
+
+      <aside class="panel archive-panel">
+        <p class="eyebrow">What each case tracks</p>
+        <ul class="utility-list">
+          <li>Project role and current status</li>
+          <li>One implementation highlight instead of generic marketing copy</li>
+          <li>Stack markers plus repository access</li>
+        </ul>
+      </aside>
     </div>
   </section>
 
@@ -23,7 +40,7 @@ const projects = await getProjects();
       <SectionTitle
         eyebrow="Selected work"
         title="Repository-backed case studies"
-        description="Each card focuses on scope, stack, and one high-signal implementation highlight drawn from the current project materials."
+        description="Each entry focuses on the technical angle that makes the repository useful to a reviewer, teammate, or future self."
       />
       <div class="card-grid">
         {projects.map((project) => <ProjectCard project={project} />)}

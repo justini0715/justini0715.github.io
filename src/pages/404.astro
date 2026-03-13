@@ -2,19 +2,30 @@
 import MainLayout from '../layouts/MainLayout.astro';
 ---
 
-<MainLayout title="404" description="Page not found." noindex={true}>
-  <section class="page-hero">
-    <div class="container narrow-flow">
-      <p class="eyebrow">404</p>
-      <h1>This page is missing, but the rest of the site is still reachable.</h1>
-      <p>
-        Try the homepage, projects page, or blog index to continue exploring the rebuilt portfolio and writing archive.
-      </p>
-      <div class="hero__actions">
-        <a class="button" href="/">Go home</a>
-        <a class="button button--ghost" href="/projects">Open projects</a>
-        <a class="button button--ghost" href="/blog">Read the blog</a>
+<MainLayout title="404" description="The page you are looking for does not exist. Try the projects page or technical blog archive instead." noindex={true}>
+  <section class="page-hero page-hero--error">
+    <div class="container hero__grid">
+      <div class="narrow-flow">
+        <p class="eyebrow">404 · missing page</p>
+        <h1>The page you are looking for does not exist.</h1>
+        <p>
+          Try the homepage, project directory, or technical blog archive to continue exploring the site.
+        </p>
+        <div class="hero__actions">
+          <a class="button" href="/">Go home</a>
+          <a class="button button--ghost" href="/projects">Open projects</a>
+          <a class="button button--ghost" href="/blog">Read the blog</a>
+        </div>
       </div>
+
+      <aside class="panel error-panel">
+        <p class="eyebrow">Quick recovery</p>
+        <ul class="utility-list">
+          <li>Start at Home for the portfolio overview.</li>
+          <li>Open Projects for repository-backed case studies.</li>
+          <li>Open Blog for technical posts and 42 writeups.</li>
+        </ul>
+      </aside>
     </div>
   </section>
 </MainLayout>

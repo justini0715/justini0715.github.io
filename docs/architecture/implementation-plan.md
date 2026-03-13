@@ -7,8 +7,8 @@
 - Domain target: `https://changwpa.kro.kr`
 
 ## Current Phase
-- Phase: Phase 8 — Studio Completion
-- Branch: `phase/8-studio-completion`
+- Phase: Phase 14 — Public Reading & Typography Polish
+- Branch: `phase/14-public-reading-typography-polish`
 - Status: Complete
 
 ## Official Phase List
@@ -20,16 +20,26 @@
 6. Phase 6 — Studio Hardening
 7. Phase 7 — Studio Usability
 8. Phase 8 — Studio Completion
+9. Phase 9 — Studio UI Cleanup
+10. Phase 10 — Studio UI Polish
+11. Phase 11 — Studio Visual Polish
+12. Phase 12 — Sitewide UI System Polish
+13. Phase 13 — Content / Copy / SEO Polish
+14. Phase 14 — Public Reading & Typography Polish
 
 ## Current Phase Scope
-- Refine the studio based on real usage feedback so the surface is cleaner and more obviously organized.
-- Separate 상태와 액션을 더 명확히 구분하고, 버튼/정보 밀도를 낮춘다.
-- Prepare the studio so future backend/storage adapters can be added on top of a cleaner UX foundation.
+- Improve the reading experience on the public site with cleaner technical typography and calmer page surfaces.
+- Refine the main page, portfolio pages, and article reading layouts so content feels more static, precise, and technical.
+- Introduce a cleaner public font system and adjust supporting spacing/rhythm around visible content blocks.
 
 ## Current Phase Non-Scope
 - Replacing the static content architecture with a hosted CMS.
 - Adding external backend, database, or authentication.
 - Building a full multi-user publishing product.
+- Changing the underlying Markdown storage/file IO model.
+- Reworking the already-polished studio beyond compatibility checks after global style changes.
+- Rebuilding the public UI system again immediately after phase 12.
+- Another large copy/SEO rewrite immediately after phase 13.
 
 ## Architecture Summary
 - Astro static output with content collections for blog posts and projects.
@@ -42,16 +52,17 @@
 - blog taxonomy: `42`, `project`, `devlog`, `setup`, `retrospective`.
 
 ## Deliverables Checklist
-- [x] 상단 상태/액션 구분 개선
-- [x] 글 목록 / 공개 설정 / 검사 패널 정리
-- [x] 태그/제목/본문 영역 가독성 개선
-- [x] 로컬 사용 안내 문구 간소화
-- [x] Phase 8 verification completed
+- [x] public font system refinement for cleaner technical reading
+- [x] article/prose reading surface polish
+- [x] homepage/projects/blog content block readability improvements
+- [x] Phase 14 verification completed
 
 ## Verification Plan
-1. Run local build and type checks after the completion pass.
-2. Verify localhost `/studio` shows the cleaner, less cluttered layout with a larger writing area.
-3. Confirm production `/studio` remains locked and docs match the updated workflow.
+1. Run local build and type checks after the reading/typography polish pass.
+2. Verify the public routes `/`, `/about`, `/projects`, `/blog`, `/blog/[slug]`, and `/404` still render with the refined typography and spacing.
+3. Confirm cards, prose blocks, and route intros feel calmer, cleaner, and more technical than before.
+4. Re-check `/studio` after any shared typography/style adjustments for compatibility.
+5. Confirm production `/studio` remains locked and the public routes remain static-output compatible.
 
 ## Work Log
 - Cloned the remote user-site repository into the writable workspace.
@@ -92,6 +103,40 @@
 - Reworked the top bar so 상태와 액션이 시각적으로 더 분리되도록 만들고, 버튼 이름을 더 직관적으로 바꿨다.
 - Removed the always-visible meta strip, moved route/file details into settings, and simplified the default screen so the writing area dominates.
 - Simplified the hero copy into a short action guide and reduced the amount of explanatory text on the page.
+- Re-opened Phase 8 locally to finish the residual studio cleanup after the component-level lock removal patch left a stale localhost guard in the repo connection path.
+- Removed the stale localhost guard from `WritingStudioApp.astro` so dev-mode repo connection can proceed again under the page-level `import.meta.env.DEV` gate.
+- Cleaned the leftover mobile-only lock-screen CSS selector that became dead after the component-level lock markup was removed.
+- Started `phase/9-studio-ui-cleanup` from the verified phase-8 branch after the user explicitly asked to proceed with a cleaner studio redesign.
+- Planning direction for phase 9: `Night Desk / Manuscript` aesthetic, one anchored manuscript column, fewer always-visible controls, and drawer-like supporting surfaces for library/preview/settings.
+- Compressed the `/studio` intro so dev mode reaches the tool faster while keeping the production lock guidance intact.
+- Reworked the studio chrome into a calmer manuscript desk: compact top bar, `새 글 · 도구` menu, lighter tag disclosure, and cleaner `문서 설정` / `점검` naming.
+- Turned the library into a drawer-like support surface and kept the editor canvas anchored as the dominant panel.
+- Synced the writing-studio runbook with the new labels and default authoring flow.
+- Started `phase/10-studio-ui-polish` from the verified phase-9 branch after the user asked to keep going.
+- Phase-10 focus: collapse the remaining dev guidance into a smaller disclosure, make library/sidepanel dismissal feel more drawer-like, and reduce the always-visible formatting noise.
+- Replaced the dev hero block with a compact expandable “로컬 열기 안내” note so the editor starts higher on the page.
+- Added an overlay layer plus `Esc` dismissal so the library and contextual side drawer behave like temporary support surfaces instead of competing layout columns.
+- Moved quick-insert formatting buttons behind a compact disclosure to reduce constant control noise above the manuscript area.
+- Tightened the remaining labels and notes so the dev surface reads more like a writing desk than a dashboard.
+- Started `phase/11-studio-visual-polish` from the verified phase-10 branch after the user asked to keep going again.
+- Cleaned up the remaining English-heavy surface labels so the studio now reads more coherently in Korean (`원고 데스크`, `라이브러리`, `오른쪽 패널`, `원본 Markdown`, `시리즈`, `고급`, `주의 영역`, `점검`, `흐름`).
+- Removed the now-dead reconnect button from the visible chrome and kept a single adaptive `폴더 연결 / 폴더 변경` action.
+- Added a save-shortcut hint and tightened the final microcopy so the surface feels calmer without adding new controls.
+- Started `phase/12-sitewide-ui-system-polish` after studio reached a sufficiently polished local state and the user explicitly asked to move on to site-wide UI work.
+- Reworked the global design tokens and spacing rhythm in `src/styles/global.css` so the public site reads more like an editorial systems notebook and less like a generic dark starter.
+- Upgraded shared shell components (`MainLayout`, `SiteHeader`, `SiteFooter`, `SectionTitle`) to introduce stronger route identity, more deliberate navigation tone, and clearer section hierarchy.
+- Differentiated `PostCard` and `ProjectCard` so project work, writing, utility notes, and metadata no longer collapse into one repeated card treatment.
+- Redesigned the public route intros across `/`, `/about`, `/projects`, `/blog`, `/blog/[slug]`, and `404` so each page type opens with a more distinct composition while staying in one visual system.
+- Phase 12 stopped at a clean PR-ready local snapshot (`phase/12-sitewide-ui-system-polish` at `883e74b`) because actual push / PR / merge / deploy requires GitHub auth.
+- Started `phase/13-content-copy-seo-polish` after the user asked to continue with content, copy, and SEO work following the PR-ready phase-12 snapshot.
+- Tightened site-wide copy so the public routes talk more directly about developer portfolio work, 42 projects, systems programming, and technical writing instead of over-explaining the site structure.
+- Improved metadata with stronger page-specific titles/descriptions plus reusable author and social-image fields in `BaseHead`.
+- Added a default social preview asset (`public/og-default.svg`) so Open Graph and Twitter previews resolve to a concrete portfolio/blog image.
+- Refined homepage, about, projects, blog, post, and 404 copy toward a calmer, more specific, less meta self-descriptive tone.
+- Started `phase/14-public-reading-typography-polish` after the user asked to keep pushing on the visible reading pages and specifically called out typography as a weakness.
+- Shifted the public reading system toward a cleaner technical sans/mono pairing and flatter surfaces so the main page, project pages, and article pages feel more static, precise, and less glossy.
+- Tightened shared chrome labels (`systems notes · project logs · static publishing`, `GitHub ↗`, `Open note →`, `status · ...`) so metadata and navigation read more like a technical publication.
+- Reworked the global spacing, radii, shadows, and prose surfaces in `global.css` so the visible reading routes feel quieter and more legible without touching the studio-specific local writing tool.
 
 ## Verification Results
 - `npm install -D astro @astrojs/sitemap @astrojs/check typescript` → dependencies installed successfully.
@@ -121,6 +166,40 @@
 - `playwright screenshot --full-page http://127.0.0.1:4327/studio /tmp/studio-usability.png` → verified the cleaner default local layout with much larger editor area and optional side panels.
 - `curl http://127.0.0.1:4326/studio` → confirmed the local studio now exposes `레포 연결`, `저장`, and the active editor rather than the production lock screen.
 - `playwright screenshot --full-page http://127.0.0.1:4328/studio /tmp/studio-usability-2.png` → verified the less cluttered completion pass with larger dark writing area, clearer status/action grouping, and optional side panels.
+- `grep "state.isLocalHost\\|isLocalHost\\|studio-locked-actions\\|studio-locked-shell\\|studio-locked-card" src/components/WritingStudioApp.astro` → no remaining stale localhost guard or component-level lock-screen leftovers.
+- `npm run check` after the cleanup → success (`tsc --noEmit`).
+- `npm run build` after the cleanup → success; rebuilt all public routes plus `/studio`.
+- `grep dist/studio/index.html` after the cleanup → production output still contains the locked `/studio` notice and no editor markers.
+- `npm run check` after phase-9 UI cleanup → success (`tsc --noEmit`).
+- `npm run build` after phase-9 UI cleanup → success; rebuilt all public routes plus `/studio`.
+- `npm run dev -- --host 127.0.0.1 --port 4347` outside the sandbox + `curl http://127.0.0.1:4347/studio` → confirmed dev `/studio` renders the new `Night desk` header, `라이브러리`, `문서 설정`, `점검`, and `새 글 · 도구` markers.
+- `grep dist/studio/index.html` after phase-9 UI cleanup → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- `npm run check` after phase-10 polish → success (`tsc --noEmit`).
+- `npm run build` after phase-10 polish → success; rebuilt all public routes plus `/studio`.
+- `npm run dev -- --host 127.0.0.1 --port 4351` outside the sandbox + `curl http://127.0.0.1:4351/studio` → confirmed dev `/studio` renders the compact `로컬 열기 안내`, `Night desk`, `새 글 · 도구`, `빠른 삽입`, and `studio-overlay` markers.
+- `grep dist/studio/index.html` after phase-10 polish → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- `npm run check` after phase-11 visual polish → success (`tsc --noEmit`).
+- `npm run build` after phase-11 visual polish → success; rebuilt all public routes plus `/studio`.
+- `npm run dev -- --host 127.0.0.1 --port 4354` outside the sandbox + `curl http://127.0.0.1:4354/studio` → confirmed dev `/studio` renders `로컬 열기 안내`, `원고 데스크`, `새 글 · 도구`, `빠른 삽입`, `오른쪽 패널`, and `원본 Markdown`.
+- `grep dist/studio/index.html` after phase-11 visual polish → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- `npm run check` after phase-12 sitewide polish → success (`tsc --noEmit`).
+- `npm run build` after phase-12 sitewide polish → success; rebuilt all public routes plus `/studio`.
+- `npx tsc --noEmit --project tsconfig.json` via LSP diagnostics after phase-12 sitewide polish → 0 errors, 0 warnings.
+- `npm run dev -- --host 127.0.0.1 --port 4364` outside the sandbox + route curls → confirmed refreshed public-route markers such as `editorial systems notebook`, `About the notebook`, `Profile snapshot`, `Project directory`, and the updated project/post card language.
+- `npm run dev -- --host 127.0.0.1 --port 4364` outside the sandbox + `curl http://127.0.0.1:4364/studio` → confirmed `/studio` still renders the compact local-only writing surface markers after the global CSS changes.
+- `grep dist/studio/index.html` after phase-12 sitewide polish → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- `npm run check` after phase-13 copy/SEO polish → success (`tsc --noEmit`).
+- `npm run build` after phase-13 copy/SEO polish → success; rebuilt all public routes plus `/studio`.
+- `npx tsc --noEmit --project tsconfig.json` via LSP diagnostics after phase-13 copy/SEO polish → 0 errors, 0 warnings.
+- `grep dist/index.html dist/about/index.html dist/projects/index.html dist/blog/index.html` after phase-13 copy/SEO polish → confirmed page-specific descriptions plus `meta name="author"`, `og:image`, `og:image:alt`, and `twitter:image` render in built output.
+- `curl http://127.0.0.1:4368/studio` against a local dev server after phase-13 copy/SEO polish → confirmed `/studio` still renders the compact local-only writing surface markers after shared metadata updates.
+- `grep dist/studio/index.html` after phase-13 copy/SEO polish → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- `npm run check` after phase-14 typography polish → success (`tsc --noEmit`).
+- `npm run build` after phase-14 typography polish → success; rebuilt all public routes plus `/studio`.
+- `npx tsc --noEmit --project tsconfig.json` via LSP diagnostics after phase-14 typography polish → 0 errors, 0 warnings.
+- `npm run dev -- --host 127.0.0.1 --port 4368` outside the sandbox + `curl http://127.0.0.1:4368/studio` → confirmed `/studio` still renders the compact local-only writing surface markers after the shared reading/typography changes.
+- `grep dist/index.html dist/about/index.html dist/projects/index.html dist/blog/index.html dist/blog/42-push-swap/index.html` after phase-14 typography polish → confirmed the new technical reading tone, card labels, and refined public metadata are present in built output.
+- `grep dist/studio/index.html` after phase-14 typography polish → production output still contains the locked `/studio` notice and excludes the active editor markers.
 
 ## Known Blockers / User-Action-Required Items
 - GitHub push/PR and Pages settings updates will require the user's GitHub auth later.

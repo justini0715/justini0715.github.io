@@ -10,19 +10,47 @@ interface Props {
   ogType?: 'website' | 'article';
   noindex?: boolean;
   publishedTime?: string;
+  updatedTime?: string;
+  image?: string;
+  imageAlt?: string;
 }
 
-const { title, description, ogType, noindex, publishedTime } = Astro.props;
+const { title, description, ogType, noindex, publishedTime, updatedTime, image, imageAlt } = Astro.props;
+const pathname = Astro.url.pathname;
+const bodyClass = pathname === '/'
+  ? 'route-home'
+  : pathname === '/about/'
+    ? 'route-about'
+    : pathname === '/projects/'
+      ? 'route-projects'
+      : pathname === '/blog/'
+        ? 'route-blog-index'
+        : pathname.startsWith('/blog/')
+          ? 'route-blog-post'
+          : pathname === '/studio/'
+            ? 'route-studio'
+            : pathname === '/404/'
+              ? 'route-not-found'
+              : 'route-generic';
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
-    <BaseHead title={title} description={description} ogType={ogType} noindex={noindex} publishedTime={publishedTime} />
+    <BaseHead
+      title={title}
+      description={description}
+      ogType={ogType}
+      noindex={noindex}
+      publishedTime={publishedTime}
+      updatedTime={updatedTime}
+      image={image}
+      imageAlt={imageAlt}
+    />
   </head>
-  <body>
+  <body class={bodyClass}>
     <div class="site-shell">
-      <SiteHeader pathname={Astro.url.pathname} />
+      <SiteHeader pathname={pathname} />
       <main class="site-shell__main">
         <slot />
       </main>

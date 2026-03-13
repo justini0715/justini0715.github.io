@@ -8,14 +8,31 @@ import { getPublishedPosts } from '../../lib/content';
 const posts = await getPublishedPosts();
 ---
 
-<MainLayout title="Blog" description="Technical writing, project notes, and an assignment-by-assignment 42 series.">
-  <section class="page-hero">
-    <div class="container narrow-flow">
-      <p class="eyebrow">Blog</p>
-      <h1>A writing system built for shipping posts one-by-one.</h1>
-      <p>
-        The archive mixes technical notes, setup writeups, and 42 assignment posts. Categories, tags, and series ordering keep the flow close to a velog-style publishing habit without losing structure.
-      </p>
+<MainLayout
+  title="Technical blog and 42 writeups"
+  description="Technical blog archive with 42 assignment writeups, debugging notes, setup guides, retrospectives, and source-first development posts."
+>
+  <section class="page-hero page-hero--blog">
+    <div class="container hero__grid">
+      <div class="narrow-flow">
+        <p class="eyebrow">Technical blog · 42 writeups</p>
+        <h1>Technical posts, setup notes, and 42 assignment writeups in one archive.</h1>
+        <p>
+          The blog mixes debugging notes, setup guides, project retrospectives, and assignment-by-assignment 42 posts. Categories, tags, and series ordering help the archive grow without losing context.
+        </p>
+        <p class="page-kicker">
+          If you are looking for systems programming notes, 42 project lessons, or source-first web workflow writeups, this is the main reading index.
+        </p>
+      </div>
+
+      <aside class="panel archive-panel">
+        <p class="eyebrow">What the archive covers</p>
+        <ul class="utility-list">
+          <li>Standalone technical posts with concrete implementation notes</li>
+          <li>42 series entries linked by project order and shared context</li>
+          <li>Setup, retrospective, and debugging content alongside project work</li>
+        </ul>
+      </aside>
     </div>
   </section>
 
@@ -42,7 +59,7 @@ const posts = await getPublishedPosts();
       <SectionTitle
         eyebrow="Published posts"
         title="Launch archive"
-        description="Technical posts and 42 entries are both first-class citizens in the same collection."
+        description="Browse technical blog entries and 42 writeups with dates, tags, and series context visible at a glance."
       />
       <div class="card-grid">
         {posts.map((post) => <PostCard post={post} />)}

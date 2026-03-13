@@ -16,26 +16,28 @@ const isActive = (href: string) => {
   <div class="container site-nav">
     <a class="site-brand" href="/">
       <span class="site-brand__mark">42</span>
-      <span>
+      <span class="site-brand__text">
         <strong>{siteMeta.shortTitle}</strong>
-        <small>developer portfolio & log</small>
+        <small>systems notes · project logs · static publishing</small>
       </span>
     </a>
 
-    <nav aria-label="Primary navigation">
-      <ul class="site-nav__links">
-        {siteMeta.nav.map((item) => (
-          <li>
-            <a class:list={{ 'is-active': isActive(item.href) }} href={item.href}>
-              {item.label}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </nav>
+    <div class="site-nav__group">
+      <nav aria-label="Primary navigation">
+        <ul class="site-nav__links">
+          {siteMeta.nav.map((item) => (
+            <li>
+              <a aria-current={isActive(item.href) ? 'page' : undefined} class:list={{ 'is-active': isActive(item.href) }} href={item.href}>
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </div>
 
     <a class="button button--ghost site-nav__cta" href={siteMeta.github} target="_blank" rel="noreferrer">
-      GitHub
+      GitHub ↗
     </a>
   </div>
 </header>

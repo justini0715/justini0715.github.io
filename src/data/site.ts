@@ -1,12 +1,15 @@
 export const siteMeta = {
   shortTitle: 'changwpa',
-  title: 'changwpa | Developer portfolio and 42 log',
+  authorName: 'changwpa',
+  title: 'changwpa | Developer Portfolio, 42 Projects, Technical Blog',
   description:
-    'A source-first developer website for project case studies, technical writing, and assignment-by-assignment 42 posts.',
+    'Developer portfolio and technical blog featuring 42 project case studies, C and systems programming notes, concurrency lessons, infrastructure work, and source-first Astro publishing.',
   intro:
-    'I use this site to turn repository work into readable case studies, keep a technical blog alive, and publish 42 assignments one project at a time without losing structure.',
+    'I use this site to turn 42 repositories, systems-flavored projects, and source-first web work into readable case studies and technical posts.',
   statusLine:
-    'Current focus: systems-flavored programming, infrastructure notes, and maintainable Astro publishing.',
+    'Current focus: C and systems programming, infrastructure notes, and maintainable Astro publishing.',
+  defaultOgImage: '/og-default.svg',
+  defaultOgAlt: 'changwpa developer portfolio, 42 projects, and technical blog',
   github: 'https://github.com/justini0715',
   repo: 'https://github.com/justini0715/justini0715.github.io',
   nav: [
@@ -19,19 +22,19 @@ export const siteMeta = {
 
 export const focusAreas = [
   '42 project writeups that preserve constraints, mistakes, and lessons learned',
-  'Systems-style debugging across C, threads, parsing, and container workflows',
-  'Static publishing workflows that stay maintainable as the archive grows'
+  'Systems programming notes across C, threads, parsing, and process-level debugging',
+  'Source-first web publishing with Astro, Markdown, and static deployment workflows'
 ];
 
 export const strengths = [
-  'Turning repository evidence into concise project narratives',
+  'Turning repository evidence into concise project case studies',
   'Documenting architecture and tradeoffs instead of only final screenshots',
   'Keeping build and deployment workflows simple enough to run locally first'
 ];
 
 export const currentFocus = [
   'Rebuilding the user-site repo as a source-first Astro project',
-  'Publishing 42 assignments in a series-friendly, velog-like flow',
+  'Publishing 42 assignments in a series-friendly technical blog flow',
   'Curating a portfolio that balances algorithms, graphics, infra, and concurrency'
 ];
 

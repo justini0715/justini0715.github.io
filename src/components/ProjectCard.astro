@@ -11,18 +11,22 @@ const { project } = Astro.props;
 <article class="card project-card">
   <div class="card__meta">
     <span class="chip">{project.data.badge}</span>
-    <span class="muted">{project.data.status}</span>
+    <span class="muted">status · {project.data.status}</span>
   </div>
-  <h3>{project.data.title}</h3>
-  <p>{project.data.description}</p>
-  <p class="project-highlight">{project.data.highlight}</p>
+  <div>
+    <h3>{project.data.title}</h3>
+    <p>{project.data.description}</p>
+  </div>
+  <div class="project-card__highlight">
+    <p class="project-highlight">{project.data.highlight}</p>
+  </div>
   <ul class="inline-tags">
     {project.data.stack.map((item) => <li>{item}</li>)}
   </ul>
   <div class="project-links">
-    <a href={project.data.repoUrl} target="_blank" rel="noreferrer">Repository</a>
+    <a href={project.data.repoUrl} target="_blank" rel="noreferrer">Repository ↗</a>
     {project.data.demoUrl && (
-      <a href={project.data.demoUrl} target="_blank" rel="noreferrer">Demo</a>
+      <a href={project.data.demoUrl} target="_blank" rel="noreferrer">Demo ↗</a>
     )}
   </div>
 </article>
