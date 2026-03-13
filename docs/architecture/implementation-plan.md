@@ -9,7 +9,7 @@
 ## Current Phase
 - Phase: Phase 6 — Studio Hardening
 - Branch: `phase/6-studio-hardening`
-- Status: In progress
+- Status: Complete
 
 ## Official Phase List
 1. Phase 1 — Foundation
@@ -40,11 +40,11 @@
 - blog taxonomy: `42`, `project`, `devlog`, `setup`, `retrospective`.
 
 ## Deliverables Checklist
-- [ ] Studio production exposure reduced to a local-only locked experience
-- [ ] Velog-inspired studio UX pass implemented
-- [ ] Tag/editor interaction flow improved
-- [ ] Documentation updated for the new local-only behavior
-- [ ] Phase 6 verification completed
+- [x] Studio production exposure reduced to a local-only locked experience
+- [x] Velog-inspired studio UX pass implemented
+- [x] Tag/editor interaction flow improved
+- [x] Documentation updated for the new local-only behavior
+- [x] Phase 6 verification completed
 
 ## Verification Plan
 1. Run local build and type checks after hardening the studio.
@@ -80,6 +80,8 @@
 - New goals: hide the active editor on the deployed site and raise the studio UI quality to a more product-like writing experience.
 - Reworked the studio into a local-only “writing desk” with a locked production surface, a stronger editorial layout, grouped publish settings, and more curated tag flows.
 - Excluded `/studio` from sitemap output and updated the writing-studio docs to reflect the new local-only behavior.
+- Tightened the production story further by rendering the full editor only during `npm run dev`, while production builds output only the locked informational surface.
+- Fixed the local dev runtime by overriding `tinyexec` to `1.0.4`, restoring `npm run dev` for the studio workflow.
 
 ## Verification Results
 - `npm install -D astro @astrojs/sitemap @astrojs/check typescript` → dependencies installed successfully.
@@ -102,6 +104,10 @@
 - `grep dist/studio/index.html` → confirmed production HTML renders the locked local-only notice and keeps the active app hidden by default.
 - `grep dist/sitemap*.xml` → confirmed `/studio` is excluded from sitemap output.
 - `playwright screenshot http://127.0.0.1:4324/studio /tmp/studio-local-full.png` → confirmed localhost activates the polished editor surface instead of the locked screen.
+- `npm ls tinyexec` → confirmed Astro now resolves `tinyexec@1.0.4`.
+- `npm run dev -- --host 127.0.0.1 --port 4326` → localhost studio boots successfully again.
+- `playwright screenshot --full-page http://127.0.0.1:4326/studio /tmp/studio-dev-final.png` → verified the localhost dev route shows the refined editor, not the locked production screen.
+- `curl https://justini0715.github.io/studio/` → verified production contains the locked notice, with no `레포 연결`, no `id="studio-app"`, and no studio app bundle reference.
 
 ## Known Blockers / User-Action-Required Items
 - GitHub push/PR and Pages settings updates will require the user's GitHub auth later.
