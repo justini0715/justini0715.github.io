@@ -1,20 +1,33 @@
 ---
 title: "philosopher"
-description: "A concurrency-focused 42 project about thread lifecycle, timing constraints, monitoring, and synchronization."
-summary: "Pthreads, monitoring loops, race-condition thinking, and validation with tooling like helgrind."
-stack: ["C", "Pthreads", "Synchronization", "Valgrind", "Helgrind"]
-status: "42 concurrency project"
+description: "A concurrency-focused C project about thread coordination, fork ownership, timing constraints, and starvation monitoring."
+summary: "A systems-oriented case study for synchronization, monitoring, and debugging under timing pressure."
+stack:
+  - C
+  - POSIX threads
+  - Concurrency
+  - Valgrind
+  - Helgrind
+badge: "42 systems"
+status: "Mandatory implementation preserved from archive"
 featured: true
 order: 3
 repoUrl: "https://github.com/justini0715/philosopher"
-highlight: "Balancing fork ownership, timing guarantees, and monitoring logic without losing observability."
-year: "42 / Concurrency"
+highlight: "The clearest portfolio story for race conditions, observability, and reasoning about concurrent state."
+year: "42"
 ---
 
-## What it does
+## Why it matters
 
-Implements the mandatory philosopher exercise with argument validation, table setup, thread creation, fork handling, eating/sleeping/thinking flow, and monitoring.
+philosopher is one of the most readable ways to talk about concurrency tradeoffs. The subject forces careful handling of thread lifetime, shared resources, timing, and failure observation.
 
-## Why it matters in the portfolio
+## What is inside
 
-It gives the portfolio a strong concurrency story and invites technical writing about deadlocks, timing, and tool-assisted debugging.
+- Philosopher/table initialization and thread creation
+- Fork handling and state transitions
+- Monitoring loop for death detection
+- Example valgrind and helgrind commands documented in the repo
+
+## Portfolio angle
+
+It gives the site a concrete systems-and-debugging story, not just a list of completed assignments.

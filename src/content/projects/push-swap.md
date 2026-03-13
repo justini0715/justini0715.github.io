@@ -1,20 +1,33 @@
 ---
 title: "push_swap"
-description: "A constrained-sorting 42 project focused on parsing integers and minimizing operations under a limited instruction set."
-summary: "Algorithm tradeoffs, scoring pressure, and disciplined operation design."
-stack: ["C", "Algorithms", "Parsing", "Optimization", "Make"]
-status: "42 algorithm project"
+description: "A constrained sorting project where performance is measured by how efficiently stack operations are used."
+summary: "An algorithmic case study centered on parsing, move minimization, and scoring-driven tradeoffs."
+stack:
+  - C
+  - Algorithms
+  - Parsing
+  - Data structures
+  - CLI tooling
+badge: "42 systems"
+status: "Archived source integrated into shared repo layout"
 featured: false
 order: 4
 repoUrl: "https://github.com/justini0715/push_swap"
-highlight: "Sorting strategy under an operations budget instead of a general-purpose algorithm sandbox."
-year: "42 / Algorithms"
+highlight: "Useful for showing optimization thinking under a fixed operation vocabulary instead of generic sorting benchmarks."
+year: "42"
 ---
 
-## What it does
+## Why it matters
 
-Sorts integers using the push/swap stack operations while handling parsing and repository organization around the restored project source.
+push_swap is a recognizable 42 project with a built-in performance story. The problem is simple to explain, but the scoring pressure turns implementation details into real tradeoffs.
 
-## Why it matters in the portfolio
+## What is inside
 
-It rounds out the launch set with an algorithm-and-constraints story that pairs well with the later 42 blog post series.
+- Integer parsing and validation
+- Stack initialization and operation pipeline
+- Sorting strategy implementation across the allowed push/swap operations
+- Repository structure aligned to the shared 42 workspace pattern
+
+## Portfolio angle
+
+This entry complements the concurrency and infra projects with a more algorithmic optimization story.

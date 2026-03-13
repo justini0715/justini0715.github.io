@@ -26,13 +26,14 @@ const projects = defineCollection({
     description: z.string(),
     summary: z.string().optional(),
     stack: z.array(z.string()),
+    badge: z.string(),
     status: z.string(),
     featured: z.boolean().default(false),
     order: z.number().int().optional(),
     repoUrl: z.string().url(),
     demoUrl: z.string().url().optional(),
     highlight: z.string(),
-    year: z.string()
+    year: z.string().optional()
   })
 });
 

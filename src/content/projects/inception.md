@@ -1,20 +1,34 @@
 ---
 title: "Inception"
-description: "A Docker Compose-based 42 infrastructure project centered on Nginx, WordPress, MariaDB, and repeatable local ops flows."
-summary: "Container orchestration, TLS, secrets, and service boundaries in a local deployment stack."
-stack: ["Docker Compose", "Nginx", "WordPress", "MariaDB", "Bash"]
-status: "42 infrastructure project"
+description: "A Docker Compose-based infrastructure project with Nginx, WordPress, MariaDB, TLS, and local operations workflows."
+summary: "A portfolio-facing infrastructure case study built around service boundaries, container orchestration, and deployment thinking."
+stack:
+  - Docker
+  - Docker Compose
+  - Nginx
+  - MariaDB
+  - WordPress
+  - Bash
+badge: "42 infra"
+status: "Archived implementation, documented for portfolio use"
 featured: true
 order: 1
 repoUrl: "https://github.com/justini0715/inception"
-highlight: "Container boundaries, TLS setup, secrets handling, and compose-driven local orchestration."
-year: "42 / Infra"
+highlight: "The strongest infrastructure story in the launch set: reverse proxying, TLS, service separation, and local ops discipline in one repo."
+year: "42"
 ---
 
-## What it does
+## Why it matters
 
-Preserves a Docker Compose-based stack with Nginx, WordPress, MariaDB, supporting secrets, and local host mapping for the 42 Inception project.
+Inception is the clearest example of moving from coding exercises to environment design. The project combines Docker-based orchestration, service boundaries, secrets handling, and local operational workflows.
 
-## Why it matters in the portfolio
+## What is inside
 
-This project shows infrastructure-oriented work rather than another CLI-only C program. It adds service boundaries, deployment ergonomics, and operational concerns to the overall portfolio mix.
+- Nginx reverse proxy with TLS
+- WordPress + MariaDB service stack
+- Compose-driven local orchestration
+- Supporting docs such as `DEV_DOC.md`, `USER_DOC.md`, and `README42.md`
+
+## Portfolio angle
+
+This entry anchors the portfolio with infrastructure work instead of only algorithm or graphics projects.
