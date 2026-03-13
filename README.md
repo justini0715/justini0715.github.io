@@ -62,3 +62,6 @@ Then open the localhost URL printed by `npm run dev`, add `/studio`, connect the
 - `phase/4-polish-deployment`
 - `phase/5-writing-studio`
 - `phase/6-studio-hardening`
+- `phase/7-studio-usability`
+- `phase/8-studio-completion`
+- `phase/9-studio-ui-cleanup`

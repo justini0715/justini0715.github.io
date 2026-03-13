@@ -30,15 +30,14 @@ const { initialPosts = [] } = Astro.props;
   <div class="container studio-shell studio-shell--editorial">
     <header class="studio-topbar">
       <div class="studio-topbar__identity">
-        <p class="eyebrow">Writing desk</p>
+        <p class="eyebrow">Night desk</p>
         <div>
           <h2>Writing Studio</h2>
-          <p>제목, 설명, 태그, 본문부터 쓰고 나머지는 필요할 때만 여는 글쓰기 화면.</p>
+          <p>원고부터 바로 쓰고, 라이브러리와 설정은 필요할 때만 여는 간결한 집필 화면입니다.</p>
         </div>
       </div>
 
       <div class="studio-topbar__status-block">
-        <p class="studio-topbar__label">상태</p>
         <div class="studio-topbar__status">
           <span id="studio-host-badge" class="studio-pill studio-pill--ok">로컬 전용</span>
           <span id="studio-connection-badge" class="studio-pill">폴더 연결 필요</span>
@@ -48,13 +47,33 @@ const { initialPosts = [] } = Astro.props;
       </div>
 
       <div class="studio-topbar__actions-block">
-        <p class="studio-topbar__label">동작</p>
         <div class="studio-topbar__actions">
-          <button id="studio-connect" class="button" type="button">작업 폴더 열기</button>
-          <button id="studio-library-toggle" class="button button--ghost" type="button">기존 글 보기</button>
-          <button id="studio-reconnect" class="button button--ghost" type="button" hidden>다른 폴더 선택</button>
+          <button id="studio-library-toggle" class="button button--ghost" type="button">라이브러리</button>
+          <button id="studio-connect" class="button button--ghost" type="button">폴더 연결</button>
+          <button id="studio-reconnect" class="button button--ghost" type="button" hidden>폴더 변경</button>
           <button id="studio-save" class="button studio-save-button" type="button">저장</button>
         </div>
+        <details class="studio-tool-menu">
+          <summary class="studio-tool-menu__summary">새 글 · 도구</summary>
+          <div class="studio-tool-menu__panel">
+            <div class="studio-tool-menu__group">
+              <p class="studio-topbar__label">새 초안</p>
+              <div class="studio-tool-menu__actions">
+                <button class="studio-mini-button studio-preset" data-template="tech" type="button">새 기술 글</button>
+                <button class="studio-mini-button studio-preset" data-template="42" type="button">새 42 글</button>
+                <button class="studio-mini-button studio-preset" data-template="blank" type="button">빈 초안</button>
+              </div>
+            </div>
+            <div class="studio-tool-menu__group">
+              <p class="studio-topbar__label">문서 작업</p>
+              <div class="studio-tool-menu__actions">
+                <button id="studio-duplicate" class="studio-command" type="button">복제</button>
+                <button id="studio-download" class="studio-command" type="button">파일로 받기</button>
+                <button id="studio-restore" class="studio-command" type="button">임시저장 불러오기</button>
+              </div>
+            </div>
+          </div>
+        </details>
       </div>
     </header>
 
@@ -62,14 +81,16 @@ const { initialPosts = [] } = Astro.props;
       <aside id="studio-library-shell" class="studio-library-shell" hidden>
         <div class="studio-library-head">
           <div>
-            <p class="eyebrow">Library</p>
-            <h3>글 목록</h3>
+            <p class="eyebrow">Library drawer</p>
+            <h3>기존 글과 새 초안</h3>
+            <p>필요할 때만 열어 이전 원고를 확인하고 새 문서를 시작합니다.</p>
           </div>
-          <div class="studio-library-actions">
-            <button class="studio-mini-button studio-preset" data-template="tech" type="button">새 기술 글</button>
-            <button class="studio-mini-button studio-preset" data-template="42" type="button">새 42 글</button>
-            <button class="studio-mini-button studio-preset" data-template="blank" type="button">빈 초안</button>
-          </div>
+        </div>
+
+        <div class="studio-library-actions">
+          <button class="studio-mini-button studio-preset" data-template="tech" type="button">새 기술 글</button>
+          <button class="studio-mini-button studio-preset" data-template="42" type="button">새 42 글</button>
+          <button class="studio-mini-button studio-preset" data-template="blank" type="button">빈 초안</button>
         </div>
 
         <div class="studio-library-filters">
@@ -94,28 +115,21 @@ const { initialPosts = [] } = Astro.props;
 
       <main class="studio-editor-shell">
         <div class="studio-command-strip">
-          <div class="studio-command-strip__group studio-command-strip__group--tools">
-            <span class="studio-command-strip__label">파일 작업</span>
-            <button id="studio-duplicate" class="studio-command" type="button">복제</button>
-            <button id="studio-download" class="studio-command" type="button">파일로 받기</button>
-            <button id="studio-restore" class="studio-command" type="button">임시저장 불러오기</button>
+          <div class="studio-command-strip__group studio-command-strip__group--panels">
+            <span class="studio-command-strip__label">오른쪽 패널</span>
+            <button id="studio-preview-toggle" class="studio-command" type="button">미리보기</button>
+            <button id="studio-settings-toggle" class="studio-command" type="button">문서 설정</button>
+            <button id="studio-notes-toggle" class="studio-command" type="button">점검</button>
           </div>
 
           <div class="studio-command-strip__group studio-command-strip__group--format">
-            <span class="studio-command-strip__label">서식</span>
+            <span class="studio-command-strip__label">빠른 삽입</span>
             <button class="studio-command studio-toolbar" data-snippet="h2" type="button">H2</button>
             <button class="studio-command studio-toolbar" data-snippet="h3" type="button">H3</button>
             <button class="studio-command studio-toolbar" data-snippet="list" type="button">리스트</button>
             <button class="studio-command studio-toolbar" data-snippet="quote" type="button">인용</button>
             <button class="studio-command studio-toolbar" data-snippet="code" type="button">코드</button>
             <button class="studio-command studio-toolbar" data-snippet="divider" type="button">구분선</button>
-          </div>
-
-          <div class="studio-command-strip__group studio-command-strip__group--panels">
-            <span class="studio-command-strip__label">패널</span>
-            <button id="studio-preview-toggle" class="studio-command" type="button">미리보기</button>
-            <button id="studio-settings-toggle" class="studio-command" type="button">공개 설정</button>
-            <button id="studio-notes-toggle" class="studio-command" type="button">검사</button>
           </div>
         </div>
 
@@ -134,7 +148,7 @@ const { initialPosts = [] } = Astro.props;
             <div class="studio-tag-zone__head">
               <div>
                 <p class="eyebrow">Tags</p>
-                <p>태그는 입력해서 추가하거나, 아래 추천 태그를 눌러 바로 붙일 수 있습니다.</p>
+                <p>가벼운 태그만 먼저 붙이고, 더 많은 추천 태그는 펼쳐서 확인하세요.</p>
               </div>
               <div class="studio-tag-entry">
                 <input id="studio-tag-input" class="studio-input studio-tag-input" type="text" placeholder="태그 입력 후 Enter" />
@@ -142,22 +156,22 @@ const { initialPosts = [] } = Astro.props;
               </div>
             </div>
 
-            <div class="studio-tag-groups">
-              <section>
-                <h4>선택된 태그</h4>
-                <div id="studio-tag-chips" class="studio-chip-row"></div>
-              </section>
+            <div id="studio-tag-chips" class="studio-chip-row studio-chip-row--selected"></div>
 
-              <section>
-                <h4>추천 태그</h4>
-                <div id="studio-tag-category" class="studio-chip-row"></div>
-              </section>
+            <details class="studio-tag-drawer">
+              <summary>추천 태그와 전체 태그 보기</summary>
+              <div class="studio-tag-groups">
+                <section>
+                  <h4>추천 태그</h4>
+                  <div id="studio-tag-category" class="studio-chip-row"></div>
+                </section>
 
-              <details class="studio-tag-library-box">
-                <summary>전체 태그 보기</summary>
-                <div id="studio-tag-library" class="studio-chip-row"></div>
-              </details>
-            </div>
+                <section>
+                  <h4>전체 태그</h4>
+                  <div id="studio-tag-library" class="studio-chip-row"></div>
+                </section>
+              </div>
+            </details>
           </section>
 
           <label class="studio-body-field">
@@ -637,8 +651,9 @@ const { initialPosts = [] } = Astro.props;
     setPill(elements.dirtyBadge, post?.dirty ? '임시저장' : '파일 저장됨', post?.dirty ? 'warn' : 'ok');
     elements.fileChip.textContent = `src/content/blog/${post?.slug || 'post-slug'}.md`;
     elements.folder.textContent = state.blogHandle ? `저장 위치: 연결됨` : '저장 위치: 폴더 미연결';
-    elements.libraryToggle.textContent = state.libraryOpen ? '글 목록 닫기' : '기존 글 보기';
-    elements.reconnect.hidden = !state.blogHandle;
+    elements.libraryToggle.textContent = state.libraryOpen ? '라이브러리 닫기' : '라이브러리';
+    elements.connect.textContent = state.blogHandle ? '폴더 변경' : '폴더 연결';
+    elements.reconnect.hidden = true;
   }
 
   function selectPost(id) {
@@ -1025,8 +1040,8 @@ const { initialPosts = [] } = Astro.props;
     elements.panelNotes.hidden = state.sideMode !== 'notes';
     const titles = {
       preview: '미리보기',
-      settings: '공개 설정',
-      notes: '검사'
+      settings: '문서 설정',
+      notes: '점검'
     };
     elements.sidepanelTitle.textContent = titles[state.sideMode] ?? '패널';
     elements.previewToggle.classList.toggle('is-active', state.sideMode === 'preview');
@@ -1169,39 +1184,59 @@ const { initialPosts = [] } = Astro.props;
 
   .studio-shell--editorial {
     display: grid;
-    gap: 1rem;
+    gap: 0.9rem;
     padding-bottom: 2rem;
   }
 
   .studio-topbar {
     position: sticky;
     top: 5.5rem;
-    z-index: 15;
+    z-index: 20;
     display: grid;
-    grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr) minmax(320px, 1fr);
-    gap: 1rem;
-    align-items: start;
-    padding: 1rem 1.25rem;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) auto;
+    gap: 0.9rem;
+    align-items: center;
+    padding: 0.95rem 1.1rem;
     border-radius: 24px;
-    background: rgba(8, 10, 14, 0.92);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: linear-gradient(180deg, rgba(16, 13, 10, 0.96), rgba(10, 10, 12, 0.94));
+    border: 1px solid rgba(214, 184, 128, 0.12);
+    box-shadow: 0 24px 60px rgba(4, 4, 7, 0.4);
     backdrop-filter: blur(18px);
-    box-shadow: var(--shadow);
   }
 
-  .studio-topbar__identity {
-    display: flex;
-    gap: 1rem;
-    align-items: start;
+  .studio-topbar__identity,
+  .studio-library-head,
+  .studio-library-filters,
+  .studio-settings-card,
+  .studio-settings-card__head,
+  .studio-settings-grid,
+  .studio-validation,
+  .studio-checklist,
+  .studio-tag-zone,
+  .studio-tag-zone__head,
+  .studio-tag-groups,
+  .studio-editor-form,
+  .studio-sidepanel__body,
+  .studio-tool-menu__panel,
+  .studio-tool-menu__group {
+    display: grid;
+    gap: 0.85rem;
   }
 
   .studio-topbar__identity h2 {
     margin: 0;
-    font-size: clamp(1.5rem, 2vw, 2rem);
+    font-size: clamp(1.45rem, 1.8vw, 1.9rem);
   }
 
-  .studio-topbar__identity p:last-child {
-    margin-top: 0.2rem;
+  .studio-topbar__identity p:last-child,
+  .studio-library-head p:last-child,
+  .studio-settings-card__head p:last-child,
+  .studio-tag-zone__head p:last-child,
+  .studio-inline-note,
+  .studio-checklist li,
+  .studio-validation li,
+  .studio-settings-card label span {
+    color: var(--muted);
   }
 
   .studio-topbar__status,
@@ -1214,43 +1249,91 @@ const { initialPosts = [] } = Astro.props;
   .studio-chip-row,
   .studio-danger-row,
   .studio-paper__meta,
-  .studio-paper__tags {
+  .studio-paper__tags,
+  .studio-tool-menu__actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.65rem;
+    gap: 0.6rem;
     align-items: center;
   }
 
   .studio-topbar__status-block,
   .studio-topbar__actions-block {
     display: grid;
-    gap: 0.55rem;
+    gap: 0.6rem;
+  }
+
+  .studio-topbar__actions-block {
+    justify-items: end;
   }
 
   .studio-topbar__label {
     margin: 0;
-    font-size: 0.82rem;
-    letter-spacing: 0.08em;
+    font-size: 0.77rem;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--muted);
+    color: rgba(237, 242, 255, 0.62);
   }
 
   .studio-topbar__hint {
     margin: 0;
-    color: var(--muted);
+    font-size: 0.88rem;
+    color: rgba(237, 242, 255, 0.7);
+  }
+
+  .studio-topbar__actions .button {
+    min-height: 40px;
+    padding-inline: 1rem;
+    box-shadow: none;
+  }
+
+  .studio-tool-menu {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+  }
+
+  .studio-tool-menu summary,
+  .studio-tag-drawer summary,
+  .studio-settings-card--advanced summary {
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .studio-tool-menu summary::-webkit-details-marker,
+  .studio-tag-drawer summary::-webkit-details-marker,
+  .studio-settings-card--advanced summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .studio-tool-menu__summary {
+    display: inline-flex;
+    justify-content: center;
+    width: 100%;
+    min-height: 40px;
+    padding: 0.7rem 0.95rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text);
     font-size: 0.92rem;
   }
 
-  .studio-topbar__actions {
-    justify-content: flex-start;
+  .studio-tool-menu[open] .studio-tool-menu__summary {
+    border-color: rgba(214, 184, 128, 0.28);
+    background: rgba(214, 184, 128, 0.08);
   }
 
-  .studio-topbar__actions .button {
-    min-height: 42px;
-  }
-
-  .studio-topbar__actions .button {
-    min-height: 42px;
+  .studio-tool-menu__panel {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 0.6rem);
+    min-width: min(420px, calc(100vw - 2rem));
+    padding: 1rem;
+    border-radius: 22px;
+    background: rgba(16, 14, 13, 0.98);
+    border: 1px solid rgba(214, 184, 128, 0.14);
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.35);
   }
 
   .studio-pill,
@@ -1259,7 +1342,9 @@ const { initialPosts = [] } = Astro.props;
   .studio-mini-button,
   .studio-chip,
   .studio-library-card__category,
-  .studio-library-card__state {
+  .studio-library-card__state,
+  .studio-series,
+  .studio-tool-menu__summary {
     display: inline-flex;
     align-items: center;
     min-height: 34px;
@@ -1269,6 +1354,7 @@ const { initialPosts = [] } = Astro.props;
     background: rgba(255, 255, 255, 0.04);
     color: var(--text);
     font-size: 0.92rem;
+    font: inherit;
   }
 
   .studio-pill--ok {
@@ -1287,27 +1373,20 @@ const { initialPosts = [] } = Astro.props;
   }
 
   .studio-save-button {
-    background: linear-gradient(135deg, #c8a05f, #f1d59c);
-    color: #16100a;
+    background: linear-gradient(135deg, #c7a168, #f2dfb1);
+    color: #17110a;
   }
 
   .studio-layout {
+    position: relative;
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: 1rem;
     align-items: start;
   }
 
-  .studio-layout.has-library {
-    grid-template-columns: minmax(240px, 280px) minmax(0, 1fr);
-  }
-
   .studio-layout.has-sidepanel {
-    grid-template-columns: minmax(0, 1fr) minmax(320px, 360px);
-  }
-
-  .studio-layout.has-library.has-sidepanel {
-    grid-template-columns: minmax(240px, 280px) minmax(0, 1fr) minmax(320px, 360px);
+    grid-template-columns: minmax(0, minmax(0, 1fr)) minmax(300px, 360px);
   }
 
   .studio-library-shell,
@@ -1321,41 +1400,27 @@ const { initialPosts = [] } = Astro.props;
     display: none !important;
   }
 
-  .studio-library-shell,
-  .studio-sidepanel {
-    position: sticky;
-    top: 11rem;
+  .studio-library-shell {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 18;
+    width: min(360px, calc(100vw - 2rem));
     display: grid;
     gap: 1rem;
-    padding: 1.1rem;
+    padding: 1rem;
     border-radius: 28px;
-    background: rgba(12, 14, 19, 0.92);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    box-shadow: var(--shadow);
-  }
-
-  .studio-library-head,
-  .studio-library-filters,
-  .studio-settings-card,
-  .studio-settings-card__head,
-  .studio-settings-grid,
-  .studio-validation,
-  .studio-checklist,
-  .studio-tag-zone,
-  .studio-tag-zone__head,
-  .studio-tag-groups,
-  .studio-editor-form,
-  .studio-sidepanel__body {
-    display: grid;
-    gap: 0.9rem;
+    background: rgba(13, 12, 11, 0.98);
+    border: 1px solid rgba(214, 184, 128, 0.12);
+    box-shadow: 0 28px 80px rgba(0, 0, 0, 0.34);
   }
 
   .studio-library-list {
     display: grid;
     gap: 0.7rem;
-    max-height: calc(100vh - 16rem);
+    max-height: min(60vh, 720px);
     overflow: auto;
-    padding-right: 0.2rem;
+    padding-right: 0.15rem;
   }
 
   .studio-library-card {
@@ -1365,7 +1430,7 @@ const { initialPosts = [] } = Astro.props;
     padding: 1rem;
     border-radius: 22px;
     border: 1px solid rgba(255, 255, 255, 0.06);
-    background: rgba(255, 255, 255, 0.02);
+    background: rgba(255, 255, 255, 0.025);
     color: var(--text);
   }
 
@@ -1405,54 +1470,54 @@ const { initialPosts = [] } = Astro.props;
 
   .studio-editor-shell {
     display: grid;
-    gap: 1rem;
+    gap: 1.2rem;
     width: 100%;
-    padding: 1.1rem 1.25rem 1.5rem;
+    min-height: calc(100vh - 13rem);
+    padding: 1.25rem 1.35rem 1.6rem;
     border-radius: 32px;
-    background: linear-gradient(180deg, rgba(14, 16, 21, 0.95), rgba(9, 10, 14, 0.96));
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    box-shadow: var(--shadow);
+    background:
+      linear-gradient(180deg, rgba(19, 16, 14, 0.98), rgba(10, 10, 11, 0.98)),
+      radial-gradient(circle at top, rgba(214, 184, 128, 0.09), transparent 50%);
+    border: 1px solid rgba(214, 184, 128, 0.1);
+    box-shadow: 0 32px 90px rgba(0, 0, 0, 0.35);
   }
 
   .studio-command-strip {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-    padding-bottom: 0.9rem;
+    justify-content: space-between;
+    gap: 0.9rem;
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid rgba(214, 184, 128, 0.1);
   }
 
   .studio-command-strip__group {
-    align-items: center;
+    gap: 0.55rem;
   }
 
   .studio-command-strip__label {
-    font-size: 0.82rem;
-    letter-spacing: 0.08em;
+    margin-right: 0.1rem;
+    font-size: 0.76rem;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--muted);
-    margin-right: 0.25rem;
+    color: rgba(237, 242, 255, 0.58);
   }
 
   .studio-command,
   .studio-mini-button {
-    font: inherit;
     cursor: pointer;
   }
 
   .studio-command:hover,
   .studio-mini-button:hover,
   .studio-chip--library:hover,
-  .studio-series:hover {
+  .studio-series:hover,
+  .studio-tool-menu__summary:hover {
     border-color: rgba(198, 160, 95, 0.32);
     background: rgba(198, 160, 95, 0.12);
   }
 
-  .studio-command.is-active {
-    border-color: rgba(198, 160, 95, 0.32);
-    background: rgba(198, 160, 95, 0.18);
-  }
-
-  .studio-command.is-active {
+  .studio-command.is-active,
+  .studio-chip--library.is-active,
+  .studio-series.is-active {
     border-color: rgba(198, 160, 95, 0.32);
     background: rgba(198, 160, 95, 0.18);
   }
@@ -1473,7 +1538,7 @@ const { initialPosts = [] } = Astro.props;
   .studio-output {
     width: 100%;
     border: 1px solid rgba(255, 255, 255, 0.08);
-    background: rgba(16, 18, 24, 0.94);
+    background: rgba(16, 18, 24, 0.92);
     color: #edf2ff;
     border-radius: 18px;
     padding: 0.95rem 1rem;
@@ -1488,28 +1553,28 @@ const { initialPosts = [] } = Astro.props;
   }
 
   .studio-title-input {
-    font-size: clamp(2.3rem, 4vw, 3.6rem);
-    line-height: 1.1;
+    font-size: clamp(2.5rem, 4vw, 4rem);
+    line-height: 1.04;
     border: 0;
-    padding: 0.6rem 0;
+    padding: 0.35rem 0 0;
     background: transparent;
-    color: #f5f3ee;
+    color: #f4ede2;
   }
 
   .studio-title-input::placeholder {
-    color: rgba(245, 243, 238, 0.26);
+    color: rgba(244, 237, 226, 0.26);
   }
 
   .studio-description-input {
-    font-size: 1.15rem;
+    font-size: 1.06rem;
     background: transparent;
     border: 0;
     padding: 0;
-    color: rgba(233, 239, 255, 0.8);
+    color: rgba(233, 239, 255, 0.78);
   }
 
   .studio-description-input::placeholder {
-    color: rgba(233, 239, 255, 0.28);
+    color: rgba(233, 239, 255, 0.26);
   }
 
   .studio-title-input:focus,
@@ -1523,10 +1588,8 @@ const { initialPosts = [] } = Astro.props;
   }
 
   .studio-tag-zone {
-    padding: 1rem 1rem 1.1rem;
-    border-radius: 24px;
-    background: rgba(255, 255, 255, 0.025);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    gap: 0.75rem;
+    padding: 0.2rem 0 0.35rem;
   }
 
   .studio-tag-zone__head {
@@ -1535,40 +1598,26 @@ const { initialPosts = [] } = Astro.props;
   }
 
   .studio-tag-zone h4 {
-    margin: 0 0 0.2rem;
-    font-size: 0.96rem;
+    margin: 0;
+    font-size: 0.94rem;
     color: var(--text);
   }
 
+  .studio-tag-entry {
+    gap: 0.5rem;
+  }
+
   .studio-tag-input {
-    min-height: 50px;
+    min-height: 46px;
     border-radius: 16px;
-  }
-
-  .studio-tag-groups section {
-    display: grid;
-    gap: 0.55rem;
-  }
-
-  .studio-tag-library-box {
-    display: grid;
-    gap: 0.55rem;
-    margin-top: 0.2rem;
-  }
-
-  .studio-tag-library-box summary {
-    cursor: pointer;
-    color: var(--muted);
-    font-weight: 600;
-    list-style: none;
-  }
-
-  .studio-tag-library-box summary::-webkit-details-marker {
-    display: none;
   }
 
   .studio-chip-row {
     min-height: 2.4rem;
+  }
+
+  .studio-chip-row--selected {
+    gap: 0.5rem;
   }
 
   .studio-chip {
@@ -1577,8 +1626,9 @@ const { initialPosts = [] } = Astro.props;
   }
 
   .studio-chip--selected {
-    background: rgba(198, 160, 95, 0.16);
-    border-color: rgba(198, 160, 95, 0.22);
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.08);
+    color: rgba(237, 242, 255, 0.94);
   }
 
   .studio-chip--library small,
@@ -1599,12 +1649,6 @@ const { initialPosts = [] } = Astro.props;
     font-size: 0.78rem;
   }
 
-  .studio-chip--library.is-active,
-  .studio-series.is-active {
-    border-color: rgba(198, 160, 95, 0.32);
-    background: rgba(198, 160, 95, 0.16);
-  }
-
   .studio-chip--paper {
     background: rgba(33, 29, 23, 0.08);
     color: #3a3026;
@@ -1616,22 +1660,44 @@ const { initialPosts = [] } = Astro.props;
     pointer-events: none;
   }
 
+  .studio-tag-drawer {
+    display: grid;
+    gap: 0.7rem;
+    padding-top: 0.1rem;
+  }
+
+  .studio-tag-drawer summary {
+    color: rgba(237, 242, 255, 0.72);
+    font-weight: 600;
+  }
+
   .studio-body-textarea,
   .studio-output {
-    min-height: 48rem;
+    min-height: max(60vh, 40rem);
     resize: vertical;
-    line-height: 1.78;
-    font-size: 1.06rem;
-    background: rgba(13, 15, 20, 0.98);
-    color: #edf2ff;
+    line-height: 1.82;
+    font-size: 1.08rem;
+    background: linear-gradient(180deg, rgba(19, 16, 14, 0.92), rgba(14, 13, 12, 0.96));
+    color: #f7f3ea;
+    border-color: rgba(214, 184, 128, 0.12);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
   }
 
   .studio-output {
+    min-height: 18rem;
     font-family: 'SFMono-Regular', ui-monospace, SFMono-Regular, Consolas, monospace;
   }
 
   .studio-sidepanel {
+    position: sticky;
+    top: 11rem;
+    display: grid;
     gap: 0.9rem;
+    padding: 1rem;
+    border-radius: 28px;
+    background: rgba(13, 12, 11, 0.96);
+    border: 1px solid rgba(214, 184, 128, 0.12);
+    box-shadow: 0 28px 80px rgba(0, 0, 0, 0.32);
   }
 
   .studio-sidepanel__header {
@@ -1648,16 +1714,6 @@ const { initialPosts = [] } = Astro.props;
     border: 1px solid rgba(255, 255, 255, 0.06);
   }
 
-  .studio-settings-card__head p:last-child,
-  .studio-tag-zone__head p:last-child,
-  .studio-topbar__identity p:last-child,
-  .studio-settings-card label span,
-  .studio-inline-note,
-  .studio-checklist li,
-  .studio-validation li {
-    color: var(--muted);
-  }
-
   .studio-inline-note {
     margin: 0;
     font-size: 0.92rem;
@@ -1671,13 +1727,6 @@ const { initialPosts = [] } = Astro.props;
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     gap: 0.55rem;
-  }
-
-  .studio-toggle-row {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    align-items: center;
   }
 
   .studio-checkbox {
@@ -1813,21 +1862,12 @@ const { initialPosts = [] } = Astro.props;
     border-color: rgba(255, 116, 116, 0.16);
   }
 
-  .studio-settings-card--advanced summary {
-    cursor: pointer;
-    color: var(--text);
-    font-weight: 700;
-    list-style: none;
-  }
-
-  .studio-settings-card--advanced summary::-webkit-details-marker {
-    display: none;
-  }
-
   .studio-settings-summary {
     display: inline-flex;
     align-items: center;
     gap: 0.45rem;
+    color: var(--text);
+    font-weight: 700;
   }
 
   .studio-danger-row {
@@ -1880,10 +1920,23 @@ const { initialPosts = [] } = Astro.props;
   @media (max-width: 1200px) {
     .studio-topbar {
       grid-template-columns: 1fr;
+      align-items: start;
     }
 
-    .studio-layout.has-sidepanel,
-    .studio-layout.has-library.has-sidepanel {
+    .studio-topbar__actions-block {
+      justify-items: stretch;
+    }
+
+    .studio-tool-menu {
+      max-width: none;
+    }
+
+    .studio-tool-menu__panel {
+      position: static;
+      min-width: 0;
+    }
+
+    .studio-layout.has-sidepanel {
       grid-template-columns: minmax(0, 1fr);
     }
 
@@ -1893,30 +1946,38 @@ const { initialPosts = [] } = Astro.props;
   }
 
   @media (max-width: 960px) {
-    .studio-topbar {
-      grid-template-columns: 1fr;
-    }
-
     .studio-library-shell,
     .studio-sidepanel {
       position: static;
+      width: 100%;
+    }
+
+    .studio-library-shell {
+      order: 2;
+    }
+
+    .studio-editor-shell {
+      min-height: auto;
     }
   }
 
   @media (max-width: 720px) {
+    .studio-topbar__actions,
+    .studio-topbar__status,
     .studio-command-strip,
     .studio-command-strip__group,
-    .studio-topbar__actions,
-    .studio-topbar__status {
+    .studio-tool-menu__actions {
       width: 100%;
     }
 
-    .studio-topbar__actions .button {
+    .studio-topbar__actions .button,
+    .studio-tool-menu__summary {
       width: 100%;
     }
 
     .studio-command-strip {
-      grid-template-columns: 1fr;
+      display: grid;
+      gap: 0.8rem;
     }
 
     .studio-inline-input,
@@ -1928,7 +1989,11 @@ const { initialPosts = [] } = Astro.props;
     }
 
     .studio-title-input {
-      font-size: 2rem;
+      font-size: 2.2rem;
+    }
+
+    .studio-body-textarea {
+      min-height: 28rem;
     }
   }
 </style>

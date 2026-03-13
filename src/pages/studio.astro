@@ -27,28 +27,24 @@ const initialBlogPosts = (await getCollection('blog')).map((post) => ({
   description="No-backend personal writing UI for creating and editing Markdown posts in the Astro blog."
   noindex={true}
 >
-  <section class="page-hero">
-    <div class="container narrow-flow">
-      <p class="eyebrow">Local writing desk</p>
-      <h1>Writing Studio</h1>
-      <div class="studio-intro-guide">
-        <div class="studio-intro-guide__steps">
-          <strong>빠른 사용 순서</strong>
-          <ol class="studio-intro-steps">
-            <li><strong>1.</strong> 레포에서 개발 서버 실행</li>
-            <li><strong>2.</strong> 터미널에 나온 localhost 주소 뒤에 <code>/studio</code> 접속</li>
-            <li><strong>3.</strong> 블로그 폴더 열기 → 제목 · 태그 · 본문 작성</li>
-            <li><strong>4.</strong> 공개/비공개 선택 후 저장</li>
-          </ol>
-        </div>
-        <pre class="studio-intro-code"><code>cd /home/iostream/changwpa-site-manual/work/justini0715.github.io
+  <section class="page-hero studio-page-hero">
+    <div class="container studio-intro-shell">
+      <div class="studio-intro-copy">
+        <p class="eyebrow">Local writing desk</p>
+        <h1>Writing Studio</h1>
+        <p class="studio-intro-lede">제목, 설명, 본문이 먼저 보이고 라이브러리와 설정은 뒤로 물러난 로컬 전용 원고 데스크입니다.</p>
+        <ol class="studio-intro-steps">
+          <li><strong>1.</strong> <code>npm run dev</code> 실행</li>
+          <li><strong>2.</strong> localhost 주소 뒤에 <code>/studio</code> 접속</li>
+          <li><strong>3.</strong> 필요할 때만 라이브러리·오른쪽 패널 열기</li>
+          <li><strong>4.</strong> 폴더 연결 후 저장</li>
+        </ol>
+      </div>
+      <pre class="studio-intro-code"><code>cd /home/iostream/changwpa-site-manual/work/justini0715.github.io
 npm run dev
 
 # 예: http://127.0.0.1:4328/studio
-
-# 글 파일 위치
-src/content/blog/*.md</code></pre>
-      </div>
+# 글 파일 위치: src/content/blog/*.md</code></pre>
     </div>
   </section>
 
@@ -77,23 +73,30 @@ src/content/blog/*.md</code></pre>
 </MainLayout>
 
 <style>
-  .studio-intro-guide {
-    display: grid;
-    gap: 1rem;
-    padding: 1rem 1.1rem;
-    border-radius: 24px;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+  .studio-page-hero {
+    padding-top: clamp(1.5rem, 3vw, 2.5rem);
   }
 
-  .studio-intro-guide__steps {
+  .studio-intro-shell {
     display: grid;
-    gap: 0.75rem;
+    gap: 1rem;
+    grid-template-columns: minmax(0, 1.3fr) minmax(300px, 0.9fr);
+    align-items: start;
+  }
+
+  .studio-intro-copy {
+    display: grid;
+    gap: 0.85rem;
+  }
+
+  .studio-intro-lede {
+    max-width: 60ch;
+    color: var(--text);
   }
 
   .studio-intro-steps {
     display: grid;
-    gap: 0.65rem;
+    gap: 0.55rem;
     padding-left: 0;
     list-style: none;
   }
@@ -108,8 +111,9 @@ src/content/blog/*.md</code></pre>
     margin: 0;
     overflow: auto;
     padding: 1rem;
-    border-radius: 18px;
-    background: rgba(7, 10, 17, 0.88);
+    border-radius: 20px;
+    background: rgba(10, 10, 14, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     color: #edf2ff;
   }
 
@@ -136,7 +140,13 @@ src/content/blog/*.md</code></pre>
     flex-wrap: wrap;
   }
 
+  @media (max-width: 900px) {
+    .studio-intro-shell {
+      grid-template-columns: 1fr;
+    }
+  }
+
   @media (max-width: 720px) {
-    .studio-intro-guide { padding: 0.9rem; }
+    .studio-intro-code { padding: 0.9rem; }
   }
 </style>

@@ -7,8 +7,8 @@
 - Domain target: `https://changwpa.kro.kr`
 
 ## Current Phase
-- Phase: Phase 8 — Studio Completion
-- Branch: `phase/8-studio-completion`
+- Phase: Phase 9 — Studio UI Cleanup
+- Branch: `phase/9-studio-ui-cleanup`
 - Status: Complete
 
 ## Official Phase List
@@ -20,16 +20,18 @@
 6. Phase 6 — Studio Hardening
 7. Phase 7 — Studio Usability
 8. Phase 8 — Studio Completion
+9. Phase 9 — Studio UI Cleanup
 
 ## Current Phase Scope
-- Refine the studio based on real usage feedback so the surface is cleaner and more obviously organized.
-- Separate 상태와 액션을 더 명확히 구분하고, 버튼/정보 밀도를 낮춘다.
-- Prepare the studio so future backend/storage adapters can be added on top of a cleaner UX foundation.
+- Make the studio feel like a calm writing desk instead of a multi-strip dashboard.
+- Reduce default-visible controls so the writing canvas dominates the first viewport.
+- Reorganize library/settings/preview surfaces into cleaner drawer-like supporting panels.
 
 ## Current Phase Non-Scope
 - Replacing the static content architecture with a hosted CMS.
 - Adding external backend, database, or authentication.
 - Building a full multi-user publishing product.
+- Changing the underlying Markdown storage/file IO model.
 
 ## Architecture Summary
 - Astro static output with content collections for blog posts and projects.
@@ -42,17 +44,18 @@
 - blog taxonomy: `42`, `project`, `devlog`, `setup`, `retrospective`.
 
 ## Deliverables Checklist
-- [x] 상단 상태/액션 구분 개선
-- [x] 글 목록 / 공개 설정 / 검사 패널 정리
-- [x] 태그/제목/본문 영역 가독성 개선
-- [x] 로컬 사용 안내 문구 간소화
-- [x] dev studio folder connection regression cleanup
-- [x] Phase 8 verification re-run after cleanup
+- [x] hero/intro를 tool-first 구조로 축소
+- [x] compact studio header + primary action row 정리
+- [x] library를 drawer 성격으로 재구성
+- [x] title/description/body 중심 manuscript 흐름 강화
+- [x] 설정/점검 패널 구조 및 명칭 정리
+- [x] Phase 9 verification completed
 
 ## Verification Plan
-1. Run local build and type checks after the completion pass.
-2. Verify localhost `/studio` shows the cleaner, less cluttered layout with a larger writing area.
-3. Confirm production `/studio` remains locked and docs match the updated workflow.
+1. Run local build and type checks after the UI cleanup pass.
+2. Verify localhost `/studio` exposes new-post, save, library, and preview controls without requiring secondary panels first.
+3. Confirm the editor’s first viewport is more writing-first than before.
+4. Confirm production `/studio` remains locked and docs match the updated workflow.
 
 ## Work Log
 - Cloned the remote user-site repository into the writable workspace.
@@ -96,6 +99,12 @@
 - Re-opened Phase 8 locally to finish the residual studio cleanup after the component-level lock removal patch left a stale localhost guard in the repo connection path.
 - Removed the stale localhost guard from `WritingStudioApp.astro` so dev-mode repo connection can proceed again under the page-level `import.meta.env.DEV` gate.
 - Cleaned the leftover mobile-only lock-screen CSS selector that became dead after the component-level lock markup was removed.
+- Started `phase/9-studio-ui-cleanup` from the verified phase-8 branch after the user explicitly asked to proceed with a cleaner studio redesign.
+- Planning direction for phase 9: `Night Desk / Manuscript` aesthetic, one anchored manuscript column, fewer always-visible controls, and drawer-like supporting surfaces for library/preview/settings.
+- Compressed the `/studio` intro so dev mode reaches the tool faster while keeping the production lock guidance intact.
+- Reworked the studio chrome into a calmer manuscript desk: compact top bar, `새 글 · 도구` menu, lighter tag disclosure, and cleaner `문서 설정` / `점검` naming.
+- Turned the library into a drawer-like support surface and kept the editor canvas anchored as the dominant panel.
+- Synced the writing-studio runbook with the new labels and default authoring flow.
 
 ## Verification Results
 - `npm install -D astro @astrojs/sitemap @astrojs/check typescript` → dependencies installed successfully.
@@ -129,6 +138,10 @@
 - `npm run check` after the cleanup → success (`tsc --noEmit`).
 - `npm run build` after the cleanup → success; rebuilt all public routes plus `/studio`.
 - `grep dist/studio/index.html` after the cleanup → production output still contains the locked `/studio` notice and no editor markers.
+- `npm run check` after phase-9 UI cleanup → success (`tsc --noEmit`).
+- `npm run build` after phase-9 UI cleanup → success; rebuilt all public routes plus `/studio`.
+- `npm run dev -- --host 127.0.0.1 --port 4347` outside the sandbox + `curl http://127.0.0.1:4347/studio` → confirmed dev `/studio` renders the new `Night desk` header, `라이브러리`, `문서 설정`, `점검`, and `새 글 · 도구` markers.
+- `grep dist/studio/index.html` after phase-9 UI cleanup → production output still contains the locked `/studio` notice and excludes the active editor markers.
 
 ## Known Blockers / User-Action-Required Items
 - GitHub push/PR and Pages settings updates will require the user's GitHub auth later.
