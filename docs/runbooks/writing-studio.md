@@ -14,7 +14,8 @@
 ## 공개 배포에서의 동작
 - `justini0715.github.io/studio`에서는 실제 편집 UI를 노출하지 않습니다.
 - 배포본에서는 **로컬 전용 도구 안내 화면**만 보입니다.
-- 실제 editor는 `localhost`에서만 활성화됩니다.
+- 실제 editor는 `npm run dev`의 `localhost`에서만 활성화됩니다.
+- 즉, `npm run build` + `npm run preview` 결과물과 실제 배포본에는 editor bundle이 포함되지 않습니다.
 - 또한 `/studio`는 sitemap에서 제외되고 `noindex` 처리됩니다.
 
 ## 가장 잘 동작하는 환경

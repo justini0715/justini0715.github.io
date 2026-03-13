@@ -40,7 +40,7 @@ npm run check
 - purpose: personal-only writing UI for blog post CRUD without backend/auth
 - recommended browser: Chrome / Edge / Brave desktop
 - docs: `docs/runbooks/writing-studio.md`
-- production behavior: deployed site shows only a locked notice; the full editor activates on localhost
+- production behavior: deployed site shows only a locked notice; the full editor is included only in `npm run dev`
 
 Typical flow:
 ```bash
