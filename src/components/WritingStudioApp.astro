@@ -1,5 +1,28 @@
 ---
 import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/blogStudio';
+
+interface SeedPost {
+  slug: string;
+  title: string;
+  description: string;
+  pubDate: string;
+  updatedDate: string;
+  category: string;
+  tags: string[];
+  series: string;
+  seriesTitle: string;
+  seriesOrder: string;
+  difficulty: string;
+  featured: boolean;
+  draft: boolean;
+  body: string;
+}
+
+interface Props {
+  initialPosts?: SeedPost[];
+}
+
+const { initialPosts = [] } = Astro.props;
 ---
 
 <section id="studio-locked" class="section studio-locked-shell">
@@ -23,6 +46,7 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
 </section>
 
 <section id="studio-app" class="section studio-shell-section" hidden>
+  <script type="application/json" id="studio-seed">{JSON.stringify(initialPosts)}</script>
   <div class="container studio-shell studio-shell--editorial">
     <header class="studio-topbar">
       <div class="studio-topbar__identity">
@@ -49,7 +73,6 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
           <button id="studio-connect" class="button" type="button">작업 폴더 열기</button>
           <button id="studio-library-toggle" class="button button--ghost" type="button">기존 글 보기</button>
           <button id="studio-reconnect" class="button button--ghost" type="button" hidden>다른 폴더 선택</button>
-          <button id="studio-focus" class="button button--ghost" type="button">집중 모드</button>
           <button id="studio-save" class="button studio-save-button" type="button">저장</button>
         </div>
       </div>
@@ -350,6 +373,7 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
   const HANDLE_STORE = 'handles';
   const HANDLE_KEY = 'repo-root';
   const SNAPSHOT_KEY = 'writing-studio-snapshot';
+  const INITIAL_SEED = JSON.parse(document.getElementById('studio-seed')?.textContent || '[]');
 
   const state = {
     repoHandle: null,
@@ -361,7 +385,6 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
     filterDraft: 'all',
     sideMode: '',
     libraryOpen: false,
-    focusMode: false,
     markdownVisible: false,
     snapshotAvailable: false,
     isLocalHost: false,
@@ -379,7 +402,6 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
     libraryToggle: $('#studio-library-toggle'),
     connect: $('#studio-connect'),
     reconnect: $('#studio-reconnect'),
-    focus: $('#studio-focus'),
     save: $('#studio-save'),
     layout: $('#studio-layout'),
     libraryShell: $('#studio-library-shell'),
@@ -449,6 +471,29 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
 
   function makeRecord(post) {
     return { ...post, id: crypto.randomUUID() };
+  }
+
+  function createSeedRecord(seed) {
+    return makeRecord({
+      slug: seed.slug,
+      originalSlug: seed.slug,
+      title: seed.title,
+      description: seed.description,
+      pubDate: seed.pubDate,
+      updatedDate: seed.updatedDate,
+      category: seed.category,
+      tags: [...(seed.tags || [])],
+      series: seed.series,
+      seriesTitle: seed.seriesTitle,
+      seriesOrder: seed.seriesOrder,
+      difficulty: seed.difficulty,
+      featured: Boolean(seed.featured),
+      draft: Boolean(seed.draft),
+      body: seed.body || '',
+      templateKind: seed.category === '42' ? '42' : 'tech',
+      dirty: false,
+      deleted: false
+    });
   }
 
   function isLocalHost() {
@@ -621,7 +666,7 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
     setPill(elements.dirtyBadge, post?.dirty ? '임시저장' : '파일 저장됨', post?.dirty ? 'warn' : 'ok');
     elements.fileChip.textContent = `src/content/blog/${post?.slug || 'post-slug'}.md`;
     elements.folder.textContent = state.blogHandle ? `저장 위치: 연결됨` : '저장 위치: 폴더 미연결';
-    elements.libraryToggle.textContent = state.libraryOpen ? '글 목록 닫기' : '글 목록';
+    elements.libraryToggle.textContent = state.libraryOpen ? '글 목록 닫기' : '기존 글 보기';
     elements.reconnect.hidden = !state.blogHandle;
   }
 
@@ -759,14 +804,14 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
   function renderTagGroup(container, stats, activeTags) {
     container.innerHTML = '';
     if (!stats.length) {
-      container.innerHTML = '<span class="studio-chip studio-chip--empty">추천 태그 없음</span>';
+      container.innerHTML = '<span class="studio-chip studio-chip--empty">기존 태그 없음</span>';
       return;
     }
     for (const stat of stats) {
       const button = document.createElement('button');
       button.type = 'button';
       button.className = `studio-chip studio-chip--library ${activeTags.includes(stat.tag) ? 'is-active' : ''}`;
-      button.innerHTML = `<span>#${stat.tag}</span><small>${stat.count}</small>`;
+      button.innerHTML = `<span>#${stat.tag}</span><span class="studio-chip__count">${stat.count}</span>`;
       button.addEventListener('click', () => toggleTag(stat.tag));
       container.appendChild(button);
     }
@@ -993,8 +1038,8 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
   }
 
   function updateLayout() {
-    const hasSidepanel = Boolean(state.sideMode) && !state.focusMode;
-    const hasLibrary = state.libraryOpen && !state.focusMode;
+    const hasSidepanel = Boolean(state.sideMode);
+    const hasLibrary = state.libraryOpen;
 
     elements.libraryShell.hidden = !hasLibrary;
     elements.sidepanel.hidden = !hasSidepanel;
@@ -1023,13 +1068,6 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
     state.markdownVisible = !state.markdownVisible;
     elements.markdownOutput.hidden = !state.markdownVisible;
     elements.markdownToggle.textContent = state.markdownVisible ? 'Markdown 숨기기' : 'Markdown 보기';
-  }
-
-  function toggleFocusMode() {
-    state.focusMode = !state.focusMode;
-    elements.shell.classList.toggle('is-focus', state.focusMode);
-    elements.focus.textContent = state.focusMode ? '집중 모드 해제' : '집중 모드';
-    updateLayout();
   }
 
   function toggleLibrary() {
@@ -1083,7 +1121,6 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
     elements.libraryToggle.addEventListener('click', toggleLibrary);
     elements.connect.addEventListener('click', () => connectRepo(true));
     elements.reconnect.addEventListener('click', () => connectRepo(true));
-    elements.focus.addEventListener('click', toggleFocusMode);
     elements.save.addEventListener('click', saveCurrent);
     elements.search.addEventListener('input', () => {
       state.search = elements.search.value;
@@ -1147,7 +1184,7 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
     elements.locked.hidden = true;
     elements.app.hidden = false;
     bindEvents();
-    state.posts = [makeRecord(createPostTemplate('tech'))];
+    state.posts = INITIAL_SEED.length ? INITIAL_SEED.map(createSeedRecord) : [makeRecord(createPostTemplate('tech'))];
     state.currentId = state.posts[0].id;
     state.snapshotAvailable = Boolean(loadSnapshot());
     elements.restore.disabled = !state.snapshotAvailable;
@@ -1271,6 +1308,10 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
 
   .studio-topbar__actions {
     justify-content: flex-start;
+  }
+
+  .studio-topbar__actions .button {
+    min-height: 42px;
   }
 
   .studio-topbar__actions .button {
@@ -1476,6 +1517,11 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
     background: rgba(198, 160, 95, 0.18);
   }
 
+  .studio-command.is-active {
+    border-color: rgba(198, 160, 95, 0.32);
+    background: rgba(198, 160, 95, 0.18);
+  }
+
   .studio-title-field,
   .studio-subtitle-field,
   .studio-body-field,
@@ -1605,6 +1651,19 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
     color: var(--muted);
   }
 
+  .studio-chip__count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.35rem;
+    min-height: 1.35rem;
+    padding: 0 0.35rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--muted);
+    font-size: 0.78rem;
+  }
+
   .studio-chip--library.is-active,
   .studio-series.is-active {
     border-color: rgba(198, 160, 95, 0.32);
@@ -1645,21 +1704,6 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
     justify-content: space-between;
     align-items: center;
     gap: 1rem;
-  }
-
-  .studio-side-tab {
-    border: 0;
-    background: transparent;
-    color: var(--muted);
-    padding: 0.7rem 0.95rem;
-    border-radius: 999px;
-    font: inherit;
-    font-weight: 700;
-  }
-
-  .studio-side-tab.is-active {
-    background: rgba(198, 160, 95, 0.14);
-    color: var(--text);
   }
 
   .studio-settings-card {
@@ -1898,15 +1942,6 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
     border: 0;
   }
 
-  .studio-shell.is-focus .studio-library-shell,
-  .studio-shell.is-focus .studio-sidepanel {
-    display: none;
-  }
-
-  .studio-shell.is-focus .studio-layout {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
   @media (max-width: 1200px) {
     .studio-topbar {
       grid-template-columns: 1fr;
@@ -1939,6 +1974,10 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
     .studio-topbar__actions,
     .studio-topbar__status,
     .studio-locked-actions {
+      width: 100%;
+    }
+
+    .studio-topbar__actions .button {
       width: 100%;
     }
 
