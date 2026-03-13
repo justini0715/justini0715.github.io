@@ -7,8 +7,8 @@
 - Domain target: `https://changwpa.kro.kr`
 
 ## Current Phase
-- Phase: Phase 7 — Studio Usability
-- Branch: `phase/7-studio-usability`
+- Phase: Phase 8 — Studio Completion
+- Branch: `phase/8-studio-completion`
 - Status: Complete
 
 ## Official Phase List
@@ -19,11 +19,12 @@
 5. Phase 5 — Writing Studio
 6. Phase 6 — Studio Hardening
 7. Phase 7 — Studio Usability
+8. Phase 8 — Studio Completion
 
 ## Current Phase Scope
-- Simplify the writing studio so the editor is much larger and the workflow is more intuitive.
-- Replace raw `draft`-style terminology in the UI with clearer 공개/비공개/임시저장 semantics.
-- Reduce duplicate or noisy controls by hiding panels until the writer explicitly asks for them.
+- Refine the studio based on real usage feedback so the surface is cleaner and more obviously organized.
+- Separate 상태와 액션을 더 명확히 구분하고, 버튼/정보 밀도를 낮춘다.
+- Prepare the studio so future backend/storage adapters can be added on top of a cleaner UX foundation.
 
 ## Current Phase Non-Scope
 - Replacing the static content architecture with a hosted CMS.
@@ -41,15 +42,15 @@
 - blog taxonomy: `42`, `project`, `devlog`, `setup`, `retrospective`.
 
 ## Deliverables Checklist
-- [x] Writer area expanded and default clutter reduced
-- [x] 공개/비공개/임시저장 terminology applied in the UI
-- [x] Library / preview / settings panels made optional instead of always open
-- [x] Docs updated for the more intuitive workflow and dynamic localhost port guidance
-- [x] Phase 7 verification completed
+- [x] 상단 상태/액션 구분 개선
+- [x] 글 목록 / 공개 설정 / 검사 패널 정리
+- [x] 태그/제목/본문 영역 가독성 개선
+- [x] 로컬 사용 안내 문구 간소화
+- [x] Phase 8 verification completed
 
 ## Verification Plan
-1. Run local build and type checks after the usability pass.
-2. Verify localhost `/studio` shows the cleaner writer-first layout with larger writing area.
+1. Run local build and type checks after the completion pass.
+2. Verify localhost `/studio` shows the cleaner, less cluttered layout with a larger writing area.
 3. Confirm production `/studio` remains locked and docs match the updated workflow.
 
 ## Work Log
@@ -87,6 +88,10 @@
 - Hid the library and side panels by default, added explicit toggles, and made the center writing area the primary surface.
 - Replaced draft/live wording with 공개/비공개/임시저장 semantics and removed some confusing default values in new post templates.
 - Updated runbook text so it no longer hardcodes port `4321` and instead follows the actual localhost port shown by `npm run dev`.
+- Started `phase/8-studio-completion` from the latest merged `main`.
+- Reworked the top bar so 상태와 액션이 시각적으로 더 분리되도록 만들고, 버튼 이름을 더 직관적으로 바꿨다.
+- Removed the always-visible meta strip, moved route/file details into settings, and simplified the default screen so the writing area dominates.
+- Simplified the hero copy into a short action guide and reduced the amount of explanatory text on the page.
 
 ## Verification Results
 - `npm install -D astro @astrojs/sitemap @astrojs/check typescript` → dependencies installed successfully.
@@ -115,6 +120,7 @@
 - `curl https://justini0715.github.io/studio/` → verified production contains the locked notice, with no `레포 연결`, no `id="studio-app"`, and no studio app bundle reference.
 - `playwright screenshot --full-page http://127.0.0.1:4327/studio /tmp/studio-usability.png` → verified the cleaner default local layout with much larger editor area and optional side panels.
 - `curl http://127.0.0.1:4326/studio` → confirmed the local studio now exposes `레포 연결`, `저장`, and the active editor rather than the production lock screen.
+- `playwright screenshot --full-page http://127.0.0.1:4328/studio /tmp/studio-usability-2.png` → verified the less cluttered completion pass with larger dark writing area, clearer status/action grouping, and optional side panels.
 
 ## Known Blockers / User-Action-Required Items
 - GitHub push/PR and Pages settings updates will require the user's GitHub auth later.

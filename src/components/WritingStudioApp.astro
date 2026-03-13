@@ -29,30 +29,31 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
         <p class="eyebrow">Writing desk</p>
         <div>
           <h2>Writing Studio</h2>
-          <p>velog처럼 글쓰기 중심으로, 하지만 소스는 그대로 Markdown.</p>
+          <p>제목 · 태그 · 본문부터 쓰고, 나머지는 필요할 때만 여는 글쓰기 작업실.</p>
         </div>
       </div>
 
-      <div class="studio-topbar__status">
-        <span id="studio-host-badge" class="studio-pill studio-pill--ok">로컬 전용</span>
-        <span id="studio-connection-badge" class="studio-pill">파일로 받기</span>
-        <span id="studio-dirty-badge" class="studio-pill">파일 저장됨</span>
+      <div class="studio-topbar__status-block">
+        <p class="studio-topbar__label">현재 상태</p>
+        <div class="studio-topbar__status">
+          <span id="studio-host-badge" class="studio-pill studio-pill--ok">로컬 전용</span>
+          <span id="studio-connection-badge" class="studio-pill">파일로 받기</span>
+          <span id="studio-dirty-badge" class="studio-pill">파일 저장됨</span>
+        </div>
+        <p id="studio-folder" class="studio-topbar__hint">저장 위치: 폴더 미연결</p>
       </div>
 
-      <div class="studio-topbar__actions">
-        <button id="studio-library-toggle" class="button button--ghost" type="button">글 목록</button>
-        <button id="studio-connect" class="button button--ghost" type="button">폴더 연결</button>
-        <button id="studio-reconnect" class="button button--ghost" type="button">폴더 다시 선택</button>
-        <button id="studio-focus" class="button button--ghost" type="button">집중 모드</button>
-        <button id="studio-save" class="button" type="button">저장</button>
+      <div class="studio-topbar__actions-block">
+        <p class="studio-topbar__label">바로 작업</p>
+        <div class="studio-topbar__actions">
+          <button id="studio-connect" class="button" type="button">작업 폴더 열기</button>
+          <button id="studio-library-toggle" class="button button--ghost" type="button">기존 글 보기</button>
+          <button id="studio-reconnect" class="button button--ghost" type="button" hidden>다른 폴더 선택</button>
+          <button id="studio-focus" class="button button--ghost" type="button">집중 모드</button>
+          <button id="studio-save" class="button studio-save-button" type="button">저장</button>
+        </div>
       </div>
     </header>
-
-    <div class="studio-meta-strip">
-      <span id="studio-folder" class="studio-meta-chip">폴더 미연결</span>
-      <span id="studio-file-chip" class="studio-meta-chip">src/content/blog/post-slug.md</span>
-      <span id="studio-route" class="studio-meta-chip">/blog/post-slug/</span>
-    </div>
 
     <div id="studio-layout" class="studio-layout">
       <aside id="studio-library-shell" class="studio-library-shell" hidden>
@@ -64,7 +65,7 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
           <div class="studio-library-actions">
             <button class="studio-mini-button studio-preset" data-template="tech" type="button">새 기술 글</button>
             <button class="studio-mini-button studio-preset" data-template="42" type="button">새 42 글</button>
-            <button class="studio-mini-button studio-preset" data-template="blank" type="button">빈 글</button>
+            <button class="studio-mini-button studio-preset" data-template="blank" type="button">빈 초안</button>
           </div>
         </div>
 
@@ -90,13 +91,15 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
 
       <main class="studio-editor-shell">
         <div class="studio-command-strip">
-          <div class="studio-command-strip__group">
+          <div class="studio-command-strip__group studio-command-strip__group--tools">
+            <span class="studio-command-strip__label">보조 도구</span>
             <button id="studio-duplicate" class="studio-command" type="button">복제</button>
-            <button id="studio-download" class="studio-command" type="button">Markdown 다운로드</button>
+            <button id="studio-download" class="studio-command" type="button">파일로 받기</button>
             <button id="studio-restore" class="studio-command" type="button">임시저장 복원</button>
           </div>
 
-          <div class="studio-command-strip__group">
+          <div class="studio-command-strip__group studio-command-strip__group--format">
+            <span class="studio-command-strip__label">서식</span>
             <button class="studio-command studio-toolbar" data-snippet="h2" type="button">H2</button>
             <button class="studio-command studio-toolbar" data-snippet="h3" type="button">H3</button>
             <button class="studio-command studio-toolbar" data-snippet="list" type="button">리스트</button>
@@ -105,7 +108,8 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
             <button class="studio-command studio-toolbar" data-snippet="divider" type="button">구분선</button>
           </div>
 
-          <div class="studio-command-strip__group">
+          <div class="studio-command-strip__group studio-command-strip__group--panels">
+            <span class="studio-command-strip__label">패널</span>
             <button id="studio-preview-toggle" class="studio-command" type="button">미리보기</button>
             <button id="studio-settings-toggle" class="studio-command" type="button">공개 설정</button>
             <button id="studio-notes-toggle" class="studio-command" type="button">검사</button>
@@ -127,10 +131,10 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
             <div class="studio-tag-zone__head">
               <div>
                 <p class="eyebrow">Tags</p>
-                <p>태그는 입력보다 큐레이션처럼 다루도록 구성했습니다.</p>
+                <p>입력한 태그는 Enter로 바로 붙고, 추천 태그는 클릭으로 추가됩니다.</p>
               </div>
               <div class="studio-tag-entry">
-                <input id="studio-tag-input" class="studio-input" type="text" placeholder="태그를 입력하고 Enter" />
+                <input id="studio-tag-input" class="studio-input studio-tag-input" type="text" placeholder="태그 입력 후 Enter" />
                 <button id="studio-add-tag" class="button button--ghost" type="button">추가</button>
               </div>
             </div>
@@ -142,20 +146,20 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
               </section>
 
               <section>
-                <h4>이 카테고리에서 자주 쓰는 태그</h4>
+                <h4>추천 태그</h4>
                 <div id="studio-tag-category" class="studio-chip-row"></div>
               </section>
 
-              <section>
-                <h4>전체 태그 라이브러리</h4>
+              <details class="studio-tag-library-box">
+                <summary>전체 태그 보기</summary>
                 <div id="studio-tag-library" class="studio-chip-row"></div>
-              </section>
+              </details>
             </div>
           </section>
 
           <label class="studio-body-field">
             <span class="visually-hidden">본문</span>
-            <textarea id="studio-body" class="studio-body-textarea" placeholder="Markdown 본문을 입력하세요."></textarea>
+            <textarea id="studio-body" class="studio-body-textarea" placeholder="여기서부터 글을 쓰면 됩니다."></textarea>
           </label>
         </form>
       </main>
@@ -230,6 +234,8 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
                   <button id="studio-slugify" class="button button--ghost" type="button">자동</button>
                 </div>
               </label>
+              <p id="studio-route" class="studio-inline-note">/blog/post-slug/</p>
+              <p id="studio-file-chip" class="studio-inline-note">src/content/blog/post-slug.md</p>
             </div>
           </section>
 
@@ -611,7 +617,9 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
     setPill(elements.connectionBadge, state.blogHandle ? '폴더 연결됨' : '파일로 받기', state.blogHandle ? 'ok' : 'warn');
     setPill(elements.dirtyBadge, post?.dirty ? '임시저장' : '파일 저장됨', post?.dirty ? 'warn' : 'ok');
     elements.fileChip.textContent = `src/content/blog/${post?.slug || 'post-slug'}.md`;
+    elements.folder.textContent = state.blogHandle ? `저장 위치: 연결됨` : '저장 위치: 폴더 미연결';
     elements.libraryToggle.textContent = state.libraryOpen ? '글 목록 닫기' : '글 목록';
+    elements.reconnect.hidden = !state.blogHandle;
   }
 
   function selectPost(id) {
@@ -688,7 +696,7 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
   function renderSelectedTags(post) {
     elements.tagChips.innerHTML = '';
     if (!post.tags.length) {
-      elements.tagChips.innerHTML = '<span class="studio-chip studio-chip--empty">아직 선택된 태그가 없습니다.</span>';
+      elements.tagChips.innerHTML = '<span class="studio-chip studio-chip--empty">아직 태그가 없습니다.</span>';
       return;
     }
     for (const tag of post.tags) {
@@ -748,7 +756,7 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
   function renderTagGroup(container, stats, activeTags) {
     container.innerHTML = '';
     if (!stats.length) {
-      container.innerHTML = '<span class="studio-chip studio-chip--empty">추천할 태그가 아직 없습니다.</span>';
+      container.innerHTML = '<span class="studio-chip studio-chip--empty">추천 태그 없음</span>';
       return;
     }
     for (const stat of stats) {
@@ -1184,9 +1192,9 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
     top: 5.5rem;
     z-index: 15;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr) minmax(320px, 1fr);
     gap: 1rem;
-    align-items: center;
+    align-items: start;
     padding: 1rem 1.25rem;
     border-radius: 24px;
     background: rgba(8, 10, 14, 0.92);
@@ -1228,8 +1236,28 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
     align-items: center;
   }
 
+  .studio-topbar__status-block,
+  .studio-topbar__actions-block {
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .studio-topbar__label {
+    margin: 0;
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .studio-topbar__hint {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.92rem;
+  }
+
   .studio-topbar__actions {
-    justify-content: flex-end;
+    justify-content: flex-start;
   }
 
   .studio-pill,
@@ -1265,8 +1293,9 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
     background: rgba(86, 25, 25, 0.48);
   }
 
-  .studio-meta-strip {
-    padding-inline: 0.15rem;
+  .studio-save-button {
+    background: linear-gradient(135deg, #c8a05f, #f1d59c);
+    color: #16100a;
   }
 
   .studio-layout {
@@ -1393,9 +1422,22 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
   }
 
   .studio-command-strip {
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     border-bottom: 1px solid rgba(255, 255, 255, 0.07);
     padding-bottom: 0.9rem;
+  }
+
+  .studio-command-strip__group {
+    align-items: center;
+  }
+
+  .studio-command-strip__label {
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-right: 0.25rem;
   }
 
   .studio-command,
@@ -1428,8 +1470,8 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
   .studio-output {
     width: 100%;
     border: 1px solid rgba(255, 255, 255, 0.08);
-    background: rgba(250, 246, 238, 0.98);
-    color: #1f1c17;
+    background: rgba(16, 18, 24, 0.94);
+    color: #edf2ff;
     border-radius: 18px;
     padding: 0.95rem 1rem;
     font: inherit;
@@ -1448,11 +1490,11 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
     border: 0;
     padding: 0.6rem 0;
     background: transparent;
-    color: #f5f0e8;
+    color: #f5f3ee;
   }
 
   .studio-title-input::placeholder {
-    color: rgba(245, 240, 232, 0.42);
+    color: rgba(245, 243, 238, 0.26);
   }
 
   .studio-description-input {
@@ -1460,11 +1502,11 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
     background: transparent;
     border: 0;
     padding: 0;
-    color: rgba(245, 240, 232, 0.82);
+    color: rgba(233, 239, 255, 0.8);
   }
 
   .studio-description-input::placeholder {
-    color: rgba(245, 240, 232, 0.36);
+    color: rgba(233, 239, 255, 0.28);
   }
 
   .studio-title-input:focus,
@@ -1484,15 +1526,40 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
     border: 1px solid rgba(255, 255, 255, 0.06);
   }
 
+  .studio-tag-zone__head {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .studio-tag-zone h4 {
     margin: 0 0 0.2rem;
     font-size: 0.96rem;
     color: var(--text);
   }
 
+  .studio-tag-input {
+    min-height: 50px;
+    border-radius: 16px;
+  }
+
   .studio-tag-groups section {
     display: grid;
     gap: 0.55rem;
+  }
+
+  .studio-tag-library-box {
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .studio-tag-library-box summary {
+    cursor: pointer;
+    color: var(--muted);
+    font-weight: 600;
+    list-style: none;
+  }
+
+  .studio-tag-library-box summary::-webkit-details-marker {
+    display: none;
   }
 
   .studio-chip-row {
@@ -1533,10 +1600,12 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
 
   .studio-body-textarea,
   .studio-output {
-    min-height: 42rem;
+    min-height: 48rem;
     resize: vertical;
     line-height: 1.78;
     font-size: 1.06rem;
+    background: rgba(13, 15, 20, 0.98);
+    color: #edf2ff;
   }
 
   .studio-output {
@@ -1817,6 +1886,10 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
   }
 
   @media (max-width: 1200px) {
+    .studio-topbar {
+      grid-template-columns: 1fr;
+    }
+
     .studio-layout.has-sidepanel,
     .studio-layout.has-library.has-sidepanel {
       grid-template-columns: minmax(0, 1fr);
@@ -1843,9 +1916,12 @@ import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/
     .studio-command-strip__group,
     .studio-topbar__actions,
     .studio-topbar__status,
-    .studio-meta-strip,
     .studio-locked-actions {
       width: 100%;
+    }
+
+    .studio-command-strip {
+      grid-template-columns: 1fr;
     }
 
     .studio-inline-input,
