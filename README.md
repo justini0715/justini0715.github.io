@@ -69,3 +69,4 @@ Then open the localhost URL printed by `npm run dev`, add `/studio`, connect the
 - `phase/11-studio-visual-polish`
 - `phase/12-sitewide-ui-system-polish`
 - `phase/13-content-copy-seo-polish`
+- `phase/14-public-reading-typography-polish`

@@ -7,8 +7,8 @@
 - Domain target: `https://changwpa.kro.kr`
 
 ## Current Phase
-- Phase: Phase 13 — Content / Copy / SEO Polish
-- Branch: `phase/13-content-copy-seo-polish`
+- Phase: Phase 14 — Public Reading & Typography Polish
+- Branch: `phase/14-public-reading-typography-polish`
 - Status: Complete
 
 ## Official Phase List
@@ -25,11 +25,12 @@
 11. Phase 11 — Studio Visual Polish
 12. Phase 12 — Sitewide UI System Polish
 13. Phase 13 — Content / Copy / SEO Polish
+14. Phase 14 — Public Reading & Typography Polish
 
 ## Current Phase Scope
-- Tighten public-facing copy so the site reads more intentionally and consistently across routes.
-- Improve SEO-facing metadata and route descriptions without changing the static architecture.
-- Refine portfolio/blog language so the site feels more credible, specific, and maintainable.
+- Improve the reading experience on the public site with cleaner technical typography and calmer page surfaces.
+- Refine the main page, portfolio pages, and article reading layouts so content feels more static, precise, and technical.
+- Introduce a cleaner public font system and adjust supporting spacing/rhythm around visible content blocks.
 
 ## Current Phase Non-Scope
 - Replacing the static content architecture with a hosted CMS.
@@ -38,6 +39,7 @@
 - Changing the underlying Markdown storage/file IO model.
 - Reworking the already-polished studio beyond compatibility checks after global style changes.
 - Rebuilding the public UI system again immediately after phase 12.
+- Another large copy/SEO rewrite immediately after phase 13.
 
 ## Architecture Summary
 - Astro static output with content collections for blog posts and projects.
@@ -50,16 +52,16 @@
 - blog taxonomy: `42`, `project`, `devlog`, `setup`, `retrospective`.
 
 ## Deliverables Checklist
-- [x] site-wide copy tone and wording consistency pass
-- [x] SEO/meta description/title polish for public routes
-- [x] high-signal content framing improvements on key landing pages
-- [x] Phase 13 verification completed
+- [x] public font system refinement for cleaner technical reading
+- [x] article/prose reading surface polish
+- [x] homepage/projects/blog content block readability improvements
+- [x] Phase 14 verification completed
 
 ## Verification Plan
-1. Run local build and type checks after the copy/SEO polish pass.
-2. Verify the public routes `/`, `/about`, `/projects`, `/blog`, `/blog/[slug]`, and `/404` still render with the refined copy and metadata.
-3. Confirm title/description metadata stays coherent and route-specific.
-4. Re-check `/studio` after any shared metadata/style adjustments for compatibility.
+1. Run local build and type checks after the reading/typography polish pass.
+2. Verify the public routes `/`, `/about`, `/projects`, `/blog`, `/blog/[slug]`, and `/404` still render with the refined typography and spacing.
+3. Confirm cards, prose blocks, and route intros feel calmer, cleaner, and more technical than before.
+4. Re-check `/studio` after any shared typography/style adjustments for compatibility.
 5. Confirm production `/studio` remains locked and the public routes remain static-output compatible.
 
 ## Work Log
@@ -131,6 +133,10 @@
 - Improved metadata with stronger page-specific titles/descriptions plus reusable author and social-image fields in `BaseHead`.
 - Added a default social preview asset (`public/og-default.svg`) so Open Graph and Twitter previews resolve to a concrete portfolio/blog image.
 - Refined homepage, about, projects, blog, post, and 404 copy toward a calmer, more specific, less meta self-descriptive tone.
+- Started `phase/14-public-reading-typography-polish` after the user asked to keep pushing on the visible reading pages and specifically called out typography as a weakness.
+- Shifted the public reading system toward a cleaner technical sans/mono pairing and flatter surfaces so the main page, project pages, and article pages feel more static, precise, and less glossy.
+- Tightened shared chrome labels (`systems notes · project logs · static publishing`, `GitHub ↗`, `Open note →`, `status · ...`) so metadata and navigation read more like a technical publication.
+- Reworked the global spacing, radii, shadows, and prose surfaces in `global.css` so the visible reading routes feel quieter and more legible without touching the studio-specific local writing tool.
 
 ## Verification Results
 - `npm install -D astro @astrojs/sitemap @astrojs/check typescript` → dependencies installed successfully.
@@ -188,6 +194,12 @@
 - `grep dist/index.html dist/about/index.html dist/projects/index.html dist/blog/index.html` after phase-13 copy/SEO polish → confirmed page-specific descriptions plus `meta name="author"`, `og:image`, `og:image:alt`, and `twitter:image` render in built output.
 - `curl http://127.0.0.1:4368/studio` against a local dev server after phase-13 copy/SEO polish → confirmed `/studio` still renders the compact local-only writing surface markers after shared metadata updates.
 - `grep dist/studio/index.html` after phase-13 copy/SEO polish → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- `npm run check` after phase-14 typography polish → success (`tsc --noEmit`).
+- `npm run build` after phase-14 typography polish → success; rebuilt all public routes plus `/studio`.
+- `npx tsc --noEmit --project tsconfig.json` via LSP diagnostics after phase-14 typography polish → 0 errors, 0 warnings.
+- `npm run dev -- --host 127.0.0.1 --port 4368` outside the sandbox + `curl http://127.0.0.1:4368/studio` → confirmed `/studio` still renders the compact local-only writing surface markers after the shared reading/typography changes.
+- `grep dist/index.html dist/about/index.html dist/projects/index.html dist/blog/index.html dist/blog/42-push-swap/index.html` after phase-14 typography polish → confirmed the new technical reading tone, card labels, and refined public metadata are present in built output.
+- `grep dist/studio/index.html` after phase-14 typography polish → production output still contains the locked `/studio` notice and excludes the active editor markers.
 
 ## Known Blockers / User-Action-Required Items
 - GitHub push/PR and Pages settings updates will require the user's GitHub auth later.

@@ -12,7 +12,7 @@ const formattedDate = new Intl.DateTimeFormat('en', { dateStyle: 'medium' }).for
 <article class="card post-card">
   <div class="card__meta">
     <span class="chip">{post.data.category}</span>
-    {post.data.seriesTitle && <span class="muted">{post.data.seriesTitle}</span>}
+    {post.data.seriesTitle && <span class="muted">series · {post.data.seriesTitle}</span>}
   </div>
   <div>
     <h3><a class="post-card__title" href={`/blog/${post.id}/`}>{post.data.title}</a></h3>
@@ -27,6 +27,6 @@ const formattedDate = new Intl.DateTimeFormat('en', { dateStyle: 'medium' }).for
         </ul>
       )}
     </div>
-    <a class="post-card__link" href={`/blog/${post.id}/`}>Read entry →</a>
+    <a class="post-card__link" href={`/blog/${post.id}/`}>Open note →</a>
   </div>
 </article>
