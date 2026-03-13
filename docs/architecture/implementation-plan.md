@@ -46,7 +46,8 @@
 - [x] 글 목록 / 공개 설정 / 검사 패널 정리
 - [x] 태그/제목/본문 영역 가독성 개선
 - [x] 로컬 사용 안내 문구 간소화
-- [x] Phase 8 verification completed
+- [x] dev studio folder connection regression cleanup
+- [x] Phase 8 verification re-run after cleanup
 
 ## Verification Plan
 1. Run local build and type checks after the completion pass.
@@ -92,6 +93,9 @@
 - Reworked the top bar so 상태와 액션이 시각적으로 더 분리되도록 만들고, 버튼 이름을 더 직관적으로 바꿨다.
 - Removed the always-visible meta strip, moved route/file details into settings, and simplified the default screen so the writing area dominates.
 - Simplified the hero copy into a short action guide and reduced the amount of explanatory text on the page.
+- Re-opened Phase 8 locally to finish the residual studio cleanup after the component-level lock removal patch left a stale localhost guard in the repo connection path.
+- Removed the stale localhost guard from `WritingStudioApp.astro` so dev-mode repo connection can proceed again under the page-level `import.meta.env.DEV` gate.
+- Cleaned the leftover mobile-only lock-screen CSS selector that became dead after the component-level lock markup was removed.
 
 ## Verification Results
 - `npm install -D astro @astrojs/sitemap @astrojs/check typescript` → dependencies installed successfully.
@@ -121,6 +125,10 @@
 - `playwright screenshot --full-page http://127.0.0.1:4327/studio /tmp/studio-usability.png` → verified the cleaner default local layout with much larger editor area and optional side panels.
 - `curl http://127.0.0.1:4326/studio` → confirmed the local studio now exposes `레포 연결`, `저장`, and the active editor rather than the production lock screen.
 - `playwright screenshot --full-page http://127.0.0.1:4328/studio /tmp/studio-usability-2.png` → verified the less cluttered completion pass with larger dark writing area, clearer status/action grouping, and optional side panels.
+- `grep "state.isLocalHost\\|isLocalHost\\|studio-locked-actions\\|studio-locked-shell\\|studio-locked-card" src/components/WritingStudioApp.astro` → no remaining stale localhost guard or component-level lock-screen leftovers.
+- `npm run check` after the cleanup → success (`tsc --noEmit`).
+- `npm run build` after the cleanup → success; rebuilt all public routes plus `/studio`.
+- `grep dist/studio/index.html` after the cleanup → production output still contains the locked `/studio` notice and no editor markers.
 
 ## Known Blockers / User-Action-Required Items
 - GitHub push/PR and Pages settings updates will require the user's GitHub auth later.

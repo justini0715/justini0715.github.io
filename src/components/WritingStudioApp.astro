@@ -25,27 +25,7 @@ interface Props {
 const { initialPosts = [] } = Astro.props;
 ---
 
-<section id="studio-locked" class="section studio-locked-shell">
-  <div class="container studio-locked-card">
-    <p class="eyebrow">Local only</p>
-    <h2>Writing Studio는 배포본에서 잠겨 있습니다.</h2>
-    <p>
-      이 도구는 <strong>내 로컬 레포를 직접 열고 저장하는 개인용 에디터</strong>입니다. 그래서 배포된 `justini0715.github.io`에서는 실제 편집 UI를
-      노출하지 않고, localhost에서만 활성화됩니다.
-    </p>
-    <ol>
-      <li>레포에서 <code>npm run dev</code> 실행</li>
-      <li>터미널에 표시된 localhost 주소 뒤에 <code>/studio</code> 접속</li>
-      <li>Chrome / Edge / Brave 데스크톱에서 레포 폴더 연결</li>
-    </ol>
-    <div class="studio-locked-actions">
-      <a class="button" href="/blog">블로그 보기</a>
-      <a class="button button--ghost" href="/">홈으로</a>
-    </div>
-  </div>
-</section>
-
-<section id="studio-app" class="section studio-shell-section" hidden>
+<section id="studio-app" class="section studio-shell-section">
   <script type="application/json" id="studio-seed">{JSON.stringify(initialPosts)}</script>
   <div class="container studio-shell studio-shell--editorial">
     <header class="studio-topbar">
@@ -367,7 +347,6 @@ const { initialPosts = [] } = Astro.props;
     normalizeTags
   } from '../lib/studio/blogStudio';
 
-  const ALLOWED_HOSTS = new Set(['localhost', '127.0.0.1', '[::1]']);
   const STATUS_TONES = ['neutral', 'ok', 'warn', 'error'];
   const HANDLE_DB = 'writing-studio-handles';
   const HANDLE_STORE = 'handles';
@@ -387,14 +366,12 @@ const { initialPosts = [] } = Astro.props;
     libraryOpen: false,
     markdownVisible: false,
     snapshotAvailable: false,
-    isLocalHost: false,
     toastTimer: null
   };
 
   const $ = (selector) => document.querySelector(selector);
 
   const elements = {
-    locked: $('#studio-locked'),
     app: $('#studio-app'),
     hostBadge: $('#studio-host-badge'),
     connectionBadge: $('#studio-connection-badge'),
@@ -496,11 +473,6 @@ const { initialPosts = [] } = Astro.props;
     });
   }
 
-  function isLocalHost() {
-    const host = window.location.hostname;
-    return ALLOWED_HOSTS.has(host) || host.endsWith('.local');
-  }
-
   function setPill(element, label, tone = 'neutral') {
     for (const name of STATUS_TONES) {
       element.classList.remove(`studio-pill--${name}`);
@@ -599,7 +571,6 @@ const { initialPosts = [] } = Astro.props;
   }
 
   async function connectRepo(forcePicker = false, silent = false) {
-    if (!state.isLocalHost) return;
     if (!('showDirectoryPicker' in window)) {
       setPill(elements.connectionBadge, '폴더 연결 불가', 'warn');
       if (!silent) {
@@ -661,7 +632,7 @@ const { initialPosts = [] } = Astro.props;
 
   function updateBadges() {
     const post = currentPost();
-    setPill(elements.hostBadge, state.isLocalHost ? '로컬 전용' : '공개 잠금', state.isLocalHost ? 'ok' : 'warn');
+    setPill(elements.hostBadge, '로컬 작업중', 'ok');
     setPill(elements.connectionBadge, state.blogHandle ? '폴더 연결됨' : '폴더 연결 필요', state.blogHandle ? 'ok' : 'warn');
     setPill(elements.dirtyBadge, post?.dirty ? '임시저장' : '파일 저장됨', post?.dirty ? 'warn' : 'ok');
     elements.fileChip.textContent = `src/content/blog/${post?.slug || 'post-slug'}.md`;
@@ -1174,15 +1145,6 @@ const { initialPosts = [] } = Astro.props;
   }
 
   async function init() {
-    state.isLocalHost = isLocalHost();
-    if (!state.isLocalHost) {
-      elements.locked.hidden = false;
-      elements.app.hidden = true;
-      return;
-    }
-
-    elements.locked.hidden = true;
-    elements.app.hidden = false;
     bindEvents();
     state.posts = INITIAL_SEED.length ? INITIAL_SEED.map(createSeedRecord) : [makeRecord(createPostTemplate('tech'))];
     state.currentId = state.posts[0].id;
@@ -1201,33 +1163,6 @@ const { initialPosts = [] } = Astro.props;
 </script>
 
 <style>
-  .studio-locked-shell {
-    padding-top: 1rem;
-  }
-
-  .studio-locked-card {
-    display: grid;
-    gap: 1rem;
-    max-width: 760px;
-    padding: 2rem;
-    border-radius: 28px;
-    background: rgba(10, 14, 24, 0.86);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: var(--shadow);
-  }
-
-  .studio-locked-card ol {
-    padding-left: 1.2rem;
-    list-style: decimal;
-    color: var(--muted);
-  }
-
-  .studio-locked-actions {
-    display: flex;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-  }
-
   .studio-shell-section {
     padding-top: 0;
   }
@@ -1972,12 +1907,7 @@ const { initialPosts = [] } = Astro.props;
     .studio-command-strip,
     .studio-command-strip__group,
     .studio-topbar__actions,
-    .studio-topbar__status,
-    .studio-locked-actions {
-      width: 100%;
-    }
-
-    .studio-topbar__actions .button {
+    .studio-topbar__status {
       width: 100%;
     }
 
