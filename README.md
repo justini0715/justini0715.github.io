@@ -40,6 +40,7 @@ npm run check
 - purpose: personal-only writing UI for blog post CRUD without backend/auth
 - recommended browser: Chrome / Edge / Brave desktop
 - docs: `docs/runbooks/writing-studio.md`
+- production behavior: deployed site shows only a locked notice; the full editor activates on localhost
 
 Typical flow:
 ```bash
@@ -59,3 +60,5 @@ Then open `http://localhost:4321/studio`, connect the repo folder, write/save th
 - `phase/2-portfolio-structure`
 - `phase/3-blog-system`
 - `phase/4-polish-deployment`
+- `phase/5-writing-studio`
+- `phase/6-studio-hardening`

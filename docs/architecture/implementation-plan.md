@@ -7,9 +7,9 @@
 - Domain target: `https://changwpa.kro.kr`
 
 ## Current Phase
-- Phase: Phase 5 — Writing Studio
-- Branch: `phase/5-writing-studio`
-- Status: Complete
+- Phase: Phase 6 — Studio Hardening
+- Branch: `phase/6-studio-hardening`
+- Status: In progress
 
 ## Official Phase List
 1. Phase 1 — Foundation
@@ -17,16 +17,17 @@
 3. Phase 3 — Blog System
 4. Phase 4 — Polish and Deployment
 5. Phase 5 — Writing Studio
+6. Phase 6 — Studio Hardening
 
 ## Current Phase Scope
-- Add a local-first personal writing UI that drastically simplifies blog post CRUD without introducing backend/auth.
-- Support creating, editing, deleting, and saving blog Markdown files inside `src/content/blog`.
-- Add tag/series assistance and document browser/workflow limits clearly.
+- Make the writing studio meaningfully local-only so the deployed site does not expose an active editor to the public.
+- Redesign the writing experience to feel closer to a polished velog-like editor rather than a raw admin panel.
+- Refine tag/editor interactions and update the documentation for the new local-only behavior.
 
 ## Current Phase Non-Scope
 - Replacing the static content architecture with a hosted CMS.
 - Adding external backend, database, or authentication.
-- Changing the public blog rendering routes or deployment model.
+- Building a full multi-user publishing product.
 
 ## Architecture Summary
 - Astro static output with content collections for blog posts and projects.
@@ -39,16 +40,16 @@
 - blog taxonomy: `42`, `project`, `devlog`, `setup`, `retrospective`.
 
 ## Deliverables Checklist
-- [x] `/studio` personal writing route added
-- [x] Local post create/update/delete flow implemented
-- [x] Tag/series suggestions and template presets implemented
-- [x] Writing-studio usage docs added
-- [x] Phase 5 verification completed
+- [ ] Studio production exposure reduced to a local-only locked experience
+- [ ] Velog-inspired studio UX pass implemented
+- [ ] Tag/editor interaction flow improved
+- [ ] Documentation updated for the new local-only behavior
+- [ ] Phase 6 verification completed
 
 ## Verification Plan
-1. Run local build and type checks after adding the writing studio.
-2. Verify the `/studio` route builds and client-side UI loads with expected controls.
-3. Confirm the writing workflow docs match the implemented browser limitations and save flow.
+1. Run local build and type checks after hardening the studio.
+2. Verify `/studio` is usable on localhost but presents only a locked informational surface on production.
+3. Confirm the refined editor UI, tag flow, and docs match the intended local-only workflow.
 
 ## Work Log
 - Cloned the remote user-site repository into the writable workspace.
@@ -75,6 +76,10 @@
 - Added `src/pages/studio.astro` plus a large client-side writing UI component that handles local post CRUD, preview, tag reuse, and series helpers.
 - Added `src/lib/studio/blogStudio.ts` for frontmatter parsing/serialization, validation, slug generation, simple preview rendering, and tag/series aggregation.
 - Added `docs/runbooks/writing-studio.md` and README guidance so the new authoring flow is documented.
+- Started `phase/6-studio-hardening` from the latest merged `main`.
+- New goals: hide the active editor on the deployed site and raise the studio UI quality to a more product-like writing experience.
+- Reworked the studio into a local-only “writing desk” with a locked production surface, a stronger editorial layout, grouped publish settings, and more curated tag flows.
+- Excluded `/studio` from sitemap output and updated the writing-studio docs to reflect the new local-only behavior.
 
 ## Verification Results
 - `npm install -D astro @astrojs/sitemap @astrojs/check typescript` → dependencies installed successfully.
@@ -92,10 +97,15 @@
 - `npm run build` after writing-studio implementation → success; built `/studio` in addition to the existing public routes.
 - `grep dist/studio/index.html` → confirmed Writing Studio UI text, connect button, quick presets, tag library, and series helper are present in built output.
 - `curl http://127.0.0.1:4321/studio` via preview → returned the expected Writing Studio HTML and metadata.
+- `npm run check` after studio hardening → success.
+- `npm run build` after studio hardening → success; `/studio` still builds cleanly.
+- `grep dist/studio/index.html` → confirmed production HTML renders the locked local-only notice and keeps the active app hidden by default.
+- `grep dist/sitemap*.xml` → confirmed `/studio` is excluded from sitemap output.
+- `playwright screenshot http://127.0.0.1:4324/studio /tmp/studio-local-full.png` → confirmed localhost activates the polished editor surface instead of the locked screen.
 
 ## Known Blockers / User-Action-Required Items
 - GitHub push/PR and Pages settings updates will require the user's GitHub auth later.
 - Custom domain DNS changes must wait until the end and will require registrar/DNS access.
 
 ## Next Phase Preview
-- If phase 5 lands well, the next likely follow-up is lightweight authoring automation (post generators / bulk utilities), not backend infrastructure.
+- After hardening, the next likely follow-up is deeper tag/project authoring utilities, not backend infrastructure.
