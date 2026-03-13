@@ -3,18 +3,29 @@ import MainLayout from '../layouts/MainLayout.astro';
 ---
 
 <MainLayout title="404" description="Page not found." noindex={true}>
-  <section class="page-hero">
-    <div class="container narrow-flow">
-      <p class="eyebrow">404</p>
-      <h1>This page is missing, but the rest of the site is still reachable.</h1>
-      <p>
-        Try the homepage, projects page, or blog index to continue exploring the rebuilt portfolio and writing archive.
-      </p>
-      <div class="hero__actions">
-        <a class="button" href="/">Go home</a>
-        <a class="button button--ghost" href="/projects">Open projects</a>
-        <a class="button button--ghost" href="/blog">Read the blog</a>
+  <section class="page-hero page-hero--error">
+    <div class="container hero__grid">
+      <div class="narrow-flow">
+        <p class="eyebrow">404 · missing page</p>
+        <h1>This page is missing, but the notebook still has a clear way back.</h1>
+        <p>
+          Try the homepage, project directory, or blog archive to continue exploring the rebuilt portfolio and writing system.
+        </p>
+        <div class="hero__actions">
+          <a class="button" href="/">Go home</a>
+          <a class="button button--ghost" href="/projects">Open projects</a>
+          <a class="button button--ghost" href="/blog">Read the blog</a>
+        </div>
       </div>
+
+      <aside class="panel error-panel">
+        <p class="eyebrow">Quick recovery</p>
+        <ul class="utility-list">
+          <li>The home route explains the site structure fastest.</li>
+          <li>The projects page shows repository-backed case studies.</li>
+          <li>The blog index collects both technical notes and 42 writeups.</li>
+        </ul>
+      </aside>
     </div>
   </section>
 </MainLayout>

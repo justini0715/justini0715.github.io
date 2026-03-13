@@ -9,13 +9,27 @@ const posts = await getPublishedPosts();
 ---
 
 <MainLayout title="Blog" description="Technical writing, project notes, and an assignment-by-assignment 42 series.">
-  <section class="page-hero">
-    <div class="container narrow-flow">
-      <p class="eyebrow">Blog</p>
-      <h1>A writing system built for shipping posts one-by-one.</h1>
-      <p>
-        The archive mixes technical notes, setup writeups, and 42 assignment posts. Categories, tags, and series ordering keep the flow close to a velog-style publishing habit without losing structure.
-      </p>
+  <section class="page-hero page-hero--blog">
+    <div class="container hero__grid">
+      <div class="narrow-flow">
+        <p class="eyebrow">Archive index</p>
+        <h1>A writing system built for shipping posts one-by-one.</h1>
+        <p>
+          The archive mixes technical notes, setup writeups, and 42 assignment posts. Categories, tags, and series ordering keep the flow close to a velog-style publishing habit without losing structure.
+        </p>
+        <p class="page-kicker">
+          Index pages, series lanes, and individual reading surfaces now each carry a clearer role in the overall notebook.
+        </p>
+      </div>
+
+      <aside class="panel archive-panel">
+        <p class="eyebrow">Archive logic</p>
+        <ul class="utility-list">
+          <li>Posts stay readable as standalone entries.</li>
+          <li>Series metadata keeps long 42 tracks connected.</li>
+          <li>Tags remain visible without overwhelming the reading flow.</li>
+        </ul>
+      </aside>
     </div>
   </section>
 
@@ -42,7 +56,7 @@ const posts = await getPublishedPosts();
       <SectionTitle
         eyebrow="Published posts"
         title="Launch archive"
-        description="Technical posts and 42 entries are both first-class citizens in the same collection."
+        description="Technical posts and 42 entries share the same collection, but the card treatment is now explicitly tuned for journal-style browsing."
       />
       <div class="card-grid">
         {posts.map((post) => <PostCard post={post} />)}

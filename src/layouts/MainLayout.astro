@@ -13,6 +13,22 @@ interface Props {
 }
 
 const { title, description, ogType, noindex, publishedTime } = Astro.props;
+const pathname = Astro.url.pathname;
+const bodyClass = pathname === '/'
+  ? 'route-home'
+  : pathname === '/about/'
+    ? 'route-about'
+    : pathname === '/projects/'
+      ? 'route-projects'
+      : pathname === '/blog/'
+        ? 'route-blog-index'
+        : pathname.startsWith('/blog/')
+          ? 'route-blog-post'
+          : pathname === '/studio/'
+            ? 'route-studio'
+            : pathname === '/404/'
+              ? 'route-not-found'
+              : 'route-generic';
 ---
 
 <!doctype html>
@@ -20,9 +36,9 @@ const { title, description, ogType, noindex, publishedTime } = Astro.props;
   <head>
     <BaseHead title={title} description={description} ogType={ogType} noindex={noindex} publishedTime={publishedTime} />
   </head>
-  <body>
+  <body class={bodyClass}>
     <div class="site-shell">
-      <SiteHeader pathname={Astro.url.pathname} />
+      <SiteHeader pathname={pathname} />
       <main class="site-shell__main">
         <slot />
       </main>

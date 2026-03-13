@@ -11,21 +11,28 @@ const recentPosts = await getRecentPosts(4);
 ---
 
 <MainLayout title={siteMeta.title} description={siteMeta.description}>
-  <section class="hero">
+  <section class="hero hero--home">
     <div class="container hero__grid">
-      <div>
-        <p class="eyebrow">Portfolio, blog, and 42 archive</p>
-        <h1>Project case studies, technical posts, and 42 writeups in one static site.</h1>
+      <div class="narrow-flow">
+        <p class="eyebrow">Editorial systems notebook</p>
+        <h1>Projects, posts, and 42 writeups edited into one deliberate developer journal.</h1>
         <p class="hero__lede">{siteMeta.intro}</p>
+        <p class="hero-microcopy">{siteMeta.statusLine}</p>
         <div class="hero__actions">
-          <a class="button" href="/projects">See featured projects</a>
-          <a class="button button--ghost" href="/blog">Browse the blog</a>
+          <a class="button" href="/projects">Read project cases</a>
+          <a class="button button--ghost" href="/blog">Open the archive</a>
         </div>
       </div>
-      <aside class="panel">
-        <p class="eyebrow">Current focus</p>
-        <p>{siteMeta.statusLine}</p>
-        <ul class="stack-list">
+
+      <aside class="hero-note archive-panel">
+        <div>
+          <p class="eyebrow">Notebook focus</p>
+          <h2>Built like a publication, not a landing page.</h2>
+          <p class="page-kicker">
+            The public site now separates working notes, project cases, and reading surfaces so each route carries a clearer role.
+          </p>
+        </div>
+        <ul class="utility-list">
           {focusAreas.map((item) => <li>{item}</li>)}
         </ul>
       </aside>
@@ -34,14 +41,15 @@ const recentPosts = await getRecentPosts(4);
 
   <section class="section">
     <div class="container two-column">
-      <article class="panel">
-        <p class="eyebrow">What you can expect here</p>
-        <h2>Less template filler, more implementation context.</h2>
+      <article class="panel utility-panel">
+        <p class="eyebrow">Notebook premise</p>
+        <h2>Less generic dark-tech starter, more intentional project-and-writing home.</h2>
         <p>
-          The goal is a launch-ready site that feels like a real developer home: useful project summaries, honest blog posts, and a 42 series that can keep growing without being reorganized every month.
+          The site is tuned for developer readers who want implementation signal quickly: what the project was, what constraints mattered, and what changed after the first pass.
         </p>
       </article>
-      <div class="feature-grid">
+
+      <div class="feature-grid feature-grid--compact">
         {strengths.map((item) => (
           <article class="card stat-card">
             <p>{item}</p>
@@ -55,8 +63,8 @@ const recentPosts = await getRecentPosts(4);
     <div class="container">
       <SectionTitle
         eyebrow="Featured work"
-        title="A portfolio mix with infrastructure, graphics, concurrency, and algorithms"
-        description="These entries are grounded in the existing 42 repositories and chosen to show range rather than one repeated project shape."
+        title="Repository-backed project cases with different technical textures"
+        description="Infrastructure, graphics, concurrency, and algorithmic work now sit in a stronger card system instead of one repeated generic panel."
       />
       <div class="card-grid">
         {featuredProjects.map((project) => <ProjectCard project={project} />)}
@@ -68,8 +76,8 @@ const recentPosts = await getRecentPosts(4);
     <div class="container">
       <SectionTitle
         eyebrow="Recent writing"
-        title="Technical posts and 42 writeups now share the same archive"
-        description="The launch set already demonstrates both technical blogging and the assignment-by-assignment 42 flow."
+        title="Technical notes and 42 posts now read like entries in the same archive"
+        description="The writing side keeps dates, tags, and series context visible without collapsing into the same presentation used for project work."
       />
       <div class="card-grid">
         {recentPosts.length ? (
@@ -87,12 +95,19 @@ const recentPosts = await getRecentPosts(4);
   </section>
 
   <section class="section">
-    <div class="container feature-grid">
-      {writingPrinciples.map((item) => (
-        <article class="card stat-card">
-          <p>{item}</p>
-        </article>
-      ))}
+    <div class="container">
+      <SectionTitle
+        eyebrow="Writing principles"
+        title="Editorial rules for what makes it into the archive"
+        description="Each entry should earn its place by clarifying a real implementation detail, decision, or lesson."
+      />
+      <div class="feature-grid">
+        {writingPrinciples.map((item) => (
+          <article class="card stat-card">
+            <p>{item}</p>
+          </article>
+        ))}
+      </div>
     </div>
   </section>
 </MainLayout>

@@ -7,8 +7,8 @@
 - Domain target: `https://changwpa.kro.kr`
 
 ## Current Phase
-- Phase: Phase 11 — Studio Visual Polish
-- Branch: `phase/11-studio-visual-polish`
+- Phase: Phase 12 — Sitewide UI System Polish
+- Branch: `phase/12-sitewide-ui-system-polish`
 - Status: Complete
 
 ## Official Phase List
@@ -23,17 +23,19 @@
 9. Phase 9 — Studio UI Cleanup
 10. Phase 10 — Studio UI Polish
 11. Phase 11 — Studio Visual Polish
+12. Phase 12 — Sitewide UI System Polish
 
 ## Current Phase Scope
-- Polish the cleaned-up studio so the first viewport feels even more writing-first.
-- Reduce visual interruption from dev guidance, library toggling, and formatting tools.
-- Make supporting surfaces behave more like temporary overlays than competing columns.
+- Upgrade the public site from a competent dark Astro template into a more intentional editorial portfolio/journal system.
+- Improve global typography, spacing rhythm, surface hierarchy, and interaction states.
+- Give shared cards, navigation, and page intros clearer role differentiation across the public routes.
 
 ## Current Phase Non-Scope
 - Replacing the static content architecture with a hosted CMS.
 - Adding external backend, database, or authentication.
 - Building a full multi-user publishing product.
 - Changing the underlying Markdown storage/file IO model.
+- Reworking the already-polished studio beyond compatibility checks after global style changes.
 
 ## Architecture Summary
 - Astro static output with content collections for blog posts and projects.
@@ -46,18 +48,18 @@
 - blog taxonomy: `42`, `project`, `devlog`, `setup`, `retrospective`.
 
 ## Deliverables Checklist
-- [x] dev 안내를 compact disclosure로 축소
-- [x] library/sidepanel overlay behavior polish
-- [x] quick insert controls를 덜 시끄럽게 정리
-- [x] writer flow 중심 상호작용 polish
-- [x] visual language / label consistency polish
-- [x] Phase 11 verification completed
+- [x] global design tokens / typography / spacing scale polish
+- [x] header / footer / section-title system upgrade
+- [x] post-card / project-card visual differentiation
+- [x] page-intro patterns across public routes 개선
+- [x] Phase 12 verification completed
 
 ## Verification Plan
-1. Run local build and type checks after the polish pass.
-2. Verify localhost `/studio` shows the compact dev note plus the manuscript desk without a large hero block.
-3. Verify library and right-side panel can be dismissed via overlay/Escape and no longer compete at the same time.
-4. Confirm production `/studio` remains locked and docs match the updated workflow.
+1. Run local build and type checks after the sitewide polish pass.
+2. Verify the public routes `/`, `/about`, `/projects`, `/blog`, `/blog/[slug]`, and `/404` feel materially more distinct while still cohesive.
+3. Verify cards, nav, buttons, and links have clearer hierarchy and interaction states.
+4. Re-check `/studio` after global style changes for compatibility.
+5. Confirm production `/studio` remains locked and the public routes remain static-output compatible.
 
 ## Work Log
 - Cloned the remote user-site repository into the writable workspace.
@@ -117,6 +119,11 @@
 - Cleaned up the remaining English-heavy surface labels so the studio now reads more coherently in Korean (`원고 데스크`, `라이브러리`, `오른쪽 패널`, `원본 Markdown`, `시리즈`, `고급`, `주의 영역`, `점검`, `흐름`).
 - Removed the now-dead reconnect button from the visible chrome and kept a single adaptive `폴더 연결 / 폴더 변경` action.
 - Added a save-shortcut hint and tightened the final microcopy so the surface feels calmer without adding new controls.
+- Started `phase/12-sitewide-ui-system-polish` after studio reached a sufficiently polished local state and the user explicitly asked to move on to site-wide UI work.
+- Reworked the global design tokens and spacing rhythm in `src/styles/global.css` so the public site reads more like an editorial systems notebook and less like a generic dark starter.
+- Upgraded shared shell components (`MainLayout`, `SiteHeader`, `SiteFooter`, `SectionTitle`) to introduce stronger route identity, more deliberate navigation tone, and clearer section hierarchy.
+- Differentiated `PostCard` and `ProjectCard` so project work, writing, utility notes, and metadata no longer collapse into one repeated card treatment.
+- Redesigned the public route intros across `/`, `/about`, `/projects`, `/blog`, `/blog/[slug]`, and `404` so each page type opens with a more distinct composition while staying in one visual system.
 
 ## Verification Results
 - `npm install -D astro @astrojs/sitemap @astrojs/check typescript` → dependencies installed successfully.
@@ -162,6 +169,12 @@
 - `npm run build` after phase-11 visual polish → success; rebuilt all public routes plus `/studio`.
 - `npm run dev -- --host 127.0.0.1 --port 4354` outside the sandbox + `curl http://127.0.0.1:4354/studio` → confirmed dev `/studio` renders `로컬 열기 안내`, `원고 데스크`, `새 글 · 도구`, `빠른 삽입`, `오른쪽 패널`, and `원본 Markdown`.
 - `grep dist/studio/index.html` after phase-11 visual polish → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- `npm run check` after phase-12 sitewide polish → success (`tsc --noEmit`).
+- `npm run build` after phase-12 sitewide polish → success; rebuilt all public routes plus `/studio`.
+- `npx tsc --noEmit --project tsconfig.json` via LSP diagnostics after phase-12 sitewide polish → 0 errors, 0 warnings.
+- `npm run dev -- --host 127.0.0.1 --port 4364` outside the sandbox + route curls → confirmed refreshed public-route markers such as `editorial systems notebook`, `About the notebook`, `Profile snapshot`, `Project directory`, and the updated project/post card language.
+- `npm run dev -- --host 127.0.0.1 --port 4364` outside the sandbox + `curl http://127.0.0.1:4364/studio` → confirmed `/studio` still renders the compact local-only writing surface markers after the global CSS changes.
+- `grep dist/studio/index.html` after phase-12 sitewide polish → production output still contains the locked `/studio` notice and excludes the active editor markers.
 
 ## Known Blockers / User-Action-Required Items
 - GitHub push/PR and Pages settings updates will require the user's GitHub auth later.
