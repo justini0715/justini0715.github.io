@@ -25,6 +25,11 @@ const formattedDate = new Intl.DateTimeFormat('en', { dateStyle: 'long' }).forma
         <span>{formattedDate}</span>
         {post.data.seriesTitle && <span>{post.data.seriesTitle}</span>}
       </div>
+      {post.data.tags.length > 0 && (
+        <ul class="inline-tags">
+          {post.data.tags.map((tag) => <li>{tag}</li>)}
+        </ul>
+      )}
     </div>
   </section>
 

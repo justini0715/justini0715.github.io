@@ -7,8 +7,8 @@
 - Domain target: `https://changwpa.kro.kr`
 
 ## Current Phase
-- Phase: Phase 2 — Portfolio Structure
-- Branch: `phase/2-portfolio-structure`
+- Phase: Phase 3 — Blog System
+- Branch: `phase/3-blog-system`
 - Status: Complete
 
 ## Official Phase List
@@ -18,12 +18,12 @@
 4. Phase 4 — Polish and Deployment
 
 ## Current Phase Scope
-- Add the launch-ready home/about/projects experience on top of the Astro scaffold.
-- Create structured project entries backed by real 42 repository evidence.
-- Tighten the responsive layout so the site reads like a personal developer site instead of a starter shell.
+- Populate the blog collection with launch-ready technical posts and 42 entries.
+- Make the blog index and post pages feel intentional, including tags and series navigation.
+- Represent the 42 writing flow explicitly so assignments can be published one-by-one without restructuring the site.
 
 ## Current Phase Non-Scope
-- Blog launch posts and final blog-system polish.
+- Final visual polish, 404 refinements, and custom-domain activation steps.
 - Final custom domain activation in GitHub Pages settings and DNS.
 - Publishing phase branches or merge/PR operations that require GitHub auth.
 
@@ -38,16 +38,16 @@
 - blog taxonomy: `42`, `project`, `devlog`, `setup`, `retrospective`.
 
 ## Deliverables Checklist
-- [x] Homepage updated with a strong hero, featured projects, and recent-writing blocks
-- [x] About page updated with biography, focus, and stack summary sections
-- [x] Projects page populated with at least 3 meaningful entries
-- [x] Responsive layout tuned for portfolio-first browsing
-- [x] Phase 2 verification completed
+- [x] At least 2 technical posts added to the blog collection
+- [x] At least 2 42 posts or strong structured stubs added with series metadata
+- [x] Blog index and post pages updated for readable post browsing
+- [x] 42 taxonomy / series structure represented in the site
+- [x] Phase 3 verification completed
 
 ## Verification Plan
-1. Run a local Astro build after the portfolio pages and project content are updated.
-2. Check the rendered project cards and home-page sections in built output / preview.
-3. Re-run project-wide TypeScript diagnostics after content and layout changes.
+1. Run a local Astro build after adding the launch posts and post-page refinements.
+2. Verify built output contains all four launch posts and that the 42 series navigation renders.
+3. Re-run project-wide TypeScript diagnostics after blog/template changes.
 
 ## Work Log
 - Cloned the remote user-site repository into the writable workspace.
@@ -60,6 +60,10 @@
 - Collected the launch-content roster from brownfield sources: featured projects should center on Inception, cub3d, philosopher, and push_swap.
 - Added four repository-backed project entries sourced from the current 42 workspace remotes and README material.
 - Updated the home, about, and projects pages to reflect a coherent portfolio-first experience with responsive content blocks.
+- Branched `phase/3-blog-system` from the verified portfolio commit.
+- Prepared the launch-post roster: one migration/devlog, one 42-repository-quality post, and two 42 systems-series entries for push_swap and philosopher.
+- Added four launch posts to the blog collection: two technical posts plus two 42 systems-series posts.
+- Updated the blog index and post template to show tags, category metadata, and previous/next series navigation.
 
 ## Verification Results
 - `npm install -D astro @astrojs/sitemap @astrojs/check typescript` → dependencies installed successfully.
@@ -68,10 +72,12 @@
 - `npx tsc --noEmit --project tsconfig.json` via LSP diagnostics → 0 errors, 0 warnings.
 - `npm run build` after portfolio updates → success; featured project content rendered into `/` and `/projects`.
 - `grep` checks against `dist/index.html` and `dist/projects/index.html` → confirmed Inception, cub3d, philosopher, and push_swap content is present in built output.
+- `npm run build` after blog updates → success; built all four blog post routes plus `/blog`.
+- `grep` checks against `dist/blog/index.html` and `dist/blog/42-philosopher/index.html` → confirmed all launch post titles render and the 42 series navigation links philosopher back to push_swap.
 
 ## Known Blockers / User-Action-Required Items
 - GitHub push/PR and Pages settings updates will require the user's GitHub auth later.
 - Custom domain DNS changes must wait until the end and will require registrar/DNS access.
 
 ## Next Phase Preview
-- Phase 3 will populate the blog system with technical posts, 42 series entries, and post-level reading flows.
+- Phase 4 will focus on final polish, 404, deployment docs, launch checklist, and custom-domain readiness.

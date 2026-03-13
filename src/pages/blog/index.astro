@@ -14,7 +14,7 @@ const posts = await getPublishedPosts();
       <p class="eyebrow">Blog</p>
       <h1>A writing system built for shipping posts one-by-one.</h1>
       <p>
-        Categories, tags, and series metadata are baked into the content model so the 42 journey can grow in a velog-like flow without losing structure.
+        The archive mixes technical notes, setup writeups, and 42 assignment posts. Categories, tags, and series ordering keep the flow close to a velog-style publishing habit without losing structure.
       </p>
     </div>
   </section>
@@ -23,7 +23,7 @@ const posts = await getPublishedPosts();
     <div class="container">
       <SectionTitle
         eyebrow="42 tracks"
-        title="Series lanes prepared for long-term writing"
+        title="Series lanes for long-term writing"
         description="Each assignment can stand alone while still belonging to a larger learning arc."
       />
       <div class="feature-grid">
@@ -40,21 +40,12 @@ const posts = await getPublishedPosts();
   <section class="section section--tint">
     <div class="container">
       <SectionTitle
-        eyebrow="Posts"
-        title="Content collection scaffold"
-        description="The blog index route is live in Phase 1 and will be populated with launch posts in Phase 3."
+        eyebrow="Published posts"
+        title="Launch archive"
+        description="Technical posts and 42 entries are both first-class citizens in the same collection."
       />
       <div class="card-grid">
-        {posts.length ? (
-          posts.map((post) => <PostCard post={post} />)
-        ) : (
-          <article class="card empty-state">
-            <h3>No posts published yet</h3>
-            <p>
-              The collection schema already supports categories, tags, series order, and draft control. Launch posts will be added in the blog-system phase.
-            </p>
-          </article>
-        )}
+        {posts.map((post) => <PostCard post={post} />)}
       </div>
     </div>
   </section>
