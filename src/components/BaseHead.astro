@@ -1,0 +1,27 @@
+---
+import { siteMeta } from '../data/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title = siteMeta.title, description = siteMeta.description } = Astro.props;
+const pageTitle = title === siteMeta.title ? title : `${title} | ${siteMeta.shortTitle}`;
+const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site) : Astro.url;
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical.toString()} />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>{pageTitle}</title>
+<meta property="og:type" content="website" />
+<meta property="og:title" content={pageTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical.toString()} />
+<meta property="og:site_name" content={siteMeta.shortTitle} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={pageTitle} />
+<meta name="twitter:description" content={description} />

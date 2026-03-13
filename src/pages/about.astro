@@ -1,0 +1,55 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import SectionTitle from '../components/SectionTitle.astro';
+import { focusAreas, siteMeta, stackSummary } from '../data/site';
+---
+
+<MainLayout title="About" description="About the changwpa developer site and the writing priorities behind it.">
+  <section class="page-hero">
+    <div class="container narrow-flow">
+      <p class="eyebrow">About</p>
+      <h1>A personal developer site built around honest project notes.</h1>
+      <p>
+        This site is being rebuilt as a maintainable Astro home for portfolio case studies, technical posts, and a 42 assignment log that can grow one entry at a time.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container two-column">
+      <div>
+        <SectionTitle
+          eyebrow="What this site is for"
+          title="A place to show the work and the reasoning behind it"
+          description="The goal is not a generic starter blog. It is a durable publishing base for systems, infrastructure, and implementation notes."
+        />
+        <p>
+          The content direction is simple: document real projects, preserve the constraints that shaped them, and make it easy to revisit the next assignment without rebuilding the whole site structure.
+        </p>
+      </div>
+      <div class="panel">
+        <p class="eyebrow">Focus areas</p>
+        <ul class="stack-list">
+          {focusAreas.map((item) => <li>{item}</li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tint">
+    <div class="container">
+      <SectionTitle
+        eyebrow="Stack summary"
+        title="Chosen for maintainability over novelty"
+        description="Static output, Markdown content, and simple deployment keep the writing flow lightweight."
+      />
+      <div class="feature-grid">
+        {stackSummary.map((item) => (
+          <article class="card stat-card">
+            <p>{item}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+</MainLayout>

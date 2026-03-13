@@ -1,0 +1,29 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={title} description={description} />
+  </head>
+  <body>
+    <div class="site-shell">
+      <SiteHeader pathname={Astro.url.pathname} />
+      <main class="site-shell__main">
+        <slot />
+      </main>
+      <SiteFooter />
+    </div>
+  </body>
+</html>

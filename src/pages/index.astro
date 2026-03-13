@@ -1,0 +1,88 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import SectionTitle from '../components/SectionTitle.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import PostCard from '../components/PostCard.astro';
+import { focusAreas, siteMeta, writingPrinciples } from '../data/site';
+import { getFeaturedProjects, getRecentPosts } from '../lib/content';
+
+const featuredProjects = await getFeaturedProjects(3);
+const recentPosts = await getRecentPosts(4);
+---
+
+<MainLayout title={siteMeta.title} description={siteMeta.description}>
+  <section class="hero">
+    <div class="container hero__grid">
+      <div>
+        <p class="eyebrow">Astro portfolio + technical writing home</p>
+        <h1>Build log, project showcase, and 42 series — all in one source-first site.</h1>
+        <p class="hero__lede">{siteMeta.intro}</p>
+        <div class="hero__actions">
+          <a class="button" href="/projects">See projects</a>
+          <a class="button button--ghost" href="/blog">Read the blog</a>
+        </div>
+      </div>
+      <aside class="panel">
+        <p class="eyebrow">Current focus</p>
+        <p>{siteMeta.statusLine}</p>
+        <ul class="stack-list">
+          {focusAreas.map((item) => <li>{item}</li>)}
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container feature-grid">
+      {writingPrinciples.map((item) => (
+        <article class="card stat-card">
+          <p>{item}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionTitle
+        eyebrow="Featured work"
+        title="Project case studies built for readability"
+        description="Phase 2 will flesh out the portfolio grid with launch-ready entries backed by repository evidence."
+      />
+      <div class="card-grid">
+        {featuredProjects.length ? (
+          featuredProjects.map((project) => <ProjectCard project={project} />)
+        ) : (
+          <article class="card empty-state">
+            <h3>Project entries are being prepared</h3>
+            <p>
+              The rebuilt site already supports structured project content. Launch entries will be added from real 42 repositories in the next phase.
+            </p>
+          </article>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tint">
+    <div class="container">
+      <SectionTitle
+        eyebrow="Recent writing"
+        title="Technical notes that explain the work, not just the result"
+        description="The blog route is live now and will be populated with technical + 42 posts in Phase 3."
+      />
+      <div class="card-grid">
+        {recentPosts.length ? (
+          recentPosts.map((post) => <PostCard post={post} />)
+        ) : (
+          <article class="card empty-state">
+            <h3>Starter posts are next</h3>
+            <p>
+              The site already supports content collections, tags, categories, and 42 series metadata. Launch posts arrive in the blog-system phase.
+            </p>
+          </article>
+        )}
+      </div>
+    </div>
+  </section>
+</MainLayout>

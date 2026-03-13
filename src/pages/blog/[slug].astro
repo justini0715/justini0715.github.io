@@ -1,0 +1,55 @@
+---
+import { getCollection, render } from 'astro:content';
+import MainLayout from '../../layouts/MainLayout.astro';
+import { getAdjacentSeriesPosts, getPublishedPosts } from '../../lib/content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.filter((post) => !post.data.draft).map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const allPosts = await getPublishedPosts();
+const { previous, next } = getAdjacentSeriesPosts(allPosts, post);
+const formattedDate = new Intl.DateTimeFormat('en', { dateStyle: 'long' }).format(post.data.pubDate);
+---
+
+<MainLayout title={post.data.title} description={post.data.description}>
+  <section class="page-hero">
+    <div class="container narrow-flow">
+      <p class="eyebrow">{post.data.category}</p>
+      <h1>{post.data.title}</h1>
+      <p>{post.data.description}</p>
+      <div class="post-meta-row">
+        <span>{formattedDate}</span>
+        {post.data.seriesTitle && <span>{post.data.seriesTitle}</span>}
+      </div>
+    </div>
+  </section>
+
+  <article class="section">
+    <div class="container prose-shell">
+      <Content />
+    </div>
+  </article>
+
+  {(previous || next) && (
+    <section class="section section--tint">
+      <div class="container series-nav">
+        {previous ? (
+          <a class="card" href={`/blog/${previous.id}/`}>
+            <p class="eyebrow">Previous in series</p>
+            <strong>{previous.data.title}</strong>
+          </a>
+        ) : <div />}
+        {next ? (
+          <a class="card" href={`/blog/${next.id}/`}>
+            <p class="eyebrow">Next in series</p>
+            <strong>{next.data.title}</strong>
+          </a>
+        ) : <div />}
+      </div>
+    </section>
+  )}
+</MainLayout>

@@ -1,0 +1,42 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import SectionTitle from '../../components/SectionTitle.astro';
+import { getProjects } from '../../lib/content';
+
+const projects = await getProjects();
+---
+
+<MainLayout title="Projects" description="Structured project entries for 42 work and other development projects.">
+  <section class="page-hero">
+    <div class="container narrow-flow">
+      <p class="eyebrow">Projects</p>
+      <h1>Projects with enough context to matter.</h1>
+      <p>
+        Launch entries will summarize the scope, stack, and technical highlight for each project instead of presenting a flat link dump.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionTitle
+        eyebrow="Case studies"
+        title="Repository-backed project summaries"
+        description="The collection is live in the scaffold and will be populated in Phase 2."
+      />
+      <div class="card-grid">
+        {projects.length ? (
+          projects.map((project) => <ProjectCard project={project} />)
+        ) : (
+          <article class="card empty-state">
+            <h3>No project entries yet</h3>
+            <p>
+              The phase-1 scaffold is ready for Markdown-based project cards. Phase 2 will add the launch set from real repositories.
+            </p>
+          </article>
+        )}
+      </div>
+    </div>
+  </section>
+</MainLayout>

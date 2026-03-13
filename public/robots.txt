@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://justini0715.github.io/sitemap-index.xml

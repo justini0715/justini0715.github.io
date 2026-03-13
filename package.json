@@ -1,0 +1,21 @@
+{
+  "name": "justini0715.github.io",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.7",
+    "@astrojs/sitemap": "^3.7.1",
+    "astro": "^6.0.4",
+    "typescript": "^5.9.3"
+  }
+}

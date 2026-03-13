@@ -1,0 +1,28 @@
+---
+import { siteMeta } from '../data/site';
+const year = new Date().getFullYear();
+---
+
+<footer class="site-shell__footer">
+  <div class="container footer-grid">
+    <div>
+      <p class="eyebrow">Source-first publishing</p>
+      <h2>{siteMeta.shortTitle}</h2>
+      <p>
+        Built for project case studies, technical posts, and a long-running 42 series that stays readable on launch day.
+      </p>
+    </div>
+
+    <div>
+      <p class="eyebrow">Links</p>
+      <ul class="footer-links">
+        <li><a href={siteMeta.github} target="_blank" rel="noreferrer">GitHub profile</a></li>
+        <li><a href={siteMeta.repo} target="_blank" rel="noreferrer">Site repository</a></li>
+        <li><a href="/blog">Latest writing</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="container footer-meta">
+    <small>© {year} {siteMeta.shortTitle}. Built with Astro and deployed to GitHub Pages.</small>
+  </div>
+</footer>

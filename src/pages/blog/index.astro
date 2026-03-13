@@ -1,0 +1,61 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+import SectionTitle from '../../components/SectionTitle.astro';
+import { seriesOverview } from '../../data/site';
+import { getPublishedPosts } from '../../lib/content';
+
+const posts = await getPublishedPosts();
+---
+
+<MainLayout title="Blog" description="Technical writing, project notes, and an assignment-by-assignment 42 series.">
+  <section class="page-hero">
+    <div class="container narrow-flow">
+      <p class="eyebrow">Blog</p>
+      <h1>A writing system built for shipping posts one-by-one.</h1>
+      <p>
+        Categories, tags, and series metadata are baked into the content model so the 42 journey can grow in a velog-like flow without losing structure.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionTitle
+        eyebrow="42 tracks"
+        title="Series lanes prepared for long-term writing"
+        description="Each assignment can stand alone while still belonging to a larger learning arc."
+      />
+      <div class="feature-grid">
+        {seriesOverview.map((series) => (
+          <article class="card stat-card">
+            <h3>{series.title}</h3>
+            <p>{series.description}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tint">
+    <div class="container">
+      <SectionTitle
+        eyebrow="Posts"
+        title="Content collection scaffold"
+        description="The blog index route is live in Phase 1 and will be populated with launch posts in Phase 3."
+      />
+      <div class="card-grid">
+        {posts.length ? (
+          posts.map((post) => <PostCard post={post} />)
+        ) : (
+          <article class="card empty-state">
+            <h3>No posts published yet</h3>
+            <p>
+              The collection schema already supports categories, tags, series order, and draft control. Launch posts will be added in the blog-system phase.
+            </p>
+          </article>
+        )}
+      </div>
+    </div>
+  </section>
+</MainLayout>
