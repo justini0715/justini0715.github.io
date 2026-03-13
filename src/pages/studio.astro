@@ -14,15 +14,24 @@ const studioEnabled = import.meta.env.DEV;
     <div class="container narrow-flow">
       <p class="eyebrow">Local writing desk</p>
       <h1>Writing Studio</h1>
-      <ol class="studio-intro-steps">
-        <li><strong>1.</strong> 작업 폴더 열기</li>
-        <li><strong>2.</strong> 제목 · 태그 · 본문 작성</li>
-        <li><strong>3.</strong> 공개/비공개 선택</li>
-        <li><strong>4.</strong> 저장 후 git 반영</li>
-      </ol>
-      <p class="studio-intro-note">
-        편집 UI는 localhost에서만 활성화됩니다. 브라우저는 Chrome / Edge / Brave 데스크톱을 권장합니다.
-      </p>
+      <div class="studio-intro-guide">
+        <div class="studio-intro-guide__steps">
+          <strong>빠른 사용 순서</strong>
+          <ol class="studio-intro-steps">
+            <li><strong>1.</strong> 레포에서 개발 서버 실행</li>
+            <li><strong>2.</strong> 터미널에 나온 localhost 주소 뒤에 <code>/studio</code> 접속</li>
+            <li><strong>3.</strong> 블로그 폴더 열기 → 제목 · 태그 · 본문 작성</li>
+            <li><strong>4.</strong> 공개/비공개 선택 후 저장</li>
+          </ol>
+        </div>
+        <pre class="studio-intro-code"><code>cd /home/iostream/changwpa-site-manual/work/justini0715.github.io
+npm run dev
+
+# 예: http://127.0.0.1:4328/studio
+
+# 글 파일 위치
+src/content/blog/*.md</code></pre>
+      </div>
     </div>
   </section>
 
@@ -51,26 +60,40 @@ const studioEnabled = import.meta.env.DEV;
 </MainLayout>
 
 <style>
-  .studio-intro-steps {
-    display: flex;
-    flex-wrap: wrap;
+  .studio-intro-guide {
+    display: grid;
+    gap: 1rem;
+    padding: 1rem 1.1rem;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .studio-intro-guide__steps {
+    display: grid;
     gap: 0.75rem;
   }
 
+  .studio-intro-steps {
+    display: grid;
+    gap: 0.65rem;
+    padding-left: 0;
+    list-style: none;
+  }
+
   .studio-intro-steps li {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    min-height: 40px;
-    padding: 0 0.95rem;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    gap: 0.6rem;
     color: var(--text);
   }
 
-  .studio-intro-note {
-    max-width: 56ch;
+  .studio-intro-code {
+    margin: 0;
+    overflow: auto;
+    padding: 1rem;
+    border-radius: 18px;
+    background: rgba(7, 10, 17, 0.88);
+    color: #edf2ff;
   }
 
   .studio-locked-page__card {
@@ -97,8 +120,6 @@ const studioEnabled = import.meta.env.DEV;
   }
 
   @media (max-width: 720px) {
-    .studio-intro-steps {
-      display: grid;
-    }
+    .studio-intro-guide { padding: 0.9rem; }
   }
 </style>

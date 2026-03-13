@@ -56,9 +56,9 @@ export const CATEGORY_LABELS: Record<BlogCategory, string> = {
   retrospective: 'Retrospective'
 };
 
-const DEFAULT_TECH_BODY = `# 새 글 제목\n\n## 문제\n\n## 시도한 것\n\n## 막혔던 점\n\n## 해결\n\n## 배운 점\n`;
-const DEFAULT_42_BODY = `# 42 - 새 과제\n\n## What this project is\n\n## Requirements / Constraints\n- \n- \n- \n\n## What I built\n\n## Architecture / Design choices\n\n## Hard parts\n\n## Bugs / Mistakes\n\n## What I learned\n\n## If I rebuilt it now\n\n## Links\n- repository: \n- subject: \n`;
-const DEFAULT_BLANK_BODY = '# 새 글\n';
+const DEFAULT_TECH_BODY = '';
+const DEFAULT_42_BODY = '';
+const DEFAULT_BLANK_BODY = '';
 
 function currentDate() {
   return new Date().toISOString().slice(0, 10);
@@ -104,7 +104,7 @@ export function normalizeTags(input: string[] | string) {
 
 export function createPostTemplate(kind: StudioTemplateKind, seedTitle = ''): StudioPost {
   const baseTitle = kind === '42' ? (seedTitle ? `42 - ${seedTitle}` : '') : seedTitle;
-  const slug = baseTitle ? slugifyTitle(baseTitle) : `post-${compactTimestamp()}`;
+  const slug = baseTitle ? slugifyTitle(baseTitle) : '';
 
   return {
     slug,
