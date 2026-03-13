@@ -10,9 +10,12 @@ interface Props {
   ogType?: 'website' | 'article';
   noindex?: boolean;
   publishedTime?: string;
+  updatedTime?: string;
+  image?: string;
+  imageAlt?: string;
 }
 
-const { title, description, ogType, noindex, publishedTime } = Astro.props;
+const { title, description, ogType, noindex, publishedTime, updatedTime, image, imageAlt } = Astro.props;
 const pathname = Astro.url.pathname;
 const bodyClass = pathname === '/'
   ? 'route-home'
@@ -34,7 +37,16 @@ const bodyClass = pathname === '/'
 <!doctype html>
 <html lang="en">
   <head>
-    <BaseHead title={title} description={description} ogType={ogType} noindex={noindex} publishedTime={publishedTime} />
+    <BaseHead
+      title={title}
+      description={description}
+      ogType={ogType}
+      noindex={noindex}
+      publishedTime={publishedTime}
+      updatedTime={updatedTime}
+      image={image}
+      imageAlt={imageAlt}
+    />
   </head>
   <body class={bodyClass}>
     <div class="site-shell">

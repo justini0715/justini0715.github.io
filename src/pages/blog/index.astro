@@ -8,26 +8,29 @@ import { getPublishedPosts } from '../../lib/content';
 const posts = await getPublishedPosts();
 ---
 
-<MainLayout title="Blog" description="Technical writing, project notes, and an assignment-by-assignment 42 series.">
+<MainLayout
+  title="Technical blog and 42 writeups"
+  description="Technical blog archive with 42 assignment writeups, debugging notes, setup guides, retrospectives, and source-first development posts."
+>
   <section class="page-hero page-hero--blog">
     <div class="container hero__grid">
       <div class="narrow-flow">
-        <p class="eyebrow">Archive index</p>
-        <h1>A writing system built for shipping posts one-by-one.</h1>
+        <p class="eyebrow">Technical blog · 42 writeups</p>
+        <h1>Technical posts, setup notes, and 42 assignment writeups in one archive.</h1>
         <p>
-          The archive mixes technical notes, setup writeups, and 42 assignment posts. Categories, tags, and series ordering keep the flow close to a velog-style publishing habit without losing structure.
+          The blog mixes debugging notes, setup guides, project retrospectives, and assignment-by-assignment 42 posts. Categories, tags, and series ordering help the archive grow without losing context.
         </p>
         <p class="page-kicker">
-          Index pages, series lanes, and individual reading surfaces now each carry a clearer role in the overall notebook.
+          If you are looking for systems programming notes, 42 project lessons, or source-first web workflow writeups, this is the main reading index.
         </p>
       </div>
 
       <aside class="panel archive-panel">
-        <p class="eyebrow">Archive logic</p>
+        <p class="eyebrow">What the archive covers</p>
         <ul class="utility-list">
-          <li>Posts stay readable as standalone entries.</li>
-          <li>Series metadata keeps long 42 tracks connected.</li>
-          <li>Tags remain visible without overwhelming the reading flow.</li>
+          <li>Standalone technical posts with concrete implementation notes</li>
+          <li>42 series entries linked by project order and shared context</li>
+          <li>Setup, retrospective, and debugging content alongside project work</li>
         </ul>
       </aside>
     </div>
@@ -56,7 +59,7 @@ const posts = await getPublishedPosts();
       <SectionTitle
         eyebrow="Published posts"
         title="Launch archive"
-        description="Technical posts and 42 entries share the same collection, but the card treatment is now explicitly tuned for journal-style browsing."
+        description="Browse technical blog entries and 42 writeups with dates, tags, and series context visible at a glance."
       />
       <div class="card-grid">
         {posts.map((post) => <PostCard post={post} />)}

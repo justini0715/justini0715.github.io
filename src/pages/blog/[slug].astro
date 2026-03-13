@@ -13,9 +13,18 @@ const { Content } = await render(post);
 const allPosts = await getPublishedPosts();
 const { previous, next } = getAdjacentSeriesPosts(allPosts, post);
 const formattedDate = new Intl.DateTimeFormat('en', { dateStyle: 'long' }).format(post.data.pubDate);
+const seriesContext = post.data.seriesTitle
+  ? `${post.data.seriesTitle} 시리즈의 한 글로, 같은 학습 흐름 안에서 앞뒤 글과 연결됩니다.`
+  : `${post.data.category} 카테고리에서 읽을 수 있는 독립적인 기술 글입니다.`;
 ---
 
-<MainLayout title={post.data.title} description={post.data.description} ogType="article" publishedTime={post.data.pubDate.toISOString()}>
+<MainLayout
+  title={post.data.title}
+  description={post.data.description}
+  ogType="article"
+  publishedTime={post.data.pubDate.toISOString()}
+  updatedTime={post.data.updatedDate?.toISOString()}
+>
   <section class="page-hero page-hero--post">
     <div class="container hero__grid">
       <div class="reading-surface narrow-flow">
@@ -29,8 +38,8 @@ const formattedDate = new Intl.DateTimeFormat('en', { dateStyle: 'long' }).forma
       </div>
 
       <aside class="panel utility-panel">
-        <p class="eyebrow">Reading notes</p>
-        <p class="meta-note">This route shifts into reading mode with quieter chrome, visible metadata, and enough context to keep longer series navigable.</p>
+        <p class="eyebrow">Entry context</p>
+        <p class="meta-note">{seriesContext}</p>
         {post.data.tags.length > 0 && (
           <ul class="inline-tags">
             {post.data.tags.map((tag) => <li>{tag}</li>)}

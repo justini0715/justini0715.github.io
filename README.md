@@ -68,3 +68,4 @@ Then open the localhost URL printed by `npm run dev`, add `/studio`, connect the
 - `phase/10-studio-ui-polish`
 - `phase/11-studio-visual-polish`
 - `phase/12-sitewide-ui-system-polish`
+- `phase/13-content-copy-seo-polish`

@@ -7,8 +7,8 @@
 - Domain target: `https://changwpa.kro.kr`
 
 ## Current Phase
-- Phase: Phase 12 — Sitewide UI System Polish
-- Branch: `phase/12-sitewide-ui-system-polish`
+- Phase: Phase 13 — Content / Copy / SEO Polish
+- Branch: `phase/13-content-copy-seo-polish`
 - Status: Complete
 
 ## Official Phase List
@@ -24,11 +24,12 @@
 10. Phase 10 — Studio UI Polish
 11. Phase 11 — Studio Visual Polish
 12. Phase 12 — Sitewide UI System Polish
+13. Phase 13 — Content / Copy / SEO Polish
 
 ## Current Phase Scope
-- Upgrade the public site from a competent dark Astro template into a more intentional editorial portfolio/journal system.
-- Improve global typography, spacing rhythm, surface hierarchy, and interaction states.
-- Give shared cards, navigation, and page intros clearer role differentiation across the public routes.
+- Tighten public-facing copy so the site reads more intentionally and consistently across routes.
+- Improve SEO-facing metadata and route descriptions without changing the static architecture.
+- Refine portfolio/blog language so the site feels more credible, specific, and maintainable.
 
 ## Current Phase Non-Scope
 - Replacing the static content architecture with a hosted CMS.
@@ -36,6 +37,7 @@
 - Building a full multi-user publishing product.
 - Changing the underlying Markdown storage/file IO model.
 - Reworking the already-polished studio beyond compatibility checks after global style changes.
+- Rebuilding the public UI system again immediately after phase 12.
 
 ## Architecture Summary
 - Astro static output with content collections for blog posts and projects.
@@ -48,17 +50,16 @@
 - blog taxonomy: `42`, `project`, `devlog`, `setup`, `retrospective`.
 
 ## Deliverables Checklist
-- [x] global design tokens / typography / spacing scale polish
-- [x] header / footer / section-title system upgrade
-- [x] post-card / project-card visual differentiation
-- [x] page-intro patterns across public routes 개선
-- [x] Phase 12 verification completed
+- [x] site-wide copy tone and wording consistency pass
+- [x] SEO/meta description/title polish for public routes
+- [x] high-signal content framing improvements on key landing pages
+- [x] Phase 13 verification completed
 
 ## Verification Plan
-1. Run local build and type checks after the sitewide polish pass.
-2. Verify the public routes `/`, `/about`, `/projects`, `/blog`, `/blog/[slug]`, and `/404` feel materially more distinct while still cohesive.
-3. Verify cards, nav, buttons, and links have clearer hierarchy and interaction states.
-4. Re-check `/studio` after global style changes for compatibility.
+1. Run local build and type checks after the copy/SEO polish pass.
+2. Verify the public routes `/`, `/about`, `/projects`, `/blog`, `/blog/[slug]`, and `/404` still render with the refined copy and metadata.
+3. Confirm title/description metadata stays coherent and route-specific.
+4. Re-check `/studio` after any shared metadata/style adjustments for compatibility.
 5. Confirm production `/studio` remains locked and the public routes remain static-output compatible.
 
 ## Work Log
@@ -124,6 +125,12 @@
 - Upgraded shared shell components (`MainLayout`, `SiteHeader`, `SiteFooter`, `SectionTitle`) to introduce stronger route identity, more deliberate navigation tone, and clearer section hierarchy.
 - Differentiated `PostCard` and `ProjectCard` so project work, writing, utility notes, and metadata no longer collapse into one repeated card treatment.
 - Redesigned the public route intros across `/`, `/about`, `/projects`, `/blog`, `/blog/[slug]`, and `404` so each page type opens with a more distinct composition while staying in one visual system.
+- Phase 12 stopped at a clean PR-ready local snapshot (`phase/12-sitewide-ui-system-polish` at `883e74b`) because actual push / PR / merge / deploy requires GitHub auth.
+- Started `phase/13-content-copy-seo-polish` after the user asked to continue with content, copy, and SEO work following the PR-ready phase-12 snapshot.
+- Tightened site-wide copy so the public routes talk more directly about developer portfolio work, 42 projects, systems programming, and technical writing instead of over-explaining the site structure.
+- Improved metadata with stronger page-specific titles/descriptions plus reusable author and social-image fields in `BaseHead`.
+- Added a default social preview asset (`public/og-default.svg`) so Open Graph and Twitter previews resolve to a concrete portfolio/blog image.
+- Refined homepage, about, projects, blog, post, and 404 copy toward a calmer, more specific, less meta self-descriptive tone.
 
 ## Verification Results
 - `npm install -D astro @astrojs/sitemap @astrojs/check typescript` → dependencies installed successfully.
@@ -175,6 +182,12 @@
 - `npm run dev -- --host 127.0.0.1 --port 4364` outside the sandbox + route curls → confirmed refreshed public-route markers such as `editorial systems notebook`, `About the notebook`, `Profile snapshot`, `Project directory`, and the updated project/post card language.
 - `npm run dev -- --host 127.0.0.1 --port 4364` outside the sandbox + `curl http://127.0.0.1:4364/studio` → confirmed `/studio` still renders the compact local-only writing surface markers after the global CSS changes.
 - `grep dist/studio/index.html` after phase-12 sitewide polish → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- `npm run check` after phase-13 copy/SEO polish → success (`tsc --noEmit`).
+- `npm run build` after phase-13 copy/SEO polish → success; rebuilt all public routes plus `/studio`.
+- `npx tsc --noEmit --project tsconfig.json` via LSP diagnostics after phase-13 copy/SEO polish → 0 errors, 0 warnings.
+- `grep dist/index.html dist/about/index.html dist/projects/index.html dist/blog/index.html` after phase-13 copy/SEO polish → confirmed page-specific descriptions plus `meta name="author"`, `og:image`, `og:image:alt`, and `twitter:image` render in built output.
+- `curl http://127.0.0.1:4368/studio` against a local dev server after phase-13 copy/SEO polish → confirmed `/studio` still renders the compact local-only writing surface markers after shared metadata updates.
+- `grep dist/studio/index.html` after phase-13 copy/SEO polish → production output still contains the locked `/studio` notice and excludes the active editor markers.
 
 ## Known Blockers / User-Action-Required Items
 - GitHub push/PR and Pages settings updates will require the user's GitHub auth later.

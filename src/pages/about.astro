@@ -4,17 +4,20 @@ import SectionTitle from '../components/SectionTitle.astro';
 import { currentFocus, focusAreas, siteMeta, stackSummary, strengths } from '../data/site';
 ---
 
-<MainLayout title="About" description="About the changwpa developer site and the working style behind it.">
+<MainLayout
+  title="About changwpa"
+  description="About changwpa: a developer portfolio focused on 42 projects, systems programming, technical writing, and source-first Astro publishing."
+>
   <section class="page-hero page-hero--about">
     <div class="container hero__grid">
       <div class="narrow-flow">
-        <p class="eyebrow">About the notebook</p>
-        <h1>A personal site for turning active project work into durable technical writing.</h1>
+        <p class="eyebrow">About changwpa</p>
+        <h1>A developer portfolio centered on 42 projects, systems-flavored work, and technical writing.</h1>
         <p>
-          This rebuild is organized around one rule: if a project or post cannot stay useful after launch day, it needs a better editorial structure. That is why the stack stays source-first, static, and easy to keep current.
+          This site exists to turn active repository work into clear project summaries and useful technical posts. The stack stays source-first, static, and easy to keep current so the archive can grow without turning into clutter.
         </p>
         <p class="page-kicker">
-          Portfolio notes, project summaries, and assignment writeups live together so the archive feels cohesive instead of split across unrelated surfaces.
+          Expect portfolio notes, 42 assignment writeups, and practical lessons from C, concurrency, infrastructure, and static publishing.
         </p>
       </div>
 
@@ -34,11 +37,11 @@ import { currentFocus, focusAreas, siteMeta, stackSummary, strengths } from '../
       <div>
         <SectionTitle
           eyebrow="Short biography"
-          title="A systems-minded developer journal anchored in 42 work"
-          description="The site focuses on C projects, infrastructure exercises, and practical notes about rebuilding and shipping source-first websites."
+          title="A systems-minded developer archive anchored in 42 work"
+          description="The site focuses on C projects, infrastructure exercises, and practical notes about debugging, building, and shipping source-first websites."
         />
         <p>
-          Instead of separating portfolio, blog, and assignment notes into different silos, this site keeps them in one place. The result should feel coherent whether you arrive looking for a project summary, a build note, or the next entry in the 42 series.
+          Instead of separating portfolio, blog, and assignment notes into different silos, this site keeps them in one place. The result should help visitors move quickly from a project summary to a technical note to the next 42 entry in the same learning arc.
         </p>
       </div>
       <div class="panel utility-panel">
