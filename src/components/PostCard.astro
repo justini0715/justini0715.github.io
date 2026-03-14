@@ -1,34 +1,36 @@
 ---
-import type { CollectionEntry } from 'astro:content';
-import { getPostPath } from '../lib/content';
+import type { PostEntry } from '../lib/content';
+import { getPostPath, is42Post } from '../lib/content';
+import MetaRow from './site/MetaRow.astro';
+import TagChipList from './site/TagChipList.astro';
 
 interface Props {
-  post: CollectionEntry<'blog'>;
+  post: PostEntry;
 }
 
 const { post } = Astro.props;
 const formattedDate = new Intl.DateTimeFormat('en', { dateStyle: 'medium' }).format(post.data.pubDate);
 const postPath = getPostPath(post);
+const categoryLabel = is42Post(post) ? '42 note' : post.data.category;
 ---
 
 <article class="card post-card">
-  <div class="card__meta">
-    <span class="chip">{post.data.category}</span>
-    {post.data.seriesTitle && <span class="muted">series · {post.data.seriesTitle}</span>}
-  </div>
   <div>
+    <MetaRow
+      className="post-card__meta-row"
+      items={[
+        categoryLabel,
+        post.data.seriesTitle ? `series · ${post.data.seriesTitle}` : ''
+      ]}
+    />
     <h3><a class="post-card__title" href={postPath}>{post.data.title}</a></h3>
     <p class="post-card__summary">{post.data.description}</p>
   </div>
+
+  <TagChipList items={post.data.tags} max={3} />
+
   <div class="card__footer post-card__footer">
-    <div>
-      <span class="muted">{formattedDate}</span>
-      {post.data.tags.length > 0 && (
-        <ul class="inline-tags">
-          {post.data.tags.slice(0, 3).map((tag) => <li>{tag}</li>)}
-        </ul>
-      )}
-    </div>
+    <span class="muted">{formattedDate}</span>
     <a class="post-card__link" href={postPath}>Open note →</a>
   </div>
 </article>

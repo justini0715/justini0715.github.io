@@ -1,28 +1,30 @@
 ---
-import type { CollectionEntry } from 'astro:content';
+import type { BlogEntry } from '../../lib/content';
+import MetaRow from '../site/MetaRow.astro';
+import TagChipList from '../site/TagChipList.astro';
 
 interface Props {
-  post: CollectionEntry<'blog'>;
+  post: BlogEntry;
   formattedDate: string;
+  formattedUpdatedDate?: string;
   seriesContext: string;
 }
 
-const { post, formattedDate, seriesContext } = Astro.props;
+const { post, formattedDate, formattedUpdatedDate, seriesContext } = Astro.props;
 ---
 
 <aside class="panel utility-panel technical-article-meta-panel">
   <p class="eyebrow">Entry context</p>
   <p class="meta-note">{seriesContext}</p>
 
-  <div class="meta-chip-grid">
-    <span class="chip">{formattedDate}</span>
-    <span class="chip">{post.data.category}</span>
-    {post.data.seriesTitle && <span class="chip">{post.data.seriesTitle}</span>}
-  </div>
+  <MetaRow
+    items={[
+      formattedDate,
+      formattedUpdatedDate ? `updated · ${formattedUpdatedDate}` : '',
+      `category · ${post.data.category}`,
+      post.data.seriesTitle ? `series · ${post.data.seriesTitle}` : ''
+    ]}
+  />
 
-  {post.data.tags.length > 0 && (
-    <ul class="inline-tags">
-      {post.data.tags.map((tag) => <li>{tag}</li>)}
-    </ul>
-  )}
+  <TagChipList items={post.data.tags} />
 </aside>

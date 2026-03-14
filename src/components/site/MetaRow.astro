@@ -1,0 +1,15 @@
+---
+interface Props {
+  items: string[];
+  className?: string;
+}
+
+const { items, className = '' } = Astro.props;
+const visibleItems = items.filter(Boolean);
+---
+
+{visibleItems.length > 0 && (
+  <div class:list={['meta-row', className]}>
+    {visibleItems.map((item) => <span class="meta-row__item">{item}</span>)}
+  </div>
+)}

@@ -1,30 +1,35 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import MetaRow from '../site/MetaRow.astro';
+import TagChipList from '../site/TagChipList.astro';
 
 interface Props {
   project: CollectionEntry<'projects'>;
 }
 
 const { project } = Astro.props;
+const updatedDate = project.data.updatedDate?.toISOString().slice(0, 10) ?? '';
 ---
 
 <aside class="panel utility-panel project-meta-panel">
-  <p class="eyebrow">Project context</p>
+  <p class="eyebrow">Case context</p>
   {project.data.summary && <p class="meta-note">{project.data.summary}</p>}
 
-  <div class="meta-chip-grid">
-    <span class="chip">{project.data.badge}</span>
-    <span class="chip">{project.data.status}</span>
-    <span class="chip">state · {project.data.state}</span>
-    {project.data.year && <span class="chip">{project.data.year}</span>}
-    {project.data.updatedDate && <span class="chip">updated · {project.data.updatedDate.toISOString().slice(0, 10)}</span>}
-  </div>
+  <MetaRow
+    items={[
+      project.data.badge,
+      `state · ${project.data.state}`,
+      project.data.status,
+      updatedDate ? `updated · ${updatedDate}` : ''
+    ]}
+  />
+
+  <TagChipList items={project.data.stack} />
 
   <ul class="utility-list">
-    {project.data.focus && <li>Current focus: {project.data.focus}</li>}
-    <li>{project.data.highlight}</li>
+    {project.data.focus && <li>Constraints and focus: {project.data.focus}</li>}
+    <li>Why it matters: {project.data.highlight}</li>
     {project.data.nextStep && <li>Next step: {project.data.nextStep}</li>}
-    <li>Stack: {project.data.stack.join(' · ')}</li>
     <li><a href={project.data.repoUrl} target="_blank" rel="noreferrer">Repository ↗</a></li>
     {project.data.demoUrl && <li><a href={project.data.demoUrl} target="_blank" rel="noreferrer">Demo ↗</a></li>}
   </ul>

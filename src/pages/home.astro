@@ -3,100 +3,89 @@ import HubLayout from '../layouts/HubLayout.astro';
 import SectionTitle from '../components/SectionTitle.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import PostCard from '../components/PostCard.astro';
-import HomeQuickAccessCard from '../components/home/HomeQuickAccessCard.astro';
 import SplitHero from '../components/site/SplitHero.astro';
-import { currentFocus, homeFocusBoard, homeNextUp, siteMeta, stackSummary, strengths } from '../data/site';
-import { getFeaturedProjects, getPublishedPosts } from '../lib/content';
+import { currentFocus, homeNextUp } from '../data/site';
+import { getFeaturedProjects, getLatest42Posts, getLatestGeneralPosts } from '../lib/content';
 
-const featuredProjects = await getFeaturedProjects(3);
-const allPosts = await getPublishedPosts();
-const recentGeneralPosts = allPosts.filter((post) => post.data.category !== '42').slice(0, 3);
-const recent42Posts = allPosts.filter((post) => post.data.category === '42').slice(0, 3);
-const quickAccess = [
-  {
-    href: '/projects',
-    eyebrow: 'Project hub',
-    title: 'Projects',
-    description: '프로젝트 흐름, 개요, 상세 케이스로 바로 이동.'
-  },
-  {
-    href: '/42',
-    eyebrow: '42 hub',
-    title: '42',
-    description: '과제 흐름, 시리즈 순서, 전용 아카이브를 바로 확인.'
-  },
-  {
-    href: '/blog',
-    eyebrow: 'Study notes',
-    title: 'Blog',
-    description: '알고리즘, 네트워크, 개념 정리 등 일반 기술 노트로 이동.'
-  },
-  {
-    href: '/about',
-    eyebrow: 'Profile',
-    title: 'About',
-    description: '내 소개와 작업 방식, 현재 방향을 다시 확인.'
-  }
-] as const;
+const [featuredProject] = await getFeaturedProjects(1);
+const latestGeneralPosts = await getLatestGeneralPosts(3);
+const latest42Posts = await getLatest42Posts(3);
 ---
 
 <HubLayout
   title="Home"
-  description="Personal home for changwpa with current focus, featured projects, recent technical notes, and recent 42 entries."
+  description="Personal home for changwpa with current focus, a featured project, recent technical notes, recent 42 entries, and the next updates to make."
 >
   <SplitHero
     sectionClass="page-hero page-hero--home-hub"
-    eyebrow="Personal home"
-    title="지금 무엇을 만들고 있고, 무엇을 배우고 있으며, 어디를 먼저 보면 되는지 한 페이지에서 정리한 허브."
-    description="이 페이지는 나만의 홈 역할을 한다. 전체 사이트의 주요 흐름을 한 번에 보고, 필요한 영역으로 바로 이동할 수 있게 만든다."
-    kicker="Projects는 진행 중인 개발 프로젝트, 42는 과제 흐름, Blog는 개발하며 공부한 개념 정리 중심으로 읽으면 된다."
-    panelEyebrow="Current focus"
-    panelItems={currentFocus}
+    eyebrow="Personal hub"
+    title="지금 무엇을 만들고 있고, 무엇을 먼저 업데이트할지 보여주는 now page."
+    description="이 페이지는 소개보다 현재 상태를 빠르게 확인하는 허브다. 프로젝트 하나, 최근 글, 다음 업데이트만 짧게 모아둔다."
+    panelEyebrow="Now page"
+    panelItems={[
+      'Current focus를 먼저 본다',
+      'Featured project로 현재 대표 작업을 확인한다',
+      '최근 일반 글과 42 글을 따로 본다',
+      'Next to update로 다음 액션을 정리한다'
+    ]}
   />
 
   <section class="section">
-    <div class="container">
-      <SectionTitle
-        eyebrow="Quick access"
-        title="이 홈에서 가장 자주 이동할 핵심 영역"
-        description="나중에 기능이 더 붙더라도, 현재 기준으로는 이 네 영역이 홈의 기본 진입점 역할을 한다."
-      />
-      <div class="home-quick-grid">
-        {quickAccess.map((item) => <HomeQuickAccessCard {...item} />)}
+    <div class="container two-column">
+      <div>
+        <SectionTitle
+          eyebrow="Current focus"
+          title="지금 가장 신경 쓰는 작업 축"
+          description="현재 사이트와 작업 흐름을 유지하는 데 직접 연결되는 주제만 남겨둔다."
+        />
       </div>
+
+      <aside class="panel utility-panel">
+        <ul class="utility-list">
+          {currentFocus.map((item) => <li>{item}</li>)}
+        </ul>
+      </aside>
     </div>
   </section>
+
+  {featuredProject && (
+    <section class="section section--tint">
+      <div class="container">
+        <SectionTitle
+          eyebrow="Featured project"
+          title="지금 기준 대표 프로젝트 한 개"
+          description="현재 포트폴리오에서 가장 먼저 열어보길 원하는 프로젝트 케이스 하나만 고정한다."
+        />
+        <div class="home-featured-project">
+          <ProjectCard project={featuredProject} />
+        </div>
+      </div>
+    </section>
+  )}
 
   <section class="section">
     <div class="container">
       <SectionTitle
-        eyebrow="Featured projects"
-        title="지금 기준으로 가장 먼저 보여주고 싶은 프로젝트"
-        description="현재 포트폴리오의 중심이 되는 프로젝트를 먼저 배치해 전체 개발 범위를 빠르게 파악할 수 있게 한다."
+        eyebrow="Latest technical blog posts"
+        title="최근 일반 기술 노트"
+        description="42와 분리된 일반 기술 글만 따로 묶어서 지금 무엇을 공부하고 정리했는지 보여준다."
       />
       <div class="card-grid">
-        {featuredProjects.map((project) => <ProjectCard project={project} />)}
+        {latestGeneralPosts.map((post) => <PostCard post={post} />)}
       </div>
     </div>
   </section>
 
   <section class="section section--tint">
-    <div class="container two-column">
-      <aside class="panel utility-panel">
-        <p class="eyebrow">Current board</p>
-        <ul class="utility-list">
-          {featuredProjects[0] && <li>지금 기준 대표 프로젝트: <strong>{featuredProjects[0].data.title}</strong></li>}
-          {recentGeneralPosts[0] && <li>최근 일반 기술 글: <strong>{recentGeneralPosts[0].data.title}</strong></li>}
-          {recent42Posts[0] && <li>최근 42 기록: <strong>{recent42Posts[0].data.title}</strong></li>}
-        </ul>
-      </aside>
-
-      <aside class="panel utility-panel">
-        <p class="eyebrow">Home scaffold</p>
-        <ul class="utility-list">
-          {homeFocusBoard.map((item) => <li>{item}</li>)}
-        </ul>
-      </aside>
+    <div class="container">
+      <SectionTitle
+        eyebrow="Latest 42 posts"
+        title="최근 42 기록"
+        description="42 전용 허브로 이어지는 최근 과제 글만 따로 노출해서 학습 흐름을 바로 확인하게 한다."
+      />
+      <div class="card-grid">
+        {latest42Posts.map((post) => <PostCard post={post} />)}
+      </div>
     </div>
   </section>
 
@@ -104,8 +93,8 @@ const quickAccess = [
     <div class="container">
       <SectionTitle
         eyebrow="Next to update"
-        title="이 홈에서 다음으로 손볼 작업"
-        description="백엔드 없이도 바로 관리할 수 있는 다음 액션을 고정해두면, `/home`이 실제 시작점 역할을 하게 된다."
+        title="다음으로 손볼 작업"
+        description="지금 바로 업데이트할 만한 항목만 간결하게 유지해서 `/home`이 실제 시작점이 되게 한다."
       />
       <div class="feature-grid feature-grid--compact">
         {homeNextUp.map((item) => (
@@ -114,58 +103,6 @@ const quickAccess = [
           </article>
         ))}
       </div>
-    </div>
-  </section>
-
-  <section class="section section--tint">
-    <div class="container two-column">
-      <div>
-        <SectionTitle
-          eyebrow="Recent technical notes"
-          title="최근에 정리한 일반 기술 글"
-          description="알고리즘, 시스템, 웹 개발, 설정, 회고 등 42와 별개의 일반 기술 기록을 모아둔다."
-        />
-        <div class="feature-grid feature-grid--compact">
-          {recentGeneralPosts.map((post) => <PostCard post={post} />)}
-        </div>
-      </div>
-
-      <div>
-        <SectionTitle
-          eyebrow="Recent 42 entries"
-          title="최근 42 흐름에서 정리한 글"
-          description="42 과제 기록은 별도 허브로 분리되지만, 홈에서도 최근 흐름을 바로 확인할 수 있게 한다."
-        />
-        <div class="feature-grid feature-grid--compact">
-          {recent42Posts.map((post) => <PostCard post={post} />)}
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="container two-column">
-      <div>
-        <SectionTitle
-          eyebrow="Strengths"
-          title="내가 이 사이트에서 보여주고 싶은 작업 방식"
-          description="설명보다 구조, 결과보다 맥락, 스크린샷보다 근거를 우선하는 식으로 사이트를 운영한다."
-        />
-        <div class="feature-grid feature-grid--compact">
-          {strengths.map((item) => (
-            <article class="card stat-card">
-              <p>{item}</p>
-            </article>
-          ))}
-        </div>
-      </div>
-
-      <aside class="panel utility-panel">
-        <p class="eyebrow">Stack snapshot</p>
-        <ul class="utility-list">
-          {stackSummary.map((item) => <li>{item}</li>)}
-        </ul>
-      </aside>
     </div>
   </section>
 </HubLayout>
