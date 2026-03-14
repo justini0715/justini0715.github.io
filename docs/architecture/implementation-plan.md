@@ -7,8 +7,8 @@
 - Domain target: `https://changwpa.kro.kr`
 
 ## Current Phase
-- Phase: Phase 36 — Archive / Article Experience
-- Branch: `phase/36-archive-article-modernization`
+- Phase: Phase 37 — Performance / SEO / A11y Hardening
+- Branch: `phase/37-perf-seo-a11y-hardening`
 - Status: Complete
 
 ## Official Phase List
@@ -48,16 +48,17 @@
 34. Phase 34 — Theme / Typography / Shared Shell
 35. Phase 35 — Targeted Bento Layout
 36. Phase 36 — Archive / Article Experience
+37. Phase 37 — Performance / SEO / A11y Hardening
 
 ## Current Phase Scope
-- Refine the archive and article routes so `/42`, `/blog`, and the detail pages feel more text-first and reading-oriented after the Bento pass.
-- Use denser archive rows for recent/related entries and tighten article hero metadata without changing the public route map.
-- Keep project, 42, and general technical article families distinct while improving consistency.
+- Finish the redesign pass with lightweight performance, SEO, and accessibility hardening that fits a static GitHub Pages portfolio/blog.
+- Tighten social/meta tags, external-link accessibility labels, and route-level reading ergonomics without introducing new runtime complexity.
+- Re-check that the production `/studio` lock surface still ships cleanly after the shared refinements.
 
 ## Current Phase Non-Scope
-- Reworking top-level layout again; Bento route composition is already fixed from the previous phase.
-- Reworking `/studio`, backend/auth/SSR/CMS behavior, or the content schema.
-- Adding client-heavy filtering, search, or route-transition logic.
+- Adding a new image optimization pipeline, backend/auth/SSR/CMS behavior, or client-heavy routing/search features.
+- Reworking the public IA or Bento composition again; this phase is hardening-only.
+- Changing the content schema or the local-only studio authoring model.
 
 ## Architecture Summary
 - Astro static output with content collections for blog posts and projects.
@@ -70,16 +71,16 @@
 - blog taxonomy: `42`, `project`, `devlog`, `setup`, `retrospective`.
 
 ## Deliverables Checklist
-- [x] `/blog` latest/archive sections now use denser text-first archive rows
-- [x] `/42` recent entries now match the refined archive-reading treatment
-- [x] project / 42 / blog detail pages now expose tighter top metadata rows
-- [x] related-post and prev/next reading flows remain intact after the refinement
-- [x] Phase 36 verification completed
+- [x] shared head metadata is stronger for theme/color-scheme/social previews
+- [x] external navigation/repository/demo links expose clearer accessibility labels
+- [x] archive/article routes keep their refined reading flows without regressions
+- [x] production `/studio` remains locked after the hardening pass
+- [x] Phase 37 verification completed
 
 ## Verification Plan
-1. Run local type checks and a full static build after the archive/article refinement.
-2. Confirm `/blog`, `/42`, `/projects/[slug]`, `/42/[slug]`, and `/blog/[slug]` render the new text-first archive/article structures in built output.
-3. Re-check production `/studio` and the top-level Bento routes for regressions.
+1. Run local type checks and a full static build after the hardening pass.
+2. Confirm the built HTML includes the stronger social/meta tags and accessibility labels.
+3. Re-check representative public routes and the production `/studio` lock page after the final shared refinements.
 
 ## Work Log
 - Cloned the remote user-site repository into the writable workspace.
@@ -446,3 +447,9 @@
 - Tightened `/projects/[slug]`, `/42/[slug]`, and `/blog/[slug]` with clearer hero metadata rows while preserving the side-context panels and related/prev-next flows.
 - `npm run check` after phase-36 archive/article experience → success (`tsc --noEmit`).
 - `npm run build` after phase-36 archive/article experience → success; rebuilt the full public route set plus the locked production `/studio` page.
+
+- Started `phase/37-perf-seo-a11y-hardening` from merged `main` after the archive/article refinement was live.
+- Added stronger shared head metadata (`referrer`, `format-detection`, `og:locale`, and `twitter:image:alt`) and improved accessibility labels on external GitHub/repository/demo links.
+- Re-verified the refined public routes and kept production `/studio` locked after the final hardening pass.
+- `npm run check` after phase-37 performance/SEO/a11y hardening → success (`tsc --noEmit`).
+- `npm run build` after phase-37 performance/SEO/a11y hardening → success; rebuilt the full public route set plus the locked production `/studio` page.
