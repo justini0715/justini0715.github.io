@@ -35,9 +35,7 @@ const bodyClass = pathname === '/'
               ? 'route-blog-index'
               : pathname.startsWith('/blog/')
                 ? 'route-blog-post'
-                : pathname === '/studio/'
-                  ? 'route-studio'
-                  : pathname === '/404/'
+                : pathname === '/404/'
                     ? 'route-not-found'
                     : 'route-generic';
 ---
