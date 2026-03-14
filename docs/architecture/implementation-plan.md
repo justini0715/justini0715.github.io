@@ -424,3 +424,4 @@
 - `npx tsc --noEmit --pretty false --project tsconfig.json` via LSP diagnostics after phase-32 → 0 errors, 0 warnings.
 - source and dev-route checks after phase-32 → confirmed `studio-current-document`, `studio-document-type`, `.mdx` support, and the reduced quick-insert toolbar exist in the local dev studio UI.
 - `grep dist/studio/index.html` after phase-32 studio IA alignment → production output still contains only the locked `/studio` notice.
+- Follow-up after phase-31 deploy: fixed the remaining `/42` read-order pluralization typo (`entryies` → `entries`) and re-verified the static build.
