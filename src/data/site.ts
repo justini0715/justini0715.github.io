@@ -12,7 +12,7 @@ export const siteMeta = {
   defaultOgAlt: 'changwpa developer portfolio, 42 projects, and technical blog',
   github: 'https://github.com/justini0715',
   repo: 'https://github.com/justini0715/justini0715.github.io',
-  profileAvatar: '/profile-avatar.svg',
+  profileAvatar: '/iostream.webp',
   nav: [
     { href: '/home', label: 'Home' },
     { href: '/projects', label: 'Projects' },
