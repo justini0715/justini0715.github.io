@@ -9,8 +9,30 @@ interface Props {
 }
 
 const { title, description, image, imageAlt } = Astro.props;
+const pathname = Astro.url.pathname;
+const archiveLinks = [
+  { href: '/projects', label: 'Projects' },
+  { href: '/42', label: '42' },
+  { href: '/blog', label: 'Blog' }
+] as const;
 ---
 
 <MainLayout title={title} description={description} image={image} imageAlt={imageAlt}>
+  <section class="layout-utility-bar">
+    <div class="container route-link-row">
+      <p class="eyebrow">Archive switcher</p>
+      <div class="route-link-row__links">
+        {archiveLinks.map((item) => (
+          <a
+            aria-current={pathname === `${item.href}/` ? 'page' : undefined}
+            class:list={{ 'route-link-chip': true, 'is-active': pathname === `${item.href}/` }}
+            href={item.href}
+          >
+            {item.label}
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
   <slot />
 </MainLayout>

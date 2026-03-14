@@ -11,6 +11,9 @@ interface Props {
 }
 
 const { title, description, publishedTime, updatedTime, image, imageAlt } = Astro.props;
+const pathname = Astro.url.pathname;
+const is42 = pathname.startsWith('/42/');
+const parent = is42 ? { href: '/42', label: '42 hub' } : { href: '/blog', label: 'Technical blog' };
 ---
 
 <MainLayout
@@ -22,5 +25,11 @@ const { title, description, publishedTime, updatedTime, image, imageAlt } = Astr
   image={image}
   imageAlt={imageAlt}
 >
+  <section class="layout-utility-bar">
+    <div class="container article-context-bar">
+      <a class="route-link-chip route-link-chip--back" href={parent.href}>← {parent.label}</a>
+      <span class="article-context-bar__label">{is42 ? '42 article' : 'Technical article'}</span>
+    </div>
+  </section>
   <slot />
 </MainLayout>

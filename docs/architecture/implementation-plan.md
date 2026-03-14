@@ -7,9 +7,9 @@
 - Domain target: `https://changwpa.kro.kr`
 
 ## Current Phase
-- Phase: Phase 18 — Project / 42 Hub Enrichment
-- Branch: `phase/18-project-42-hub-enrichment`
-- Status: Complete
+- Phase: Phase 19 — Layout Chrome Differentiation
+- Branch: `phase/19-layout-chrome-differentiation`
+- Status: In Progress
 
 ## Official Phase List
 1. Phase 1 — Foundation
@@ -30,11 +30,12 @@
 16. Phase 16 — Layout / Component Split
 17. Phase 17 — Route Compatibility Hardening
 18. Phase 18 — Project / 42 Hub Enrichment
+19. Phase 19 — Layout Chrome Differentiation
 
 ## Current Phase Scope
-- Strengthen `/projects` so it behaves more like a project trajectory / overview hub than a plain directory.
-- Strengthen `/42` so it behaves more like a series-aware archive hub than a generic post list.
-- Use the new route structure from phases 15-17 and enrich the hub pages with higher-signal grouping and navigation.
+- Make the new route-specific layouts feel more meaningfully different instead of behaving like thin wrappers.
+- Add archive/hub/article-specific chrome so each route family carries clearer local navigation and context.
+- Preserve the route split from phases 15-18 while reducing the feeling that every route still shares the same surrounding shell.
 
 ## Current Phase Non-Scope
 - Replacing the static content architecture with a hosted CMS.
@@ -48,6 +49,7 @@
 - Reworking the route map again immediately after phase 15.
 - A full content-collection migration; this phase is compatibility-focused only.
 - Adding the user-specific `/home` features that still require separate product decisions.
+- Rewriting the core content model or adding backend features.
 
 ## Architecture Summary
 - Astro static output with content collections for blog posts and projects.
@@ -60,16 +62,16 @@
 - blog taxonomy: `42`, `project`, `devlog`, `setup`, `retrospective`.
 
 ## Deliverables Checklist
-- [x] `/projects` hub summary and grouping improvements
-- [x] `/42` hub series / reading-order improvements
-- [x] supporting content helpers for hub views
-- [x] Phase 18 verification completed
+- [ ] archive layout subnav / chrome
+- [ ] hub layout quick-link chrome
+- [ ] article layout context / back bar
+- [ ] Phase 19 verification completed
 
 ## Verification Plan
-1. Run local build and type checks after the hub enrichment pass.
-2. Verify `/projects` now exposes clearer grouping/summary structure.
-3. Verify `/42` now exposes clearer series / reading-order structure.
-4. Re-check `/studio` after any shared helpers or styles for compatibility.
+1. Run local build and type checks after the layout chrome pass.
+2. Verify archive routes now share a useful archive switcher / subnav.
+3. Verify article routes now expose clearer context back to their parent archive.
+4. Re-check `/studio` after shared layout changes for compatibility.
 5. Confirm production `/studio` remains locked and the public routes remain static-output compatible.
 
 ## Work Log
