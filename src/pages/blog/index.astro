@@ -3,42 +3,108 @@ import ArchiveLayout from '../../layouts/ArchiveLayout.astro';
 import PostCard from '../../components/PostCard.astro';
 import SectionTitle from '../../components/SectionTitle.astro';
 import SplitHero from '../../components/site/SplitHero.astro';
-import { getGeneralPosts } from '../../lib/content';
+import MetaRow from '../../components/site/MetaRow.astro';
+import TagChipList from '../../components/site/TagChipList.astro';
+import { GENERAL_BLOG_CATEGORY_ORDER, getGeneralPosts, getPostPath, groupGeneralPostsByCategory } from '../../lib/content';
 
 const posts = await getGeneralPosts();
+const latestPosts = posts.slice(0, 3);
+const groupedPosts = groupGeneralPostsByCategory(posts);
+const categoryLabels = {
+  devlog: 'Devlog',
+  setup: 'Setup',
+  retrospective: 'Retrospective',
+  project: 'Project'
+} as const;
+const availableCategories = GENERAL_BLOG_CATEGORY_ORDER.filter((category) => groupedPosts.some((group) => group.category === category));
 ---
 
 <ArchiveLayout
   title="Technical blog"
-  description="Technical blog archive for non-42 posts: debugging notes, setup guides, retrospectives, and source-first development writeups."
+  description="General technical blog archive for study notes, setup guides, retrospectives, and project-related technical writing outside the 42 track."
 >
   <SplitHero
     sectionClass="page-hero page-hero--blog"
     eyebrow="Technical blog"
-    title="Technical posts, setup notes, and retrospectives outside the 42 track."
-    description="This archive is now the general technical notebook: Astro rebuild notes, tooling writeups, debugging logs, setup guides, and retrospective posts that are not part of the dedicated 42 hub."
-    panelEyebrow="What lives here"
+    title="개발하면서 공부한 일반 기술 노트를 모아두는 아카이브."
+    description="이 페이지는 42 전용 허브와 분리된 일반 기술 블로그다. 알고리즘, 네트워크, 설정, 회고, 프로젝트성 기술 메모를 category별로 정리한다."
+    panelEyebrow="Archive rules"
     panelItems={[
-      'Standalone technical posts with concrete implementation notes',
-      'Setup, retrospective, and debugging entries outside the 42 curriculum',
-      'Source-first workflow notes for the site and related tooling'
+      '42 글은 여기 두지 않는다',
+      'Latest posts에서 최근 노트를 먼저 본다',
+      'All posts archive에서 category별로 다시 훑는다'
     ]}
     panelClassName="panel archive-panel"
   >
     <p slot="body" class="page-kicker">
-      Looking for assignment-by-assignment 42 writeups instead? Visit <a href="/42">the 42 hub</a> for project-specific reading lanes.
+      42 과제 글은 <a href="/42">42 hub</a>에서, 일반 기술 노트는 여기에서 읽는다.
     </p>
   </SplitHero>
+
+  <section class="section">
+    <div class="container">
+      <SectionTitle
+        eyebrow="Category chips"
+        title="정적 카테고리 이동"
+        description="상단 네비게이션을 늘리지 않고, 블로그 안에서 category별로 바로 이동할 수 있게 둔다."
+      />
+      <div class="archive-chip-row" aria-label="Blog category navigation">
+        {availableCategories.map((category) => (
+          <a class="route-link-chip" href={`#category-${category}`}>
+            {categoryLabels[category]}
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
 
   <section class="section section--tint">
     <div class="container">
       <SectionTitle
-        eyebrow="Published posts"
-        title="Technical archive"
-        description="Browse non-42 technical blog entries with dates, tags, and context visible at a glance."
+        eyebrow="Latest posts"
+        title="최근 일반 기술 글"
+        description="가장 최근에 업데이트한 일반 기술 노트부터 먼저 읽을 수 있게 최근 글만 따로 보여준다."
       />
       <div class="card-grid">
-        {posts.map((post) => <PostCard post={post} />)}
+        {latestPosts.map((post) => <PostCard post={post} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionTitle
+        eyebrow="All posts archive"
+        title="카테고리별 전체 아카이브"
+        description="최신 글과 별개로, 전체 글을 카테고리 단위로 다시 읽을 수 있게 묶는다."
+      />
+
+      <div class="archive-group-list">
+        {groupedPosts.map((group) => (
+          <section id={`category-${group.category}`} class="archive-group-section">
+            <div class="archive-group-section__head">
+              <p class="eyebrow">{categoryLabels[group.category]}</p>
+              <h3>{group.items.length} post{group.items.length > 1 ? 's' : ''}</h3>
+            </div>
+
+            <div class="archive-post-list">
+              {group.items.map((post) => {
+                const formattedDate = new Intl.DateTimeFormat('en', { dateStyle: 'medium' }).format(post.data.pubDate);
+                return (
+                  <article class="archive-post-item">
+                    <div class="archive-post-item__copy">
+                      <h4><a href={getPostPath(post)}>{post.data.title}</a></h4>
+                      <p>{post.data.description}</p>
+                      <MetaRow items={[formattedDate, `category · ${post.data.category}`]} />
+                      <TagChipList items={post.data.tags} max={4} />
+                    </div>
+                    <a class="post-card__link" href={getPostPath(post)}>Read →</a>
+                  </article>
+                );
+              })}
+            </div>
+          </section>
+        ))}
       </div>
     </div>
   </section>

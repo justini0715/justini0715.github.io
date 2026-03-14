@@ -3,85 +3,66 @@ import ArchiveLayout from '../../layouts/ArchiveLayout.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
 import SectionTitle from '../../components/SectionTitle.astro';
 import SplitHero from '../../components/site/SplitHero.astro';
-import { getProjects, groupProjectsByBadge, groupProjectsByState } from '../../lib/content';
+import { getFeaturedProjects, getProjects, groupProjectsByState } from '../../lib/content';
 
 const projects = await getProjects();
-const projectGroups = groupProjectsByBadge(projects);
+const featuredProjects = await getFeaturedProjects(2);
 const projectStates = groupProjectsByState(projects);
-const featuredCount = projects.filter((project) => project.data.featured).length;
-const uniqueStacks = new Set(projects.flatMap((project) => project.data.stack)).size;
+const stateLabels = {
+  active: 'Active',
+  stable: 'Stable',
+  archived: 'Archived',
+  planned: 'Planned'
+} as const;
 ---
 
 <ArchiveLayout
-  title="Projects and 42 case studies"
-  description="Developer portfolio projects and 42 case studies covering infrastructure, graphics, concurrency, algorithms, and source-first engineering work."
+  title="Projects and case studies"
+  description="Project index for changwpa with selected work, project states, and full repository-backed case studies."
 >
   <SplitHero
     sectionClass="page-hero page-hero--projects"
-    eyebrow="Developer projects · 42 case studies"
-    title="Project case studies across infrastructure, graphics, concurrency, and algorithms."
-    description="This directory is built from existing repositories and shaped for technical readers: what the project covered, which constraints mattered, and why the implementation is worth reviewing."
-    kicker="Expect 42 projects, Docker and web infrastructure work, graphics experiments, and operation-constrained algorithm cases."
-    panelEyebrow="What each case tracks"
+    eyebrow="Projects"
+    title="프로젝트의 추이, 상태, 케이스 스터디를 한 곳에서 읽는 인덱스."
+    description="이 페이지는 프로젝트를 홍보하기보다, 어떤 작업을 했고 지금 어떤 상태인지 빠르게 파악하는 인덱스 역할을 한다."
+    kicker="각 카드는 title, description, stack, 상태, highlight, repository 접근을 기준으로 정리한다."
+    panelEyebrow="How to read"
     panelItems={[
-      'Project role and current status',
-      'One implementation highlight instead of generic marketing copy',
-      'Stack markers plus repository access'
+      'Selected work에서 대표 케이스를 먼저 본다',
+      'Project states에서 active/stable/archived/planned를 구분한다',
+      'All projects grid에서 전체 목록을 훑는다'
     ]}
     panelClassName="panel archive-panel"
   />
 
-  <section class="section">
-    <div class="container feature-grid feature-grid--compact">
-      <article class="card stat-card hub-metric-card">
-        <p class="eyebrow">Total</p>
-        <h3>{projects.length}</h3>
-        <p>현재 정리된 프로젝트 수</p>
-      </article>
-      <article class="card stat-card hub-metric-card">
-        <p class="eyebrow">Featured</p>
-        <h3>{featuredCount}</h3>
-        <p>첫 화면에서 우선적으로 보여주는 프로젝트</p>
-      </article>
-      <article class="card stat-card hub-metric-card">
-        <p class="eyebrow">Domains</p>
-        <h3>{projectGroups.length}</h3>
-        <p>현재 카드가 묶이는 주요 프로젝트 분야</p>
-      </article>
-      <article class="card stat-card hub-metric-card">
-        <p class="eyebrow">Stacks</p>
-        <h3>{uniqueStacks}</h3>
-        <p>지금까지 공개된 주요 기술 스택 개수</p>
-      </article>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="container">
-      <SectionTitle
-        eyebrow="Selected work"
-        title="Repository-backed case studies"
-        description="Each entry focuses on the technical angle that makes the repository useful to a reviewer, teammate, or future self."
-      />
-      <div class="card-grid">
-        {projects.map((project) => <ProjectCard project={project} />)}
+  {featuredProjects.length > 0 && (
+    <section class="section">
+      <div class="container">
+        <SectionTitle
+          eyebrow="Selected work"
+          title="먼저 열어볼 대표 케이스"
+          description="현재 기준으로 가장 설명력이 높은 프로젝트 케이스 두 개만 먼저 배치한다."
+        />
+        <div class="card-grid card-grid--selected">
+          {featuredProjects.map((project) => <ProjectCard project={project} />)}
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
+  )}
 
   <section class="section section--tint">
     <div class="container">
       <SectionTitle
         eyebrow="Project states"
         title="현재 상태 기준으로 보는 프로젝트 판"
-        description="지금 유지 중인 프로젝트와 이미 아카이브된 프로젝트를 따로 보면, 다음에 어디를 손봐야 하는지 더 빨리 판단할 수 있다."
+        description="active → stable → archived → planned 순서로 읽으면 지금 무엇을 더 살펴봐야 하는지 판단하기 쉽다."
       />
 
       <div class="hub-lane-grid">
         {projectStates.map((group) => (
           <section class="panel hub-lane-panel">
             <div class="hub-lane-panel__head">
-              <p class="eyebrow">{group.state}</p>
+              <p class="eyebrow">{stateLabels[group.state]}</p>
               <h3>{group.items.length} project{group.items.length > 1 ? 's' : ''}</h3>
             </div>
             <div class="hub-stack-cluster">
@@ -98,31 +79,15 @@ const uniqueStacks = new Set(projects.flatMap((project) => project.data.stack)).
     </div>
   </section>
 
-  <section class="section section--tint">
+  <section class="section">
     <div class="container">
       <SectionTitle
-        eyebrow="Project lanes"
-        title="분야별로 다시 보는 프로젝트 흐름"
-        description="단순히 카드 전체를 훑는 대신, 어떤 분야의 작업이 어떻게 쌓였는지 영역별로 다시 읽을 수 있게 정리한다."
+        eyebrow="All projects"
+        title="전체 프로젝트 목록"
+        description="각 카드에서 바로 케이스 상세나 repository로 들어갈 수 있게 유지한다."
       />
-
-      <div class="hub-lane-grid">
-        {projectGroups.map((group) => (
-          <section class="panel hub-lane-panel">
-            <div class="hub-lane-panel__head">
-              <p class="eyebrow">{group.badge}</p>
-              <h3>{group.items.length} project{group.items.length > 1 ? 's' : ''}</h3>
-            </div>
-            <div class="hub-stack-cluster">
-              {group.items.map((project) => (
-                <a class="hub-project-link" href={project.data.repoUrl} target="_blank" rel="noreferrer">
-                  <strong>{project.data.title}</strong>
-                  <span>{project.data.highlight}</span>
-                </a>
-              ))}
-            </div>
-          </section>
-        ))}
+      <div class="card-grid">
+        {projects.map((project) => <ProjectCard project={project} />)}
       </div>
     </div>
   </section>

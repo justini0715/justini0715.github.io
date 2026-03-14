@@ -7,8 +7,8 @@
 - Domain target: `https://changwpa.kro.kr`
 
 ## Current Phase
-- Phase: Phase 30 — Real Profile Image
-- Branch: `phase/30-profile-photo`
+- Phase: Phase 31 — Public IA Refresh
+- Branch: `phase/31-public-ia-refresh`
 - Status: Complete
 
 ## Official Phase List
@@ -42,11 +42,12 @@
 28. Phase 28 — Responsive Shell & Profile Menu
 29. Phase 29 — Dedicated Profile Page
 30. Phase 30 — Real Profile Image
+31. Phase 31 — Public IA Refresh
 
 ## Current Phase Scope
-- Replace the temporary generated avatar with the user-provided real `iostream` profile image.
-- Keep the dedicated profile-page flow from phase 29 intact while swapping only the actual image asset reference.
-- Verify the chosen image survives the static build and renders on both the navbar avatar and the profile page.
+- Clarify the public IA so each route immediately communicates its job without repeating hub content across pages.
+- Keep the current Astro + GitHub Pages route map, but simplify section structure, hero density, archive grouping, and card semantics across the public pages.
+- Refresh `/`, `/home`, `/projects`, `/42`, `/blog`, `/about`, and `404` around text-first reading and archive clarity.
 
 ## Current Phase Non-Scope
 - Replacing the static content architecture with a hosted CMS.
@@ -54,10 +55,9 @@
 - Building a full multi-user publishing product.
 - Changing the underlying Markdown storage/file IO model.
 - Reworking the public route map again after the phase-15/27 split.
-- Introducing a brand-new authenticated account page or settings surface.
-- Adding authenticated profile state, comments, or backend-backed profile data.
-- Cropping, filtering, or building a full image-upload pipeline; this phase only swaps to the chosen provided asset.
-- Reworking the already-polished studio beyond compatibility checks after shared-header changes.
+- Adding new top-level routes, dynamic filters, search, or client-heavy archive behavior.
+- Replacing the current content collection model or doing backend/CMS work.
+- Reworking `/studio` behavior yet; studio alignment comes in the next phase.
 
 ## Architecture Summary
 - Astro static output with content collections for blog posts and projects.
@@ -70,15 +70,18 @@
 - blog taxonomy: `42`, `project`, `devlog`, `setup`, `retrospective`.
 
 ## Deliverables Checklist
-- [x] chosen `iostream` profile image is now the active avatar source
-- [x] navbar avatar and `/about` profile card both point to the real provided image
-- [x] Phase 30 verification completed
+- [x] landing page reduced to showcase/gateway role only
+- [x] `/home` reduced to now-page hub sections only
+- [x] `/projects`, `/42`, and `/blog` restructured around clearer archive roles
+- [x] article/detail pages show clearer metadata and adjacent/related navigation
+- [x] compact footer and shared public UI semantics refreshed
+- [x] Phase 31 verification completed
 
 ## Verification Plan
-1. Run local type checks and a full static build after switching the image asset.
-2. Confirm built public HTML now references `/iostream.webp` in representative routes.
-3. Confirm the chosen image is emitted into `dist/`.
-4. Re-check `/studio` after the shared asset/config change for compatibility.
+1. Run local type checks and a full static build after the public IA refresh.
+2. Confirm the landing page only exposes the gateway hero, current focus, GitHub CTA, and the four entry cards.
+3. Confirm `/home`, `/projects`, `/42`, `/blog`, `/about`, and `404` expose the intended section structure in built output.
+4. Re-check `/studio` after shared public-shell changes for compatibility.
 
 ## Work Log
 - Cloned the remote user-site repository into the writable workspace.
@@ -398,3 +401,14 @@
 - `rg -n "iostream.webp" dist -g '*.html'` after phase-30 → confirmed representative built routes now reference the real profile image.
 - `test -f dist/iostream.webp` after phase-30 → confirmed the chosen image is emitted in the static build output.
 - `grep dist/studio/index.html` after phase-30 real profile image → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- Started `phase/31-public-ia-refresh` from the merged `main` state after the real profile image phase was live.
+- Reduced the landing page to a pure showcase/gateway surface and trimmed the footer into a compact archive footer.
+- Reworked `/home` into a true now-page hub with only current focus, one featured project, latest general posts, latest 42 posts, and next-to-update sections.
+- Rebuilt `/projects`, `/42`, and `/blog` around clearer archive roles: selected work vs all projects, series/read-order vs recent 42 entries, and category chips + grouped archive sections for the general blog.
+- Tightened the detail routes so project pages read as case studies, 42 entries keep series-first navigation, and general blog posts fall back to related posts when there is no series navigation.
+- Added shared `MetaRow` and `TagChipList` components to standardize metadata and chip rendering across cards and article-side panels.
+- `npm run check` after phase-31 public IA refresh → success (`tsc --noEmit`).
+- `npm run build` after phase-31 public IA refresh → success; rebuilt the full public route set, project detail routes, compatibility pages, and `/studio`.
+- `npx tsc --noEmit --pretty false --project tsconfig.json` via LSP diagnostics after phase-31 → 0 errors, 0 warnings.
+- built-output checks against `/`, `/home`, `/projects`, `/projects/[slug]`, `/42`, `/42/[slug]`, `/blog`, `/blog/[slug]`, `/about`, and `/404` after phase-31 → confirmed the new gateway/now-page/archive/case-study section structures render as intended.
+- `grep dist/studio/index.html` after phase-31 public IA refresh → production output still contains the locked `/studio` notice and excludes the active editor markers.

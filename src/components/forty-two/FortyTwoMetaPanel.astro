@@ -1,8 +1,10 @@
 ---
-import type { CollectionEntry } from 'astro:content';
+import type { FortyTwoEntry } from '../../lib/content';
+import MetaRow from '../site/MetaRow.astro';
+import TagChipList from '../site/TagChipList.astro';
 
 interface Props {
-  post: CollectionEntry<'blog'>;
+  post: FortyTwoEntry;
   formattedDate: string;
   seriesContext: string;
 }
@@ -14,17 +16,14 @@ const { post, formattedDate, seriesContext } = Astro.props;
   <p class="eyebrow">Entry context</p>
   <p class="meta-note">{seriesContext}</p>
 
-  <div class="meta-chip-grid">
-    <span class="chip">{formattedDate}</span>
-    <span class="chip">{post.data.category}</span>
-    {post.data.seriesTitle && <span class="chip">{post.data.seriesTitle}</span>}
-    {post.data.seriesOrder && <span class="chip">order · {post.data.seriesOrder}</span>}
-    {post.data.difficulty && <span class="chip">difficulty · {post.data.difficulty}</span>}
-  </div>
+  <MetaRow
+    items={[
+      formattedDate,
+      post.data.seriesTitle ?? '',
+      post.data.seriesOrder ? `order · ${post.data.seriesOrder}` : '',
+      post.data.difficulty ? `difficulty · ${post.data.difficulty}` : ''
+    ]}
+  />
 
-  {post.data.tags.length > 0 && (
-    <ul class="inline-tags">
-      {post.data.tags.map((tag) => <li>{tag}</li>)}
-    </ul>
-  )}
+  <TagChipList items={post.data.tags} />
 </aside>

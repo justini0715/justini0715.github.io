@@ -5,6 +5,12 @@ export type FortyTwoEntry = CollectionEntry<'fortyTwo'>;
 export type PostEntry = BlogEntry | FortyTwoEntry;
 export type ProjectEntry = CollectionEntry<'projects'>;
 
+export const PROJECT_STATE_ORDER = ['active', 'stable', 'archived', 'planned'] as const;
+export type ProjectState = (typeof PROJECT_STATE_ORDER)[number];
+
+export const GENERAL_BLOG_CATEGORY_ORDER = ['devlog', 'setup', 'retrospective', 'project'] as const;
+export type GeneralBlogCategory = (typeof GENERAL_BLOG_CATEGORY_ORDER)[number];
+
 const byNewest = (a: PostEntry, b: PostEntry) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf();
 const byProjectOrder = (a: ProjectEntry, b: ProjectEntry) => {
   const left = a.data.order ?? Number.MAX_SAFE_INTEGER;
@@ -57,6 +63,14 @@ export async function getGeneralPosts() {
   return getPublishedCollectionPosts('blog');
 }
 
+export async function getLatest42Posts(limit = 3) {
+  return (await get42Posts()).slice(0, limit);
+}
+
+export async function getLatestGeneralPosts(limit = 3) {
+  return (await getGeneralPosts()).slice(0, limit);
+}
+
 export async function getRecentPosts(limit = 3) {
   return (await getPublishedPosts()).slice(0, limit);
 }
@@ -83,15 +97,9 @@ export function groupProjectsByBadge(projects: ProjectEntry[]) {
 }
 
 export function groupProjectsByState(projects: ProjectEntry[]) {
-  const groups = new Map<string, ProjectEntry[]>();
-
-  for (const project of projects) {
-    const key = project.data.state;
-    if (!groups.has(key)) groups.set(key, []);
-    groups.get(key)?.push(project);
-  }
-
-  return [...groups.entries()].map(([state, items]) => ({ state, items }));
+  return PROJECT_STATE_ORDER
+    .map((state) => ({ state, items: projects.filter((project) => project.data.state === state) }))
+    .filter((group) => group.items.length > 0);
 }
 
 export async function getFeaturedProjects(limit = 3) {
@@ -133,4 +141,39 @@ export function groupPostsBySeries(posts: PostEntry[]) {
     title: items[0]?.data.seriesTitle ?? (series === 'standalone' ? 'Standalone' : series),
     items: [...items].sort((a, b) => (a.data.seriesOrder ?? 0) - (b.data.seriesOrder ?? 0))
   }));
+}
+
+export function groupGeneralPostsByCategory(posts: BlogEntry[]) {
+  return GENERAL_BLOG_CATEGORY_ORDER
+    .map((category) => ({
+      category,
+      items: posts.filter((post) => post.data.category === category)
+    }))
+    .filter((group) => group.items.length > 0);
+}
+
+export function getRelatedGeneralPosts(posts: BlogEntry[], current: BlogEntry, limit = 2) {
+  const related = posts
+    .filter((post) => post.id !== current.id)
+    .map((post) => {
+      const sameCategory = Number(post.data.category === current.data.category);
+      const sharedTags = post.data.tags.filter((tag) => current.data.tags.includes(tag)).length;
+      const score = sameCategory * 10 + sharedTags;
+      return { post, score };
+    })
+    .sort((left, right) => {
+      if (right.score !== left.score) return right.score - left.score;
+      return byNewest(left.post, right.post);
+    });
+
+  const strongMatches = related.filter((entry) => entry.score > 0).slice(0, limit).map((entry) => entry.post);
+  if (strongMatches.length === limit) return strongMatches;
+
+  const fallback = related
+    .filter((entry) => entry.score === 0)
+    .map((entry) => entry.post)
+    .filter((post) => !strongMatches.includes(post))
+    .slice(0, limit - strongMatches.length);
+
+  return [...strongMatches, ...fallback];
 }

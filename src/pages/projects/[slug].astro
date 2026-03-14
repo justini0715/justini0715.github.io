@@ -2,6 +2,7 @@
 import { getCollection, render } from 'astro:content';
 import ArticleLayout from '../../layouts/ArticleLayout.astro';
 import ProjectMetaPanel from '../../components/projects/ProjectMetaPanel.astro';
+import TagChipList from '../../components/site/TagChipList.astro';
 
 export async function getStaticPaths() {
   const projects = await getCollection('projects');
@@ -10,22 +11,50 @@ export async function getStaticPaths() {
 
 const { project } = Astro.props;
 const { Content } = await render(project);
+const whyItMatters = project.data.summary ?? project.data.description;
+const implementationHighlight = project.data.focus ?? project.data.highlight;
 ---
 
-<ArticleLayout
-  title={project.data.title}
-  description={project.data.description}
->
+<ArticleLayout title={project.data.title} description={project.data.description}>
   <section class="page-hero page-hero--post">
     <div class="container hero__grid">
       <div class="reading-surface narrow-flow">
-        <p class="eyebrow">{project.data.badge}</p>
+        <p class="eyebrow">Project case study</p>
         <h1>{project.data.title}</h1>
         <p>{project.data.description}</p>
-        <p class="page-kicker">이 페이지는 프로젝트 개요, 핵심 포인트, 사용 스택, 외부 자료 링크를 함께 보는 프로젝트 케이스 뷰다.</p>
+        <p class="page-kicker">상태, 제약, 구현 포인트, 다음 단계까지 함께 읽는 포트폴리오형 프로젝트 문서.</p>
       </div>
 
       <ProjectMetaPanel project={project} />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container project-case-grid">
+      <article class="panel project-case-panel">
+        <p class="eyebrow">Why it matters</p>
+        <p>{whyItMatters}</p>
+      </article>
+
+      <article class="panel project-case-panel">
+        <p class="eyebrow">Constraints / implementation highlight</p>
+        <p>{implementationHighlight}</p>
+      </article>
+
+      <article class="panel project-case-panel">
+        <p class="eyebrow">Stack</p>
+        <TagChipList items={project.data.stack} />
+      </article>
+
+      <article class="panel project-case-panel">
+        <p class="eyebrow">Lessons / next steps</p>
+        <ul class="utility-list">
+          <li>{project.data.highlight}</li>
+          {project.data.nextStep && <li>{project.data.nextStep}</li>}
+          <li><a href={project.data.repoUrl} target="_blank" rel="noreferrer">Repository ↗</a></li>
+          {project.data.demoUrl && <li><a href={project.data.demoUrl} target="_blank" rel="noreferrer">Demo ↗</a></li>}
+        </ul>
+      </article>
     </div>
   </section>
 

@@ -1,6 +1,8 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { getProjectPath } from '../lib/content';
+import MetaRow from './site/MetaRow.astro';
+import TagChipList from './site/TagChipList.astro';
 
 interface Props {
   project: CollectionEntry<'projects'>;
@@ -11,20 +13,19 @@ const projectPath = getProjectPath(project);
 ---
 
 <article class="card project-card">
-  <div class="card__meta">
-    <span class="chip">{project.data.badge}</span>
-    <span class="muted">status · {project.data.status}</span>
-  </div>
   <div>
+    <span class="chip">{project.data.badge}</span>
     <h3><a class="project-card__title" href={projectPath}>{project.data.title}</a></h3>
     <p>{project.data.description}</p>
   </div>
+
+  <TagChipList items={project.data.stack} />
+  <MetaRow className="project-card__meta-row" items={[`state · ${project.data.state}`, project.data.status]} />
+
   <div class="project-card__highlight">
     <p class="project-highlight">{project.data.highlight}</p>
   </div>
-  <ul class="inline-tags">
-    {project.data.stack.map((item) => <li>{item}</li>)}
-  </ul>
+
   <div class="project-links">
     <a href={projectPath}>Case detail →</a>
     <a href={project.data.repoUrl} target="_blank" rel="noreferrer">Repository ↗</a>

@@ -8,63 +8,39 @@ import { get42Posts, groupPostsBySeries } from '../../lib/content';
 
 const posts = await get42Posts();
 const seriesGroups = groupPostsBySeries(posts);
+const recentPosts = posts.slice(0, 3);
 ---
 
 <ArchiveLayout
   title="42 hub"
-  description="Dedicated 42 archive with assignment writeups, systems programming notes, and series-linked project posts."
+  description="Dedicated 42 archive with series lanes, read-in-order links, and recent assignment writeups."
 >
   <SplitHero
     sectionClass="page-hero page-hero--blog"
     eyebrow="42 hub"
-    title="Assignment writeups and systems notes collected in one dedicated 42 archive."
-    description="This route is reserved for 42 content only: project-by-project writeups, systems programming lessons, and series-linked notes that belong to the curriculum track."
-    panelEyebrow="What the hub covers"
+    title="42 과제 흐름을 전용 허브로 분리해 읽는 아카이브."
+    description="이 경로는 42 글만 모아두는 허브다. 일반 기술 블로그와 합치지 않고, 시리즈와 읽는 순서를 중심으로 정리한다."
+    panelEyebrow="Hub structure"
     panelItems={[
-      '42 assignment posts grouped into long-running series lanes',
-      'Project lessons grounded in repository structure and implementation tradeoffs',
-      'Dedicated routing so 42 reading stays separate from the general blog archive'
+      'Series lanes로 42 트랙을 나눈다',
+      'Read in order에서 같은 흐름의 순서를 따라간다',
+      'Recent entries에서 최근 과제 기록을 바로 연다'
     ]}
     panelClassName="panel archive-panel"
   >
     <p slot="body" class="page-kicker">
-      For general web, tooling, setup, and retrospective posts, head back to <a href="/blog">the technical blog</a>.
+      일반 기술 노트와 회고는 <a href="/blog">Blog</a>에서, 42 과제 흐름은 여기에서 읽는다.
     </p>
   </SplitHero>
-
-  <section class="section">
-    <div class="container feature-grid feature-grid--compact">
-      <article class="card stat-card hub-metric-card">
-        <p class="eyebrow">Entries</p>
-        <h3>{posts.length}</h3>
-        <p>현재 42 허브에서 읽을 수 있는 글 수</p>
-      </article>
-      <article class="card stat-card hub-metric-card">
-        <p class="eyebrow">Series</p>
-        <h3>{seriesGroups.length}</h3>
-        <p>현재 42 글이 묶이는 시리즈 개수</p>
-      </article>
-      <article class="card stat-card hub-metric-card">
-        <p class="eyebrow">Latest</p>
-        <h3>{posts[0]?.data.title ?? '—'}</h3>
-        <p>가장 최근에 정리한 42 기록</p>
-      </article>
-      <article class="card stat-card hub-metric-card">
-        <p class="eyebrow">Read mode</p>
-        <h3>Track</h3>
-        <p>시리즈 순서와 전후 맥락을 기준으로 읽는 흐름</p>
-      </article>
-    </div>
-  </section>
 
   <section class="section">
     <div class="container">
       <SectionTitle
         eyebrow="Series lanes"
-        title="Long-term 42 tracks"
-        description="Each assignment can stand alone while still belonging to a larger systems-learning arc."
+        title="42 트랙별 읽기 축"
+        description="시스템, 그래픽, 인프라 같은 맥락으로 묶어서 각 과제가 어디에 속하는지 먼저 보여준다."
       />
-      <div class="feature-grid">
+      <div class="feature-grid feature-grid--compact">
         {seriesOverview.map((series) => (
           <article class="card stat-card">
             <h3>{series.title}</h3>
@@ -79,8 +55,8 @@ const seriesGroups = groupPostsBySeries(posts);
     <div class="container">
       <SectionTitle
         eyebrow="Read in order"
-        title="시리즈 순서로 읽는 현재 흐름"
-        description="현재 들어온 글 수가 많지 않더라도, 어떤 순서와 시리즈로 쌓이고 있는지 바로 이해할 수 있게 한다."
+        title="시리즈 순서로 이어 읽기"
+        description="같은 시리즈 안의 과제가 어떤 순서로 쌓였는지부터 이해할 수 있게 한다."
       />
 
       <div class="hub-lane-grid">
@@ -104,15 +80,15 @@ const seriesGroups = groupPostsBySeries(posts);
     </div>
   </section>
 
-  <section class="section section--tint">
+  <section class="section">
     <div class="container">
       <SectionTitle
-        eyebrow="42 posts"
-        title="Assignment archive"
-        description="Browse 42 posts with dates, tags, and series context visible at a glance."
+        eyebrow="Recent 42 entries"
+        title="최근 과제 기록"
+        description="지금 막 추가되거나 업데이트된 42 글부터 바로 읽을 수 있게 최근 항목만 먼저 보여준다."
       />
       <div class="card-grid">
-        {posts.map((post) => <PostCard post={post as any} />)}
+        {recentPosts.map((post) => <PostCard post={post} />)}
       </div>
     </div>
   </section>

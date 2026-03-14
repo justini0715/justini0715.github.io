@@ -2,7 +2,10 @@
 import { render } from 'astro:content';
 import ArticleLayout from '../../layouts/ArticleLayout.astro';
 import TechnicalArticleMetaPanel from '../../components/blog/TechnicalArticleMetaPanel.astro';
-import { getAdjacentSeriesPosts, getGeneralPosts, getPostPath } from '../../lib/content';
+import SectionTitle from '../../components/SectionTitle.astro';
+import MetaRow from '../../components/site/MetaRow.astro';
+import TagChipList from '../../components/site/TagChipList.astro';
+import { getAdjacentSeriesPosts, getGeneralPosts, getPostPath, getRelatedGeneralPosts } from '../../lib/content';
 
 export async function getStaticPaths() {
   const posts = await getGeneralPosts();
@@ -13,10 +16,14 @@ const { post } = Astro.props;
 const { Content } = await render(post);
 const allPosts = await getGeneralPosts();
 const { previous, next } = getAdjacentSeriesPosts(allPosts, post);
+const relatedPosts = !previous && !next ? getRelatedGeneralPosts(allPosts, post, 2) : [];
 const formattedDate = new Intl.DateTimeFormat('en', { dateStyle: 'long' }).format(post.data.pubDate);
+const formattedUpdatedDate = post.data.updatedDate
+  ? new Intl.DateTimeFormat('en', { dateStyle: 'medium' }).format(post.data.updatedDate)
+  : undefined;
 const seriesContext = post.data.seriesTitle
-  ? `${post.data.seriesTitle} 시리즈의 한 글로, 같은 학습 흐름 안에서 앞뒤 글과 연결됩니다.`
-  : `${post.data.category} 카테고리에서 읽을 수 있는 독립적인 기술 글입니다.`;
+  ? `${post.data.seriesTitle} 시리즈의 한 글로, 같은 흐름 안에서 앞뒤 글과 연결됩니다.`
+  : `${post.data.category} 카테고리에서 읽는 독립적인 기술 글입니다.`;
 ---
 
 <ArticleLayout
@@ -31,10 +38,15 @@ const seriesContext = post.data.seriesTitle
         <p class="eyebrow">Technical blog</p>
         <h1>{post.data.title}</h1>
         <p>{post.data.description}</p>
-        <p class="page-kicker">일반 기술 글은 학습/정리 중심의 노트로 다루며, 프로젝트 과제 글보다 더 가볍고 개념 중심의 읽기 흐름을 유지한다.</p>
+        <p class="page-kicker">개념 정리, 설정, 회고, 프로젝트성 메모를 읽는 일반 기술 글 화면.</p>
       </div>
 
-      <TechnicalArticleMetaPanel post={post} formattedDate={formattedDate} seriesContext={seriesContext} />
+      <TechnicalArticleMetaPanel
+        post={post}
+        formattedDate={formattedDate}
+        formattedUpdatedDate={formattedUpdatedDate}
+        seriesContext={seriesContext}
+      />
     </div>
   </section>
 
@@ -61,6 +73,34 @@ const seriesContext = post.data.seriesTitle
             <span class="muted">Move forward to the next linked writeup.</span>
           </a>
         ) : <div class="series-nav__empty"></div>}
+      </div>
+    </section>
+  )}
+
+  {!previous && !next && relatedPosts.length > 0 && (
+    <section class="section section--tint">
+      <div class="container">
+        <SectionTitle
+          eyebrow="Related posts"
+          title="같이 읽으면 좋은 일반 기술 글"
+          description="같은 category나 태그를 공유하는 글을 우선으로 골라 이어 읽을 수 있게 한다."
+        />
+        <div class="archive-post-list">
+          {relatedPosts.map((relatedPost) => {
+            const relatedDate = new Intl.DateTimeFormat('en', { dateStyle: 'medium' }).format(relatedPost.data.pubDate);
+            return (
+              <article class="archive-post-item">
+                <div class="archive-post-item__copy">
+                  <h4><a href={getPostPath(relatedPost)}>{relatedPost.data.title}</a></h4>
+                  <p>{relatedPost.data.description}</p>
+                  <MetaRow items={[relatedDate, `category · ${relatedPost.data.category}`]} />
+                  <TagChipList items={relatedPost.data.tags} max={4} />
+                </div>
+                <a class="post-card__link" href={getPostPath(relatedPost)}>Read →</a>
+              </article>
+            );
+          })}
+        </div>
       </div>
     </section>
   )}

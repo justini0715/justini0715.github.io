@@ -217,6 +217,20 @@
     gap: 0.55rem;
   }
 
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.75rem;
+    align-items: center;
+  }
+
+  .meta-row__item {
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.02em;
+  }
+
   .site-shell__header {
     position: sticky;
     top: 0;
@@ -640,6 +654,10 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
+  .card-grid--selected {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .feature-grid--compact {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -811,6 +829,11 @@
     line-height: 1.72;
   }
 
+  .post-card__meta-row,
+  .project-card__meta-row {
+    margin-top: 0.65rem;
+  }
+
   .post-card__footer {
     justify-content: space-between;
     align-items: end;
@@ -966,6 +989,86 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .home-featured-project {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 38rem;
+  }
+
+  .archive-chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .archive-group-list {
+    display: grid;
+    gap: 1.4rem;
+  }
+
+  .archive-group-section {
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .archive-group-section__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  .archive-group-section__head h3,
+  .archive-post-item h4 {
+    margin-top: 0;
+  }
+
+  .archive-post-list {
+    display: grid;
+    gap: 0.85rem;
+  }
+
+  .archive-post-item {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.1rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--line-soft);
+    background: rgba(255, 255, 255, 0.025);
+  }
+
+  .archive-post-item__copy {
+    display: grid;
+    gap: 0.6rem;
+    min-width: 0;
+  }
+
+  .archive-post-item__copy h4 a {
+    color: var(--text);
+  }
+
+  .archive-post-item__copy h4 a:hover {
+    color: var(--accent-strong);
+  }
+
+  .archive-post-item__copy p {
+    max-width: 58ch;
+  }
+
+  .project-case-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .project-case-panel {
+    display: grid;
+    gap: 0.8rem;
+  }
+
   .home-quick-card {
     display: grid;
     gap: 0.75rem;
@@ -1007,33 +1110,37 @@
     border-top: 0;
   }
 
-  .footer-grid {
-    padding: 2.2rem 0 1.2rem;
+  .footer-compact {
+    display: grid;
+    gap: 0.9rem;
+    padding: 1.6rem 0 2rem;
     border-top: 1px solid var(--line-faint);
-    align-items: start;
   }
 
-  .footer-column {
-    display: grid;
-    gap: 0.8rem;
-  }
-
-  .footer-links,
-  .footer-nav {
-    display: grid;
-    gap: 0.6rem;
-  }
-
-  .footer-links a,
-  .footer-nav a {
-    color: var(--text-soft);
-  }
-
-  .footer-meta {
+  .footer-compact__brand {
     display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 0 0 2.2rem;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.85rem;
+    align-items: center;
+    color: var(--muted);
+  }
+
+  .footer-compact__brand strong {
+    color: var(--text);
+  }
+
+  .footer-compact__nav,
+  .footer-compact__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem 1rem;
+    align-items: center;
+  }
+
+  .footer-compact__nav a,
+  .footer-compact__meta a,
+  .footer-compact__meta small {
+    color: var(--text-soft);
   }
 
   .prose-shell {
@@ -1221,18 +1328,16 @@
     .footer-grid,
     .series-nav,
     .card-grid,
+    .card-grid--selected,
     .feature-grid,
     .feature-grid--compact,
     .hub-lane-grid,
+    .project-case-grid,
     .route-home .hero__grid,
     .route-forty-two-index .page-hero .hero__grid,
     .route-forty-two-post .page-hero .hero__grid,
     .route-blog-post .page-hero .hero__grid {
       grid-template-columns: 1fr;
-    }
-
-    .footer-meta {
-      flex-direction: column;
     }
   }
 
@@ -1297,6 +1402,10 @@
 
     .home-quick-grid {
       grid-template-columns: 1fr;
+    }
+
+    .archive-post-item {
+      flex-direction: column;
     }
 
     .profile-page-card__hero,

@@ -15,8 +15,8 @@ const allPosts = await get42Posts();
 const { previous, next } = getAdjacentSeriesPosts(allPosts, post);
 const formattedDate = new Intl.DateTimeFormat('en', { dateStyle: 'long' }).format(post.data.pubDate);
 const seriesContext = post.data.seriesTitle
-  ? `${post.data.seriesTitle} 시리즈의 한 글로, 같은 학습 흐름 안에서 앞뒤 글과 연결됩니다.`
-  : '42 카테고리에서 읽을 수 있는 독립적인 과제 기록입니다.';
+  ? `${post.data.seriesTitle} 시리즈 안에서 앞뒤 글과 연결되는 42 과제 기록입니다.`
+  : '42 카테고리 안에서 읽는 독립 과제 기록입니다.';
 ---
 
 <ArticleLayout
@@ -28,13 +28,13 @@ const seriesContext = post.data.seriesTitle
   <section class="page-hero page-hero--post">
     <div class="container hero__grid">
       <div class="reading-surface narrow-flow">
-        <p class="eyebrow">42 hub</p>
+        <p class="eyebrow">42 article</p>
         <h1>{post.data.title}</h1>
         <p>{post.data.description}</p>
-        <p class="page-kicker">42 전용 글은 시리즈, 순서, 난이도, 전후 맥락을 함께 보여줘서 일반 기술 글보다 프로젝트 흐름을 더 강하게 드러낸다.</p>
+        <p class="page-kicker">시리즈, 순서, 난이도를 같이 보여줘서 과제 간 맥락을 잃지 않게 만드는 42 전용 읽기 화면.</p>
       </div>
 
-      <FortyTwoMetaPanel post={post as any} formattedDate={formattedDate} seriesContext={seriesContext} />
+      <FortyTwoMetaPanel post={post} formattedDate={formattedDate} seriesContext={seriesContext} />
     </div>
   </section>
 
@@ -51,14 +51,14 @@ const seriesContext = post.data.seriesTitle
           <a class="series-card" href={getPostPath(previous)}>
             <p class="eyebrow">Previous in series</p>
             <strong>{previous.data.title}</strong>
-            <span class="muted">Continue backward through the assignment log.</span>
+            <span class="muted">같은 series 안에서 바로 앞 과제로 이동합니다.</span>
           </a>
         ) : <div class="series-nav__empty"></div>}
         {next ? (
           <a class="series-card" href={getPostPath(next)}>
             <p class="eyebrow">Next in series</p>
             <strong>{next.data.title}</strong>
-            <span class="muted">Move forward to the next linked writeup.</span>
+            <span class="muted">같은 series 안에서 다음 과제로 이동합니다.</span>
           </a>
         ) : <div class="series-nav__empty"></div>}
       </div>

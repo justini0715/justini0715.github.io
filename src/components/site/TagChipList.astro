@@ -1,0 +1,16 @@
+---
+interface Props {
+  items: string[];
+  max?: number;
+  className?: string;
+}
+
+const { items, max, className = '' } = Astro.props;
+const visibleItems = typeof max === 'number' ? items.slice(0, max) : items;
+---
+
+{visibleItems.length > 0 && (
+  <ul class:list={['inline-tags', className]}>
+    {visibleItems.map((item) => <li>{item}</li>)}
+  </ul>
+)}
