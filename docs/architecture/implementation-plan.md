@@ -7,8 +7,8 @@
 - Domain target: `https://changwpa.kro.kr`
 
 ## Current Phase
-- Phase: Phase 35 — Targeted Bento Layout
-- Branch: `phase/35-targeted-bento-layout`
+- Phase: Phase 36 — Archive / Article Experience
+- Branch: `phase/36-archive-article-modernization`
 - Status: Complete
 
 ## Official Phase List
@@ -47,16 +47,17 @@
 33. Phase 33 — Profile Avatar Shape
 34. Phase 34 — Theme / Typography / Shared Shell
 35. Phase 35 — Targeted Bento Layout
+36. Phase 36 — Archive / Article Experience
 
 ## Current Phase Scope
-- Apply targeted Bento layout patterns to `/`, `/home`, `/about`, and `/projects` while keeping archive/article routes reading-first.
-- Keep the current route map and content intact, but refactor the key top-level pages into clearer card-based compositions with rounded surfaces and responsive stacking.
-- Preserve the gateway/now-page/profile/project-index roles that were already established in the IA pass.
+- Refine the archive and article routes so `/42`, `/blog`, and the detail pages feel more text-first and reading-oriented after the Bento pass.
+- Use denser archive rows for recent/related entries and tighten article hero metadata without changing the public route map.
+- Keep project, 42, and general technical article families distinct while improving consistency.
 
 ## Current Phase Non-Scope
-- Applying strong Bento treatment to `/42`, `/blog`, or detail/article routes; those remain reading-first and will be refined next.
+- Reworking top-level layout again; Bento route composition is already fixed from the previous phase.
 - Reworking `/studio`, backend/auth/SSR/CMS behavior, or the content schema.
-- Adding client-heavy interactions beyond the existing lightweight hover/scroll behaviors.
+- Adding client-heavy filtering, search, or route-transition logic.
 
 ## Architecture Summary
 - Astro static output with content collections for blog posts and projects.
@@ -69,16 +70,16 @@
 - blog taxonomy: `42`, `project`, `devlog`, `setup`, `retrospective`.
 
 ## Deliverables Checklist
-- [x] landing page now includes targeted Bento-style overview cards without losing the gateway role
-- [x] `/home` now renders its 5 now-page blocks inside a stronger Bento composition
-- [x] `/about` now reads like a Bento profile dossier
-- [x] `/projects` now opens with a Bento-style selected-work/state overview before the full index
-- [x] Phase 35 verification completed
+- [x] `/blog` latest/archive sections now use denser text-first archive rows
+- [x] `/42` recent entries now match the refined archive-reading treatment
+- [x] project / 42 / blog detail pages now expose tighter top metadata rows
+- [x] related-post and prev/next reading flows remain intact after the refinement
+- [x] Phase 36 verification completed
 
 ## Verification Plan
-1. Run local type checks and a full static build after the route-level Bento refactor.
-2. Confirm `/`, `/home`, `/about`, and `/projects` expose the intended Bento-card compositions in built output.
-3. Re-check `/studio` and the non-Bento archive routes for regressions.
+1. Run local type checks and a full static build after the archive/article refinement.
+2. Confirm `/blog`, `/42`, `/projects/[slug]`, `/42/[slug]`, and `/blog/[slug]` render the new text-first archive/article structures in built output.
+3. Re-check production `/studio` and the top-level Bento routes for regressions.
 
 ## Work Log
 - Cloned the remote user-site repository into the writable workspace.
@@ -439,3 +440,9 @@
 - Turned `/home` into a five-block now-page Bento composition, `/about` into a denser profile dossier, and `/projects` into a selected-work/state overview before the full grid.
 - `npm run check` after phase-35 targeted Bento layout → success (`tsc --noEmit`).
 - `npm run build` after phase-35 targeted Bento layout → success; rebuilt the full public route set plus the locked production `/studio` page.
+
+- Started `phase/36-archive-article-modernization` from merged `main` after the targeted Bento layouts were live.
+- Replaced card-heavy recent/archive sections on `/blog` and `/42` with denser archive rows and added a reusable archive list item component for text-first reading.
+- Tightened `/projects/[slug]`, `/42/[slug]`, and `/blog/[slug]` with clearer hero metadata rows while preserving the side-context panels and related/prev-next flows.
+- `npm run check` after phase-36 archive/article experience → success (`tsc --noEmit`).
+- `npm run build` after phase-36 archive/article experience → success; rebuilt the full public route set plus the locked production `/studio` page.

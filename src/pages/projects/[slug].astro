@@ -2,6 +2,7 @@
 import { getCollection, render } from 'astro:content';
 import ArticleLayout from '../../layouts/ArticleLayout.astro';
 import ProjectMetaPanel from '../../components/projects/ProjectMetaPanel.astro';
+import MetaRow from '../../components/site/MetaRow.astro';
 import TagChipList from '../../components/site/TagChipList.astro';
 
 export async function getStaticPaths() {
@@ -13,6 +14,7 @@ const { project } = Astro.props;
 const { Content } = await render(project);
 const whyItMatters = project.data.summary ?? project.data.description;
 const implementationHighlight = project.data.focus ?? project.data.highlight;
+const updatedDate = project.data.updatedDate?.toISOString().slice(0, 10) ?? '';
 ---
 
 <ArticleLayout title={project.data.title} description={project.data.description}>
@@ -22,7 +24,8 @@ const implementationHighlight = project.data.focus ?? project.data.highlight;
         <p class="eyebrow">Project case study</p>
         <h1>{project.data.title}</h1>
         <p>{project.data.description}</p>
-        <p class="page-kicker">상태, 제약, 구현 포인트, 다음 단계까지 함께 읽는 포트폴리오형 프로젝트 문서.</p>
+        <MetaRow items={[project.data.badge, `state · ${project.data.state}`, project.data.status, updatedDate ? `updated · ${updatedDate}` : '']} />
+        <TagChipList items={project.data.stack} max={6} />
       </div>
 
       <ProjectMetaPanel project={project} />

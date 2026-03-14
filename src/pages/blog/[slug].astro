@@ -3,6 +3,7 @@ import { render } from 'astro:content';
 import ArticleLayout from '../../layouts/ArticleLayout.astro';
 import TechnicalArticleMetaPanel from '../../components/blog/TechnicalArticleMetaPanel.astro';
 import SectionTitle from '../../components/SectionTitle.astro';
+import ArchiveListItem from '../../components/site/ArchiveListItem.astro';
 import MetaRow from '../../components/site/MetaRow.astro';
 import TagChipList from '../../components/site/TagChipList.astro';
 import { getAdjacentSeriesPosts, getGeneralPosts, getPostPath, getRelatedGeneralPosts } from '../../lib/content';
@@ -38,7 +39,8 @@ const seriesContext = post.data.seriesTitle
         <p class="eyebrow">Technical blog</p>
         <h1>{post.data.title}</h1>
         <p>{post.data.description}</p>
-        <p class="page-kicker">개념 정리, 설정, 회고, 프로젝트성 메모를 읽는 일반 기술 글 화면.</p>
+        <MetaRow items={[formattedDate, formattedUpdatedDate ? `updated · ${formattedUpdatedDate}` : '', `category · ${post.data.category}`]} />
+        <TagChipList items={post.data.tags} />
       </div>
 
       <TechnicalArticleMetaPanel
@@ -89,15 +91,13 @@ const seriesContext = post.data.seriesTitle
           {relatedPosts.map((relatedPost) => {
             const relatedDate = new Intl.DateTimeFormat('en', { dateStyle: 'medium' }).format(relatedPost.data.pubDate);
             return (
-              <article class="archive-post-item">
-                <div class="archive-post-item__copy">
-                  <h4><a href={getPostPath(relatedPost)}>{relatedPost.data.title}</a></h4>
-                  <p>{relatedPost.data.description}</p>
-                  <MetaRow items={[relatedDate, `category · ${relatedPost.data.category}`]} />
-                  <TagChipList items={relatedPost.data.tags} max={4} />
-                </div>
-                <a class="post-card__link" href={getPostPath(relatedPost)}>Read →</a>
-              </article>
+              <ArchiveListItem
+                href={getPostPath(relatedPost)}
+                title={relatedPost.data.title}
+                description={relatedPost.data.description}
+                meta={[relatedDate, `category · ${relatedPost.data.category}`]}
+                tags={relatedPost.data.tags}
+              />
             );
           })}
         </div>

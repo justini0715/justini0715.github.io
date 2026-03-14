@@ -2,6 +2,8 @@
 import { render } from 'astro:content';
 import ArticleLayout from '../../layouts/ArticleLayout.astro';
 import FortyTwoMetaPanel from '../../components/forty-two/FortyTwoMetaPanel.astro';
+import MetaRow from '../../components/site/MetaRow.astro';
+import TagChipList from '../../components/site/TagChipList.astro';
 import { get42Posts, getAdjacentSeriesPosts, getPostPath } from '../../lib/content';
 
 export async function getStaticPaths() {
@@ -31,7 +33,15 @@ const seriesContext = post.data.seriesTitle
         <p class="eyebrow">42 article</p>
         <h1>{post.data.title}</h1>
         <p>{post.data.description}</p>
-        <p class="page-kicker">시리즈, 순서, 난이도를 같이 보여줘서 과제 간 맥락을 잃지 않게 만드는 42 전용 읽기 화면.</p>
+        <MetaRow
+          items={[
+            formattedDate,
+            post.data.seriesTitle ? `series · ${post.data.seriesTitle}` : '',
+            post.data.seriesOrder ? `order · ${post.data.seriesOrder}` : '',
+            post.data.difficulty ? `difficulty · ${post.data.difficulty}` : ''
+          ]}
+        />
+        <TagChipList items={post.data.tags} />
       </div>
 
       <FortyTwoMetaPanel post={post} formattedDate={formattedDate} seriesContext={seriesContext} />

@@ -1,10 +1,8 @@
 ---
 import ArchiveLayout from '../../layouts/ArchiveLayout.astro';
-import PostCard from '../../components/PostCard.astro';
 import SectionTitle from '../../components/SectionTitle.astro';
 import SplitHero from '../../components/site/SplitHero.astro';
-import MetaRow from '../../components/site/MetaRow.astro';
-import TagChipList from '../../components/site/TagChipList.astro';
+import ArchiveListItem from '../../components/site/ArchiveListItem.astro';
 import { GENERAL_BLOG_CATEGORY_ORDER, getGeneralPosts, getPostPath, groupGeneralPostsByCategory } from '../../lib/content';
 
 const posts = await getGeneralPosts();
@@ -17,6 +15,7 @@ const categoryLabels = {
   project: 'Project'
 } as const;
 const availableCategories = GENERAL_BLOG_CATEGORY_ORDER.filter((category) => groupedPosts.some((group) => group.category === category));
+const formatDate = (value: Date) => new Intl.DateTimeFormat('en', { dateStyle: 'medium' }).format(value);
 ---
 
 <ArchiveLayout
@@ -63,10 +62,18 @@ const availableCategories = GENERAL_BLOG_CATEGORY_ORDER.filter((category) => gro
       <SectionTitle
         eyebrow="Latest posts"
         title="최근 일반 기술 글"
-        description="가장 최근에 업데이트한 일반 기술 노트부터 먼저 읽을 수 있게 최근 글만 따로 보여준다."
+        description="가장 최근에 업데이트한 일반 기술 노트부터 먼저 읽을 수 있게 최근 글을 텍스트 중심으로 정리한다."
       />
-      <div class="card-grid">
-        {latestPosts.map((post) => <PostCard post={post} />)}
+      <div class="archive-post-list">
+        {latestPosts.map((post) => (
+          <ArchiveListItem
+            href={getPostPath(post)}
+            title={post.data.title}
+            description={post.data.description}
+            meta={[formatDate(post.data.pubDate), `category · ${post.data.category}`]}
+            tags={post.data.tags}
+          />
+        ))}
       </div>
     </div>
   </section>
@@ -88,20 +95,15 @@ const availableCategories = GENERAL_BLOG_CATEGORY_ORDER.filter((category) => gro
             </div>
 
             <div class="archive-post-list">
-              {group.items.map((post) => {
-                const formattedDate = new Intl.DateTimeFormat('en', { dateStyle: 'medium' }).format(post.data.pubDate);
-                return (
-                  <article class="archive-post-item">
-                    <div class="archive-post-item__copy">
-                      <h4><a href={getPostPath(post)}>{post.data.title}</a></h4>
-                      <p>{post.data.description}</p>
-                      <MetaRow items={[formattedDate, `category · ${post.data.category}`]} />
-                      <TagChipList items={post.data.tags} max={4} />
-                    </div>
-                    <a class="post-card__link" href={getPostPath(post)}>Read →</a>
-                  </article>
-                );
-              })}
+              {group.items.map((post) => (
+                <ArchiveListItem
+                  href={getPostPath(post)}
+                  title={post.data.title}
+                  description={post.data.description}
+                  meta={[formatDate(post.data.pubDate), `category · ${post.data.category}`]}
+                  tags={post.data.tags}
+                />
+              ))}
             </div>
           </section>
         ))}
