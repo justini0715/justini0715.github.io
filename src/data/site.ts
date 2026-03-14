@@ -98,5 +98,10 @@ export const seriesOverview = [
     key: '42-infra',
     title: '42 Infra',
     description: 'Infrastructure, containers, web serving, and deployment-oriented writeups.'
+  },
+  {
+    key: '42-cpp',
+    title: '42 C++',
+    description: 'C++ module notes covering OOP basics, canonical form, inheritance, polymorphism, and exception-driven design.'
   }
 ];
