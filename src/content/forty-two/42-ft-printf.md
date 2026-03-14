@@ -4,9 +4,9 @@ description: "가변 인자와 포맷 dispatch를 직접 다루면서 출력 함
 pubDate: 2026-03-03
 category: "42"
 tags: ["42", "c", "printf", "variadic"]
-series: "42-core"
-seriesTitle: "42 Core"
-seriesOrder: 3
+series: "42-circle-1"
+seriesTitle: "Circle 1"
+seriesOrder: 1
 difficulty: "가변 인자와 포맷 파싱"
 featured: false
 draft: false

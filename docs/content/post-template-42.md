@@ -4,7 +4,10 @@ description: "<one-sentence summary>"
 pubDate: 2026-03-13
 category: "42"
 tags: ["42", "c", "systems"]
-series: "42-core"
+series: "42-circle-3"
+seriesTitle: "Circle 3"
+seriesOrder: 1
+difficulty: "<constraint summary>"
 draft: true
 ---
 

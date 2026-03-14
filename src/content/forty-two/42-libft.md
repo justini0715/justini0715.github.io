@@ -4,8 +4,8 @@ description: "첫 정적 라이브러리를 직접 만들면서 문자열, 메�
 pubDate: 2026-03-01
 category: "42"
 tags: ["42", "c", "library", "libft"]
-series: "42-core"
-seriesTitle: "42 Core"
+series: "42-circle-0"
+seriesTitle: "Circle 0"
 seriesOrder: 1
 difficulty: "기초 C 라이브러리와 메모리 처리"
 featured: true

@@ -4,8 +4,8 @@ description: "한 줄씩 읽는 함수 하나를 구현하면서 static 상태�
 pubDate: 2026-03-02
 category: "42"
 tags: ["42", "c", "io", "get_next_line"]
-series: "42-core"
-seriesTitle: "42 Core"
+series: "42-circle-1"
+seriesTitle: "Circle 1"
 seriesOrder: 2
 difficulty: "버퍼 상태 보존과 메모리 수명 관리"
 featured: false

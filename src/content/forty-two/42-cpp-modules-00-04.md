@@ -4,9 +4,9 @@ description: "클래스 기초부터 canonical form, 상속, 다형성까지 이
 pubDate: 2026-03-13
 category: "42"
 tags: ["42", "cpp", "oop", "cpp-modules"]
-series: "42-cpp"
-seriesTitle: "42 C++"
-seriesOrder: 1
+series: "42-circle-4"
+seriesTitle: "Circle 4"
+seriesOrder: 2
 difficulty: "객체지향 기초부터 다형성까지"
 featured: false
 draft: false

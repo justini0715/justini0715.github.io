@@ -4,8 +4,8 @@ description: "현재 로컬 checkout 기준으로는 구현 소스가 비어 있
 pubDate: 2026-03-12
 category: "42"
 tags: ["42", "cpp", "http", "webserv"]
-series: "42-infra"
-seriesTitle: "42 Infra"
+series: "42-circle-5"
+seriesTitle: "Circle 5"
 seriesOrder: 3
 difficulty: "HTTP 서버 구현(현재 repo는 placeholder 상태)"
 featured: false

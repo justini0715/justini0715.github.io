@@ -4,9 +4,9 @@ description: "교착상태, mutex, 모니터링, 타이밍 문제를 동시에 �
 pubDate: 2026-03-07
 category: "42"
 tags: ["42", "c", "threads", "philosopher"]
-series: "42-systems"
-seriesTitle: "42 Systems"
-seriesOrder: 3
+series: "42-circle-3"
+seriesTitle: "Circle 3"
+seriesOrder: 1
 difficulty: "동시성과 시간 민감한 상태 관리"
 featured: true
 draft: false

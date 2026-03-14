@@ -4,9 +4,9 @@ description: "파이프, fork, dup2, execve를 묶어 셸의 두 단계 파이�
 pubDate: 2026-03-05
 category: "42"
 tags: ["42", "c", "pipe", "execve", "pipex"]
-series: "42-systems"
-seriesTitle: "42 Systems"
-seriesOrder: 1
+series: "42-circle-2"
+seriesTitle: "Circle 2"
+seriesOrder: 2
 difficulty: "프로세스/파이프/리다이렉션"
 featured: false
 draft: false

@@ -4,9 +4,9 @@ description: "`.cub` 파싱, 텍스처 메타데이터, 맵 검증, 레이캐스
 pubDate: 2026-03-10
 category: "42"
 tags: ["42", "c", "raycasting", "cub3d"]
-series: "42-graphics"
-seriesTitle: "42 Graphics"
-seriesOrder: 2
+series: "42-circle-4"
+seriesTitle: "Circle 4"
+seriesOrder: 1
 difficulty: "맵 파싱과 레이캐스팅 렌더링"
 featured: true
 draft: false

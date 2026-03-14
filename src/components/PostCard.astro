@@ -12,6 +12,9 @@ const { post } = Astro.props;
 const formattedDate = new Intl.DateTimeFormat('en', { dateStyle: 'medium' }).format(post.data.pubDate);
 const postPath = getPostPath(post);
 const categoryLabel = is42Post(post) ? '42 note' : post.data.category;
+const seriesLabel = post.data.seriesTitle
+  ? `${is42Post(post) ? 'circle' : 'series'} · ${post.data.seriesTitle}`
+  : '';
 ---
 
 <article class="card post-card">
@@ -20,7 +23,7 @@ const categoryLabel = is42Post(post) ? '42 note' : post.data.category;
       className="post-card__meta-row"
       items={[
         categoryLabel,
-        post.data.seriesTitle ? `series · ${post.data.seriesTitle}` : ''
+        seriesLabel
       ]}
     />
     <h3><a class="post-card__title" href={postPath}>{post.data.title}</a></h3>
