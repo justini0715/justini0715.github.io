@@ -7,8 +7,8 @@
 - Domain target: `https://changwpa.kro.kr`
 
 ## Current Phase
-- Phase: Phase 32 — Studio IA Alignment
-- Branch: `phase/32-studio-ia-alignment`
+- Phase: Phase 33 — Profile Avatar Shape
+- Branch: `phase/33-profile-avatar-shape`
 - Status: Complete
 
 ## Official Phase List
@@ -44,6 +44,7 @@
 30. Phase 30 — Real Profile Image
 31. Phase 31 — Public IA Refresh
 32. Phase 32 — Studio IA Alignment
+33. Phase 33 — Profile Avatar Shape
 
 ## Current Phase Scope
 - Keep `/studio` as a single local-only editor route while tightening the IA around document type, save state, preview/settings/checks drawers, and browser fallback.
@@ -71,18 +72,14 @@
 - blog taxonomy: `42`, `project`, `devlog`, `setup`, `retrospective`.
 
 ## Deliverables Checklist
-- [x] studio top bar centers on folder state, current document title, dirty/saved state, and save action
-- [x] quick insert controls reduced to H2/list/quote/code block/link
-- [x] technical-post vs 42-post editing rules separated inside the form
-- [x] `.md` and `.mdx` loading works while preserving original file extensions
-- [x] unsupported-browser fallback prefers Markdown download over folder save
-- [x] Phase 32 verification completed
+- [x] about-page profile image no longer shows a rounded-rectangle background box
+- [x] avatar shape now matches the actual image silhouette
+- [x] Phase 33 verification completed
 
 ## Verification Plan
-1. Run local type checks and a full static build after the studio IA changes.
-2. Confirm the local-only studio shell exposes the new top bar structure, drawer layout, and quick-insert controls in source/built dev assets.
-3. Confirm `.md` and `.mdx` seeds both load and that save/download paths preserve the original extension.
-4. Re-check production `/studio` to confirm the lock notice remains the only shipped UI.
+1. Run local type checks and a full static build after the avatar-shape CSS fix.
+2. Confirm the built about page still renders the profile image and no longer shows the old rounded-rectangle box.
+3. Re-check the rest of the public shell and production `/studio` for regressions.
 
 ## Work Log
 - Cloned the remote user-site repository into the writable workspace.
@@ -425,3 +422,8 @@
 - source and dev-route checks after phase-32 → confirmed `studio-current-document`, `studio-document-type`, `.mdx` support, and the reduced quick-insert toolbar exist in the local dev studio UI.
 - `grep dist/studio/index.html` after phase-32 studio IA alignment → production output still contains only the locked `/studio` notice.
 - Follow-up after phase-31 deploy: fixed the remaining `/42` read-order pluralization typo (`entryies` → `entries`) and re-verified the static build.
+
+- Started `phase/33-profile-avatar-shape` after the deployed profile image revealed a mismatched rounded-rectangle box around the about-page avatar.
+- Changed the large about-page avatar to a background-free circular treatment so the visible frame matches the image silhouette instead of a rounded rectangle.
+- `npm run check` after phase-33 profile avatar shape → success (`tsc --noEmit`).
+- `npm run build` after phase-33 profile avatar shape → success; rebuilt the public routes plus the locked production `/studio` page.

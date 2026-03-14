@@ -439,10 +439,11 @@
   .profile-page-card__avatar {
     width: clamp(6rem, 13vw, 9rem);
     height: clamp(6rem, 13vw, 9rem);
-    border-radius: 1.8rem;
+    object-fit: cover;
+    border-radius: 999px;
     border: 1px solid rgba(231, 194, 141, 0.24);
-    background: linear-gradient(180deg, rgba(18, 27, 40, 0.98), rgba(11, 17, 26, 1));
-    box-shadow: 0 18px 44px rgba(2, 7, 16, 0.3);
+    background: transparent;
+    box-shadow: 0 18px 44px rgba(2, 7, 16, 0.22);
   }
 
   .profile-page-card__section,
@@ -1416,7 +1417,7 @@
     .profile-page-card__avatar {
       width: 5.75rem;
       height: 5.75rem;
-      border-radius: 1.4rem;
+      border-radius: 999px;
     }
 
     .route-blog-post .reading-surface,
