@@ -7,9 +7,9 @@
 - Domain target: `https://changwpa.kro.kr`
 
 ## Current Phase
-- Phase: Phase 20 — Project Detail Routes
-- Branch: `phase/20-project-detail-routes`
-- Status: Complete
+- Phase: Phase 21 — Domain Article Differentiation
+- Branch: `phase/21-domain-article-differentiation`
+- Status: In Progress
 
 ## Official Phase List
 1. Phase 1 — Foundation
@@ -32,11 +32,12 @@
 18. Phase 18 — Project / 42 Hub Enrichment
 19. Phase 19 — Layout Chrome Differentiation
 20. Phase 20 — Project Detail Routes
+21. Phase 21 — Domain Article Differentiation
 
 ## Current Phase Scope
-- Add a dedicated project detail route family under `/projects/[slug]`.
-- Let project cards lead into fuller project dossiers instead of only external repository links.
-- Keep the new project detail routes consistent with the route split and layout system introduced in phases 15-19.
+- Differentiate project detail pages and 42 article pages so they no longer feel like the same generic article wrapper with different copy.
+- Add domain-specific metadata panels and supporting structure for project cases and 42 entries.
+- Keep the route and layout splits intact while making each article family feel more intentional.
 
 ## Current Phase Non-Scope
 - Replacing the static content architecture with a hosted CMS.
@@ -52,6 +53,7 @@
 - Adding the user-specific `/home` features that still require separate product decisions.
 - Rewriting the core content model or adding backend features.
 - Reworking blog/42 routing again; this phase is project-detail specific.
+- Reworking the general technical blog article family in the same phase.
 
 ## Architecture Summary
 - Astro static output with content collections for blog posts and projects.
@@ -64,16 +66,16 @@
 - blog taxonomy: `42`, `project`, `devlog`, `setup`, `retrospective`.
 
 ## Deliverables Checklist
-- [x] `/projects/[slug]` route added
-- [x] project cards link into internal case-detail pages
-- [x] project detail layout context / back navigation works
-- [x] Phase 20 verification completed
+- [x] project-specific meta panel extracted
+- [x] 42-specific meta panel extracted
+- [x] project / 42 detail surfaces visibly differentiated
+- [x] Phase 21 verification completed
 
 ## Verification Plan
-1. Run local build and type checks after the project-detail pass.
-2. Verify `/projects/[slug]` pages build and render the project content correctly.
-3. Verify project cards now link to internal detail pages while preserving external repo/demo links.
-4. Re-check `/studio` after shared layout/helper changes for compatibility.
+1. Run local build and type checks after the domain-article differentiation pass.
+2. Verify `/projects/[slug]` and `/42/[slug]` now expose clearer, different metadata/context structures.
+3. Verify the general `/blog/[slug]` article route remains unchanged and healthy.
+4. Re-check `/studio` after any shared style changes for compatibility.
 5. Confirm production `/studio` remains locked and the public routes remain static-output compatible.
 
 ## Work Log
@@ -168,6 +170,9 @@
 - Added a hub quick-link row to `HubLayout`, an archive switcher to `ArchiveLayout`, and a context/back bar to `ArticleLayout`.
 - Started `phase/20-project-detail-routes` so the project hub can lead into full internal project dossiers instead of stopping at external repository links.
 - Added `/projects/[slug]` routes, internal project case links from project cards, and a project-detail article-style reading surface with context metadata and repository/demo links.
+- Started `phase/21-domain-article-differentiation` so project detail pages and 42 detail pages stop looking like the same generic article type with only text changes.
+- Added `ProjectMetaPanel` and `FortyTwoMetaPanel` so project cases and 42 entries now expose different metadata structures and context density.
+- Kept the general technical blog article surface unchanged while making project and 42 article families more distinct.
 
 ## Verification Results
 - `npm install -D astro @astrojs/sitemap @astrojs/check typescript` → dependencies installed successfully.
@@ -256,6 +261,20 @@
 - `grep dist/studio/index.html` after phase-18 hub enrichment → production output still contains the locked `/studio` notice and excludes the active editor markers.
 - `npm run check` after phase-19 layout chrome differentiation → success (`tsc --noEmit`).
 - `npm run build` after phase-19 layout chrome differentiation → success; rebuilt the full split route set plus the compatibility pages and `/studio`.
+- `npx tsc --noEmit --project tsconfig.json` via LSP diagnostics after phase-19 → 0 errors, 0 warnings.
+- `grep dist/home/index.html dist/projects/index.html dist/42/index.html dist/blog/rebuilding-a-legacy-github-pages-site-with-astro/index.html dist/42/42-push-swap/index.html` after phase-19 → confirmed the new hub/archive/article chrome markers render in built output.
+- `grep dist/studio/index.html` after phase-19 layout chrome differentiation → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- `npm run check` after phase-20 project detail routes → success (`tsc --noEmit`).
+- `npm run build` after phase-20 project detail routes → success; built `/projects/[slug]` detail routes for every current project plus the existing split route set and `/studio`.
+- `npx tsc --noEmit --project tsconfig.json` via LSP diagnostics after phase-20 project detail routes → 0 errors, 0 warnings.
+- `find dist/projects -maxdepth 2 -type f` after phase-20 → confirmed project detail routes now build under `/projects/inception/`, `/projects/cub3d/`, `/projects/philosopher/`, and `/projects/push-swap/`.
+- `grep dist/projects/index.html dist/projects/inception/index.html` after phase-20 → confirmed project cards now link to `Case detail →` and project detail pages expose `Project case` context with internal reading surfaces.
+- `grep dist/studio/index.html` after phase-20 project detail routes → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- `npm run check` after phase-21 domain article differentiation → success (`tsc --noEmit`).
+- `npm run build` after phase-21 domain article differentiation → success; rebuilt the full split route set, project detail routes, compatibility pages, and `/studio`.
+- `npx tsc --noEmit --project tsconfig.json` via LSP diagnostics after phase-21 → 0 errors, 0 warnings.
+- `grep dist/projects/inception/index.html dist/42/42-push-swap/index.html` after phase-21 → confirmed project detail pages now render `Project context` metadata panels while 42 detail pages render richer `Entry context` chips including order/difficulty.
+- `grep dist/studio/index.html` after phase-21 domain article differentiation → production output still contains the locked `/studio` notice and excludes the active editor markers.
 - `npx tsc --noEmit --project tsconfig.json` via LSP diagnostics after phase-19 → 0 errors, 0 warnings.
 - `grep dist/home/index.html dist/projects/index.html dist/42/index.html dist/blog/rebuilding-a-legacy-github-pages-site-with-astro/index.html dist/42/42-push-swap/index.html` after phase-19 → confirmed the new hub/archive/article chrome markers render in built output.
 - `grep dist/studio/index.html` after phase-19 layout chrome differentiation → production output still contains the locked `/studio` notice and excludes the active editor markers.

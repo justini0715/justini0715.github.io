@@ -1,6 +1,7 @@
 ---
 import { render } from 'astro:content';
 import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import FortyTwoMetaPanel from '../../components/forty-two/FortyTwoMetaPanel.astro';
 import { get42Posts, getAdjacentSeriesPosts, getPostPath } from '../../lib/content';
 
 export async function getStaticPaths() {
@@ -30,22 +31,10 @@ const seriesContext = post.data.seriesTitle
         <p class="eyebrow">42 hub</p>
         <h1>{post.data.title}</h1>
         <p>{post.data.description}</p>
-        <div class="post-meta-row">
-          <span class="chip">{formattedDate}</span>
-          <span class="chip">{post.data.category}</span>
-          {post.data.seriesTitle && <span class="muted">Series · {post.data.seriesTitle}</span>}
-        </div>
+        <p class="page-kicker">42 전용 글은 시리즈, 순서, 난이도, 전후 맥락을 함께 보여줘서 일반 기술 글보다 프로젝트 흐름을 더 강하게 드러낸다.</p>
       </div>
 
-      <aside class="panel utility-panel">
-        <p class="eyebrow">Entry context</p>
-        <p class="meta-note">{seriesContext}</p>
-        {post.data.tags.length > 0 && (
-          <ul class="inline-tags">
-            {post.data.tags.map((tag) => <li>{tag}</li>)}
-          </ul>
-        )}
-      </aside>
+      <FortyTwoMetaPanel post={post} formattedDate={formattedDate} seriesContext={seriesContext} />
     </div>
   </section>
 

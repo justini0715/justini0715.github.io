@@ -205,6 +205,12 @@
     text-transform: uppercase;
   }
 
+  .meta-chip-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+  }
+
   .site-shell__header {
     position: sticky;
     top: 0;
@@ -537,6 +543,11 @@
 
   .hub-project-link:hover strong {
     color: var(--accent-strong);
+  }
+
+  .project-meta-panel,
+  .forty-two-meta-panel {
+    gap: 1rem;
   }
 
   .card,

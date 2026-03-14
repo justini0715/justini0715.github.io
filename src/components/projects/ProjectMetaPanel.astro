@@ -1,0 +1,27 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+}
+
+const { project } = Astro.props;
+---
+
+<aside class="panel utility-panel project-meta-panel">
+  <p class="eyebrow">Project context</p>
+  {project.data.summary && <p class="meta-note">{project.data.summary}</p>}
+
+  <div class="meta-chip-grid">
+    <span class="chip">{project.data.badge}</span>
+    <span class="chip">{project.data.status}</span>
+    {project.data.year && <span class="chip">{project.data.year}</span>}
+  </div>
+
+  <ul class="utility-list">
+    <li>{project.data.highlight}</li>
+    <li>Stack: {project.data.stack.join(' · ')}</li>
+    <li><a href={project.data.repoUrl} target="_blank" rel="noreferrer">Repository ↗</a></li>
+    {project.data.demoUrl && <li><a href={project.data.demoUrl} target="_blank" rel="noreferrer">Demo ↗</a></li>}
+  </ul>
+</aside>

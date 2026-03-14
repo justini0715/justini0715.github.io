@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import ProjectMetaPanel from '../../components/projects/ProjectMetaPanel.astro';
 
 export async function getStaticPaths() {
   const projects = await getCollection('projects');
@@ -21,22 +22,10 @@ const { Content } = await render(project);
         <p class="eyebrow">{project.data.badge}</p>
         <h1>{project.data.title}</h1>
         <p>{project.data.description}</p>
-        <div class="post-meta-row">
-          <span class="chip">{project.data.status}</span>
-          {project.data.year && <span class="chip">{project.data.year}</span>}
-        </div>
+        <p class="page-kicker">이 페이지는 프로젝트 개요, 핵심 포인트, 사용 스택, 외부 자료 링크를 함께 보는 프로젝트 케이스 뷰다.</p>
       </div>
 
-      <aside class="panel utility-panel">
-        <p class="eyebrow">Project context</p>
-        {project.data.summary && <p class="meta-note">{project.data.summary}</p>}
-        <ul class="utility-list">
-          <li>{project.data.highlight}</li>
-          <li>Stack: {project.data.stack.join(' · ')}</li>
-          <li><a href={project.data.repoUrl} target="_blank" rel="noreferrer">Repository ↗</a></li>
-          {project.data.demoUrl && <li><a href={project.data.demoUrl} target="_blank" rel="noreferrer">Demo ↗</a></li>}
-        </ul>
-      </aside>
+      <ProjectMetaPanel project={project} />
     </div>
   </section>
 
