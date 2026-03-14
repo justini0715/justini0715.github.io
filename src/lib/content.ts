@@ -20,8 +20,20 @@ export function getPostPath(post: PostEntry) {
   return is42Post(post) ? `/42/${post.id}/` : `/blog/${post.id}/`;
 }
 
-async function getPublishedCollectionPosts<C extends 'blog' | 'fortyTwo'>(collection: C) {
-  return (await getCollection(collection)).filter((post) => !post.data.draft).sort(byNewest);
+function sortPublishedPosts<T extends PostEntry>(posts: T[]) {
+  return posts.filter((post: T) => !post.data.draft).sort(byNewest);
+}
+
+async function getPublishedCollectionPosts(collection: 'blog'): Promise<BlogEntry[]>;
+async function getPublishedCollectionPosts(collection: 'fortyTwo'): Promise<FortyTwoEntry[]>;
+async function getPublishedCollectionPosts(collection: 'blog' | 'fortyTwo') {
+  if (collection === 'blog') {
+    const posts: BlogEntry[] = await getCollection('blog');
+    return sortPublishedPosts(posts);
+  }
+
+  const posts: FortyTwoEntry[] = await getCollection('fortyTwo');
+  return sortPublishedPosts(posts);
 }
 
 export async function getPublishedPosts() {
@@ -82,16 +94,16 @@ export async function getFeaturedProjects(limit = 3) {
   return (await getProjects()).filter((project) => project.data.featured).slice(0, limit);
 }
 
-export function getSeriesPosts<T extends PostEntry>(posts: T[], seriesKey?: string) {
-  if (!seriesKey) return [] as T[];
+export function getSeriesPosts(posts: PostEntry[], seriesKey?: string) {
+  if (!seriesKey) return [] as PostEntry[];
   return posts
     .filter((post) => post.data.series === seriesKey)
     .sort((a, b) => (a.data.seriesOrder ?? 0) - (b.data.seriesOrder ?? 0));
 }
 
-export function getAdjacentSeriesPosts<T extends PostEntry>(posts: T[], current: T) {
+export function getAdjacentSeriesPosts(posts: PostEntry[], current: PostEntry) {
   if (!current.data.series) {
-    return { previous: undefined, next: undefined } as { previous: T | undefined; next: T | undefined };
+    return { previous: undefined, next: undefined };
   }
 
   const seriesPosts = getSeriesPosts(posts, current.data.series);
@@ -103,8 +115,8 @@ export function getAdjacentSeriesPosts<T extends PostEntry>(posts: T[], current:
   };
 }
 
-export function groupPostsBySeries<T extends PostEntry>(posts: T[]) {
-  const groups = new Map<string, T[]>();
+export function groupPostsBySeries(posts: PostEntry[]) {
+  const groups = new Map<string, PostEntry[]>();
 
   for (const post of posts) {
     const key = post.data.series ?? 'standalone';
