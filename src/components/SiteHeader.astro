@@ -1,6 +1,5 @@
 ---
-import ProfileMenu from './ProfileMenu.astro';
-import { siteMeta } from '../data/site';
+import { profileCard, siteMeta } from '../data/site';
 
 interface Props {
   pathname: string;
@@ -38,7 +37,22 @@ const isActive = (href: string) => {
     </div>
 
     <div class="site-nav__tools">
-      <ProfileMenu />
+      <a
+        aria-current={pathname === '/about/' ? 'page' : undefined}
+        class:list={{ 'site-profile-link': true, 'is-active': pathname === '/about/' }}
+        href="/about"
+        aria-label="Open profile page"
+      >
+        <img
+          class="site-profile-link__avatar"
+          src={profileCard.avatar}
+          alt={`${siteMeta.shortTitle} profile avatar`}
+          width="48"
+          height="48"
+          loading="eager"
+          decoding="async"
+        />
+      </a>
     </div>
   </div>
 </header>
@@ -47,15 +61,8 @@ const isActive = (href: string) => {
   const header = document.querySelector('[data-scroll-header]');
   if (header) {
     const media = window.matchMedia('(max-width: 960px)');
-    const profileMenu = header.querySelector('[data-profile-menu]');
     let lastY = window.scrollY;
     let ticking = false;
-
-    const closeProfileMenu = () => {
-      if (profileMenu instanceof HTMLDetailsElement) {
-        profileMenu.open = false;
-      }
-    };
 
     const updateHeader = () => {
       const currentY = window.scrollY;
@@ -64,7 +71,6 @@ const isActive = (href: string) => {
         header.classList.remove('is-hidden');
       } else if (currentY > lastY) {
         header.classList.add('is-hidden');
-        closeProfileMenu();
       } else {
         header.classList.remove('is-hidden');
       }
@@ -79,18 +85,6 @@ const isActive = (href: string) => {
         ticking = true;
       }
     };
-
-    document.addEventListener('click', (event) => {
-      if (profileMenu instanceof HTMLDetailsElement && profileMenu.open && !profileMenu.contains(event.target)) {
-        closeProfileMenu();
-      }
-    });
-
-    document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape') {
-        closeProfileMenu();
-      }
-    });
 
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', updateHeader);
