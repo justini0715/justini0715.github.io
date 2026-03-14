@@ -28,7 +28,7 @@ const { initialPosts = [] } = Astro.props;
 ---
 
 <section id="studio-app" class="section studio-shell-section">
-  <script type="application/json" id="studio-seed">{JSON.stringify(initialPosts)}</script>
+  <script type="application/json" id="studio-seed" set:html={JSON.stringify(initialPosts).replace(/</g, '\\u003c')}></script>
   <div class="container studio-shell studio-shell--editorial">
     <header class="studio-topbar">
       <div class="studio-topbar__identity">
