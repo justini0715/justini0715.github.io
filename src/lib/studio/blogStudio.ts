@@ -1,5 +1,23 @@
 export const BLOG_CATEGORIES = ['42', 'project', 'devlog', 'setup', 'retrospective'] as const;
 export type BlogCategory = (typeof BLOG_CATEGORIES)[number];
+export const STUDIO_COLLECTION_KEYS = ['blog', 'forty-two'] as const;
+export type StudioCollectionKey = (typeof STUDIO_COLLECTION_KEYS)[number];
+
+export const STUDIO_COLLECTION_META: Record<
+  StudioCollectionKey,
+  { directory: string; routeBase: string; label: string }
+> = {
+  blog: {
+    directory: 'src/content/blog',
+    routeBase: '/blog',
+    label: '일반 글'
+  },
+  'forty-two': {
+    directory: 'src/content/forty-two',
+    routeBase: '/42',
+    label: '42 글'
+  }
+};
 
 export const SERIES_PRESETS = [
   { value: '42-core', title: '42 Core', description: 'libft, get_next_line, ft_printf 같은 기초 C 트랙' },
@@ -11,6 +29,8 @@ export const SERIES_PRESETS = [
 export type StudioTemplateKind = 'tech' | '42' | 'blank';
 
 export interface StudioPost {
+  collection: StudioCollectionKey;
+  originalCollection: StudioCollectionKey;
   slug: string;
   originalSlug: string;
   title: string;
@@ -92,6 +112,24 @@ export function seriesTitleFor(value: string) {
   return SERIES_PRESETS.find((series) => series.value === value)?.title ?? '';
 }
 
+export function collectionKeyForCategory(category: BlogCategory) {
+  return category === '42' ? 'forty-two' : 'blog';
+}
+
+export function getCollectionDirectory(collection: StudioCollectionKey) {
+  return STUDIO_COLLECTION_META[collection].directory;
+}
+
+export function getPostRoute(post: Pick<StudioPost, 'category' | 'slug'>) {
+  const routeBase = STUDIO_COLLECTION_META[collectionKeyForCategory(post.category)].routeBase;
+  return `${routeBase}/${post.slug || 'post-slug'}/`;
+}
+
+export function getPostFilePath(post: Pick<StudioPost, 'category' | 'slug'>) {
+  const directory = getCollectionDirectory(collectionKeyForCategory(post.category));
+  return `${directory}/${post.slug || 'post-slug'}.md`;
+}
+
 export function normalizeTags(input: string[] | string) {
   const raw = Array.isArray(input) ? input.join(',') : input;
 
@@ -105,15 +143,19 @@ export function normalizeTags(input: string[] | string) {
 export function createPostTemplate(kind: StudioTemplateKind, seedTitle = ''): StudioPost {
   const baseTitle = kind === '42' ? (seedTitle ? `42 - ${seedTitle}` : '') : seedTitle;
   const slug = baseTitle ? slugifyTitle(baseTitle) : '';
+  const category = kind === '42' ? '42' : 'devlog';
+  const collection = collectionKeyForCategory(category);
 
   return {
+    collection,
+    originalCollection: collection,
     slug,
     originalSlug: '',
     title: baseTitle,
     description: '',
     pubDate: currentDate(),
     updatedDate: '',
-    category: kind === '42' ? '42' : 'devlog',
+    category,
     tags: kind === '42' ? ['42'] : [],
     series: kind === '42' ? '42-core' : '',
     seriesTitle: kind === '42' ? '42 Core' : '',
@@ -156,7 +198,7 @@ function parseInlineArray(value: string) {
   return normalizeTags(result);
 }
 
-export function parsePostFile(fileName: string, markdown: string): StudioPost {
+export function parsePostFile(fileName: string, markdown: string, collection: StudioCollectionKey = 'blog'): StudioPost {
   const normalized = markdown.replace(/\r\n/g, '\n');
   let frontmatterBlock = '';
   let body = normalized;
@@ -181,6 +223,8 @@ export function parsePostFile(fileName: string, markdown: string): StudioPost {
   const category = parseString(fields.get('category') ?? 'devlog');
 
   return {
+    collection,
+    originalCollection: collection,
     slug,
     originalSlug: slug,
     title: parseString(fields.get('title') ?? slug),
@@ -230,9 +274,14 @@ export function serializePost(post: StudioPost) {
 }
 
 export function validatePost(post: StudioPost, posts: StudioPost[]): ValidationIssue[] {
+  const targetCollection = collectionKeyForCategory(post.category);
   const issues: ValidationIssue[] = [];
   const duplicate = posts.find(
-    (candidate) => !candidate.deleted && candidate !== post && candidate.slug.toLowerCase() === post.slug.toLowerCase()
+    (candidate) =>
+      !candidate.deleted &&
+      candidate !== post &&
+      collectionKeyForCategory(candidate.category) === targetCollection &&
+      candidate.slug.toLowerCase() === post.slug.toLowerCase()
   );
 
   if (!post.title.trim()) issues.push({ level: 'error', field: 'title', message: '제목은 필수입니다.' });
@@ -292,8 +341,11 @@ export function collectSeriesStats(posts: StudioPost[]): SeriesStat[] {
 }
 
 export function clonePost(post: StudioPost): StudioPost {
+  const collection = collectionKeyForCategory(post.category);
   return {
     ...post,
+    collection,
+    originalCollection: collection,
     tags: [...post.tags],
     slug: slugifyTitle(`${post.slug}-copy`),
     originalSlug: '',

@@ -13,10 +13,11 @@ export const siteMeta = {
   github: 'https://github.com/justini0715',
   repo: 'https://github.com/justini0715/justini0715.github.io',
   nav: [
-    { href: '/', label: 'Home' },
-    { href: '/about', label: 'About' },
+    { href: '/home', label: 'Home' },
     { href: '/projects', label: 'Projects' },
-    { href: '/blog', label: 'Blog' }
+    { href: '/42', label: '42' },
+    { href: '/blog', label: 'Blog' },
+    { href: '/about', label: 'About' }
   ]
 } as const;
 
@@ -36,6 +37,18 @@ export const currentFocus = [
   'Rebuilding the user-site repo as a source-first Astro project',
   'Publishing 42 assignments in a series-friendly technical blog flow',
   'Curating a portfolio that balances algorithms, graphics, infra, and concurrency'
+];
+
+export const homeNextUp = [
+  '대표 프로젝트 설명과 자료 링크를 최신 상태로 다듬기',
+  '일반 기술 글 중 다음에 보강할 개념 노트 정리하기',
+  '42 허브에서 다음 순서로 읽을 글과 보강할 과제 기록 정리하기'
+];
+
+export const homeFocusBoard = [
+  '프로젝트 흐름은 `/projects`에서, 학습 기록은 `/blog`와 `/42`에서 각자 역할을 분리해 유지하기',
+  '새 기능이 붙더라도 `/home`은 빠른 진입과 현재 상황 요약이 핵심이라는 원칙 유지하기',
+  '현재 보이는 정보는 정적이어도 되지만, 나중에 로컬 기능을 붙이기 쉬운 구조로 유지하기'
 ];
 
 export const stackSummary = [

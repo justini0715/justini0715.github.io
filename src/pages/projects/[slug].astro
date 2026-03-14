@@ -1,0 +1,37 @@
+---
+import { getCollection, render } from 'astro:content';
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import ProjectMetaPanel from '../../components/projects/ProjectMetaPanel.astro';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((project) => ({ params: { slug: project.id }, props: { project } }));
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+---
+
+<ArticleLayout
+  title={project.data.title}
+  description={project.data.description}
+>
+  <section class="page-hero page-hero--post">
+    <div class="container hero__grid">
+      <div class="reading-surface narrow-flow">
+        <p class="eyebrow">{project.data.badge}</p>
+        <h1>{project.data.title}</h1>
+        <p>{project.data.description}</p>
+        <p class="page-kicker">이 페이지는 프로젝트 개요, 핵심 포인트, 사용 스택, 외부 자료 링크를 함께 보는 프로젝트 케이스 뷰다.</p>
+      </div>
+
+      <ProjectMetaPanel project={project} />
+    </div>
+  </section>
+
+  <article class="section">
+    <div class="container prose-shell">
+      <Content />
+    </div>
+  </article>
+</ArticleLayout>

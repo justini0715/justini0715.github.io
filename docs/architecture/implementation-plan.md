@@ -7,8 +7,8 @@
 - Domain target: `https://changwpa.kro.kr`
 
 ## Current Phase
-- Phase: Phase 14 — Public Reading & Typography Polish
-- Branch: `phase/14-public-reading-typography-polish`
+- Phase: Phase 27 — Mobile Nav & Header UX
+- Branch: `phase/27-mobile-nav-and-header-ux`
 - Status: Complete
 
 ## Official Phase List
@@ -26,11 +26,24 @@
 12. Phase 12 — Sitewide UI System Polish
 13. Phase 13 — Content / Copy / SEO Polish
 14. Phase 14 — Public Reading & Typography Polish
+15. Phase 15 — Route / UI Separation
+16. Phase 16 — Layout / Component Split
+17. Phase 17 — Route Compatibility Hardening
+18. Phase 18 — Project / 42 Hub Enrichment
+19. Phase 19 — Layout Chrome Differentiation
+20. Phase 20 — Project Detail Routes
+21. Phase 21 — Domain Article Differentiation
+22. Phase 22 — Home Hub Scaffold
+23. Phase 23 — Blog Article Differentiation
+24. Phase 24 — Home Hub Features
+25. Phase 25 — Projects Hub Features
+26. Phase 26 — 42 / Blog Collection Split
+27. Phase 27 — Mobile Nav & Header UX
 
 ## Current Phase Scope
-- Improve the reading experience on the public site with cleaner technical typography and calmer page surfaces.
-- Refine the main page, portfolio pages, and article reading layouts so content feels more static, precise, and technical.
-- Introduce a cleaner public font system and adjust supporting spacing/rhythm around visible content blocks.
+- Fix the public mobile navigation so it no longer stacks links vertically into a clumsy mobile menu.
+- Add a scroll-aware header behavior on smaller screens so the header gets out of the way while reading.
+- Keep the route/layout split intact while improving the actual mobile browsing experience.
 
 ## Current Phase Non-Scope
 - Replacing the static content architecture with a hosted CMS.
@@ -40,6 +53,18 @@
 - Reworking the already-polished studio beyond compatibility checks after global style changes.
 - Rebuilding the public UI system again immediately after phase 12.
 - Another large copy/SEO rewrite immediately after phase 13.
+- Splitting the underlying content collection into separate physical `blog` and `forty-two` collections in this phase.
+- Reworking the route map again immediately after phase 15.
+- A full content-collection migration; this phase is compatibility-focused only.
+- Adding the user-specific `/home` features that still require separate product decisions.
+- Rewriting the core content model or adding backend features.
+- Reworking blog/42 routing again; this phase is project-detail specific.
+- Reworking the general technical blog article family in the same phase.
+- Implementing backend-driven widgets or persistence for `/home` yet.
+- Adding real persistence or authenticated state for `/home`.
+- Reworking project or 42 article routing again; this phase is blog-article specific.
+- Splitting the 42/blog collections physically in this phase.
+- Reworking the content model again; this phase is header/mobile UX specific.
 
 ## Architecture Summary
 - Astro static output with content collections for blog posts and projects.
@@ -52,17 +77,17 @@
 - blog taxonomy: `42`, `project`, `devlog`, `setup`, `retrospective`.
 
 ## Deliverables Checklist
-- [x] public font system refinement for cleaner technical reading
-- [x] article/prose reading surface polish
-- [x] homepage/projects/blog content block readability improvements
-- [x] Phase 14 verification completed
+- [x] mobile nav links no longer stack vertically
+- [x] horizontal mobile nav scrolling enabled
+- [x] mobile scroll-down header hide behavior added
+- [x] Phase 27 verification completed
 
 ## Verification Plan
-1. Run local build and type checks after the reading/typography polish pass.
-2. Verify the public routes `/`, `/about`, `/projects`, `/blog`, `/blog/[slug]`, and `/404` still render with the refined typography and spacing.
-3. Confirm cards, prose blocks, and route intros feel calmer, cleaner, and more technical than before.
-4. Re-check `/studio` after any shared typography/style adjustments for compatibility.
-5. Confirm production `/studio` remains locked and the public routes remain static-output compatible.
+1. Run local build and type checks after the mobile-nav pass.
+2. Verify the public header keeps nav links horizontally accessible on smaller screens.
+3. Verify the header hides on downward scroll and reappears when scrolling up on mobile widths.
+4. Re-check `/studio` after shared header/style changes for compatibility.
+5. Confirm the public routes remain static-output compatible.
 
 ## Work Log
 - Cloned the remote user-site repository into the writable workspace.
@@ -137,6 +162,49 @@
 - Shifted the public reading system toward a cleaner technical sans/mono pairing and flatter surfaces so the main page, project pages, and article pages feel more static, precise, and less glossy.
 - Tightened shared chrome labels (`systems notes · project logs · static publishing`, `GitHub ↗`, `Open note →`, `status · ...`) so metadata and navigation read more like a technical publication.
 - Reworked the global spacing, radii, shadows, and prose surfaces in `global.css` so the visible reading routes feel quieter and more legible without touching the studio-specific local writing tool.
+- Started `phase/15-route-ui-separation` after the user approved the route split plan and explicitly clarified distinct jobs for landing, home, projects, 42, and blog.
+- Split `/` and `/home` so `/` now works as a stronger showcase landing page while `/home` becomes the personal overview hub with featured projects, recent technical notes, and recent 42 entries.
+- Added a dedicated `/42` hub and `/42/[slug]` article route without splitting the underlying content collection yet; 42 routing is now derived from `category === '42'`.
+- Limited `/blog` and `/blog/[slug]` to non-42 technical posts and updated shared post links/helpers so 42 entries route to `/42/...` instead of `/blog/...`.
+- Updated shared navigation and route-class logic so the public shell now understands `/home`, `/42`, and the landing route as separate surfaces.
+- Started `phase/16-layout-component-split` immediately after the route split to stop the new route families from duplicating the same hero/aside patterns in each page file.
+- Extracted `PublicShell` out of the old `MainLayout` and introduced role-based wrappers (`LandingLayout`, `HubLayout`, `ArchiveLayout`, `ArticleLayout`) so the route families now have clearer structural boundaries.
+- Extracted shared route-building blocks (`SplitHero`, `UtilityListPanel`, `LandingEntryCard`) to reduce repeated landing/home/archive/article page markup and make later UI iteration cheaper.
+- Started `phase/17-route-compatibility-hardening` immediately after the split because old `/blog/42-*` links would otherwise break once the dedicated `/42` route family went live.
+- Added explicit legacy notice/redirect pages for the currently published 42 slugs under their old `/blog/...` paths, pointing readers to the new canonical `/42/...` routes.
+- Updated sitemap filtering so those compatibility pages are not promoted as first-class archive pages.
+- Started `phase/18-project-42-hub-enrichment` immediately after route compatibility hardening so the new `/projects` and `/42` routes feel like actual hubs instead of shallow archive pages.
+- Added project hub summary metrics plus badge-grouped lanes so `/projects` now reads more like an overview / trajectory surface rather than only one flat grid.
+- Added 42 hub summary metrics plus ordered series-group sections so `/42` now exposes both archive browsing and reading-order context.
+- Added supporting content helpers for grouping projects by badge and 42 posts by series so the hub pages can keep their logic smaller and more reusable.
+- Started `phase/19-layout-chrome-differentiation` so the new route-specific layouts stop behaving like thin wrappers and instead carry visible route-family context.
+- Added a hub quick-link row to `HubLayout`, an archive switcher to `ArchiveLayout`, and a context/back bar to `ArticleLayout`.
+- Started `phase/20-project-detail-routes` so the project hub can lead into full internal project dossiers instead of stopping at external repository links.
+- Added `/projects/[slug]` routes, internal project case links from project cards, and a project-detail article-style reading surface with context metadata and repository/demo links.
+- Started `phase/21-domain-article-differentiation` so project detail pages and 42 detail pages stop feeling like the same generic article type with only text changes.
+- Added `ProjectMetaPanel` and `FortyTwoMetaPanel` so project cases and 42 entries now expose different metadata structures and context density.
+- Started `phase/22-home-hub-scaffold` to make `/home` a more realistic personal hub shell before any user-specific functions exist.
+- Added quick-access cards, a current-board summary, and a home scaffold panel so `/home` can grow into a richer personal control surface without another structural rewrite.
+- Started `phase/23-blog-article-differentiation` so the general technical blog article family also gets its own article-side context instead of remaining the default leftover article shape.
+- Added `TechnicalArticleMetaPanel` so project / 42 / general technical articles now each have their own article-side metadata pattern.
+- Started `phase/24-home-hub-features` to turn `/home` from a structural shell into a more useful personal start page.
+- Added static-first home feature data in `site.ts`, strengthened the current-board module, and introduced a “Next to update” block so `/home` now behaves more like a practical personal hub even without backend state.
+- Started `phase/25-projects-hub-features` to make `/projects` read more like a status/materials hub instead of only an archive grid.
+- Added project-level `state`, `focus`, `nextStep`, and `updatedDate` fields to the project content model and filled them into the existing project content files.
+- Added state-based grouping to the `/projects` hub and expanded project detail context so visitors can see what is stable, what is archived, and what should be updated next.
+- Started `phase/26-collection-split-prep` to physically separate 42 content from the general blog content source while keeping the public route split intact.
+- Added a dedicated `fortyTwo` collection, moved the 42 markdown files into `src/content/forty-two/`, and updated helpers/routes so `/42/*` reads from the new collection while `/blog/*` reads only the general blog collection.
+- Updated the writing studio so it can seed, load, preview, and save both `blog` and `forty-two` content families to the correct directories and public routes.
+- Started `phase/27-mobile-nav-and-header-ux` after noticing that the mobile header still stacked navigation awkwardly and stayed fixed on screen while reading.
+- Changed the mobile nav to a horizontal scrollable chip row and added a small scroll-direction-aware hide/show behavior for the header on mobile widths.
+- Started `phase/26-collection-split-prep` to physically separate 42 content from the general blog content source while keeping the already-shipped route split intact.
+- Added a dedicated `fortyTwo` content collection, moved the 42 markdown files into `src/content/forty-two/`, and updated shared content helpers so `/42/*` reads from the new collection while `/blog/*` reads from the general blog collection only.
+- Aligned the local writing studio to the split content model by teaching it to seed, load, preview, and save both `blog` and `forty-two` content families safely.
+- Started `phase/22-home-hub-scaffold` to make `/home` a more realistic personal hub shell before any user-specific functions exist.
+- Added quick-access cards, a current board summary, and a home scaffold panel so `/home` can evolve into a richer personal control surface without another structural rewrite.
+- Started `phase/21-domain-article-differentiation` so project detail pages and 42 detail pages stop looking like the same generic article type with only text changes.
+- Added `ProjectMetaPanel` and `FortyTwoMetaPanel` so project cases and 42 entries now expose different metadata structures and context density.
+- Kept the general technical blog article surface unchanged while making project and 42 article families more distinct.
 
 ## Verification Results
 - `npm install -D astro @astrojs/sitemap @astrojs/check typescript` → dependencies installed successfully.
@@ -200,6 +268,108 @@
 - `npm run dev -- --host 127.0.0.1 --port 4368` outside the sandbox + `curl http://127.0.0.1:4368/studio` → confirmed `/studio` still renders the compact local-only writing surface markers after the shared reading/typography changes.
 - `grep dist/index.html dist/about/index.html dist/projects/index.html dist/blog/index.html dist/blog/42-push-swap/index.html` after phase-14 typography polish → confirmed the new technical reading tone, card labels, and refined public metadata are present in built output.
 - `grep dist/studio/index.html` after phase-14 typography polish → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- `npm run check` after phase-15 route split → success (`tsc --noEmit`).
+- `npm run build` after phase-15 route split → success; built `/`, `/home`, `/projects`, `/42`, `/42/[slug]`, `/blog`, `/blog/[slug]`, `/about`, `404`, and `/studio`.
+- `npx tsc --noEmit --project tsconfig.json` via LSP diagnostics after phase-15 route split → 0 errors, 0 warnings.
+- `grep dist/index.html dist/home/index.html` after phase-15 route split → confirmed the new landing selection surface and the separate personal home hub.
+- `grep dist/42/index.html dist/blog/index.html` after phase-15 route split → confirmed `/42` is its own hub and `/blog` points 42 readers to `/42` while listing only non-42 posts.
+- `grep dist/studio/index.html` after phase-15 route split → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- `npm run check` after phase-16 layout/component split → success (`tsc --noEmit`).
+- `npm run build` after phase-16 layout/component split → success; built `/`, `/home`, `/projects`, `/42`, `/42/[slug]`, `/blog`, `/blog/[slug]`, `/about`, `404`, and `/studio`.
+- `npx tsc --noEmit --project tsconfig.json` via LSP diagnostics after phase-16 layout/component split → 0 errors, 0 warnings.
+- `find src/layouts -maxdepth 1 -type f` after phase-16 → confirmed `PublicShell`, `LandingLayout`, `HubLayout`, `ArchiveLayout`, and `ArticleLayout` now exist alongside `MainLayout`.
+- `grep dist/index.html dist/home/index.html dist/42/index.html dist/blog/index.html` after phase-16 → confirmed landing/home/archive routes still render their intended split surfaces after component extraction.
+- `grep dist/studio/index.html` after phase-16 layout/component split → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- `npm run check` after phase-17 compatibility hardening → success (`tsc --noEmit`).
+- `npm run build` after phase-17 compatibility hardening → success; built the full split route set plus `dist/blog/42-push-swap/index.html` and `dist/blog/42-philosopher/index.html` compatibility pages.
+- `npx tsc --noEmit --project tsconfig.json` via LSP diagnostics after phase-17 compatibility hardening → 0 errors, 0 warnings.
+- `grep dist/blog/42-push-swap/index.html dist/blog/42-philosopher/index.html` after phase-17 → confirmed both legacy pages render redirect/notice surfaces pointing to the new `/42/...` routes.
+- `grep dist/studio/index.html` after phase-17 compatibility hardening → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- `npm run check` after phase-18 hub enrichment → success (`tsc --noEmit`).
+- `npm run build` after phase-18 hub enrichment → success; rebuilt the full split route set plus the existing compatibility pages and `/studio`.
+- `npx tsc --noEmit --project tsconfig.json` via LSP diagnostics after phase-18 hub enrichment → 0 errors, 0 warnings.
+- `grep dist/projects/index.html` after phase-18 → confirmed project hub summary metrics and grouped project lanes render in the built output.
+- `grep dist/42/index.html` after phase-18 → confirmed 42 hub summary metrics and ordered reading-lane sections render in the built output.
+- `grep dist/studio/index.html` after phase-18 hub enrichment → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- `npm run check` after phase-19 layout chrome differentiation → success (`tsc --noEmit`).
+- `npm run build` after phase-19 layout chrome differentiation → success; rebuilt the full split route set plus the compatibility pages and `/studio`.
+- `npx tsc --noEmit --project tsconfig.json` via LSP diagnostics after phase-19 → 0 errors, 0 warnings.
+- `grep dist/home/index.html dist/projects/index.html dist/42/index.html dist/blog/rebuilding-a-legacy-github-pages-site-with-astro/index.html dist/42/42-push-swap/index.html` after phase-19 → confirmed the new hub/archive/article chrome markers render in built output.
+- `grep dist/studio/index.html` after phase-19 layout chrome differentiation → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- `npm run check` after phase-20 project detail routes → success (`tsc --noEmit`).
+- `npm run build` after phase-20 project detail routes → success; built `/projects/[slug]` detail routes for every current project plus the existing split route set and `/studio`.
+- `npx tsc --noEmit --project tsconfig.json` via LSP diagnostics after phase-20 project detail routes → 0 errors, 0 warnings.
+- `find dist/projects -maxdepth 2 -type f` after phase-20 → confirmed project detail routes now build under `/projects/inception/`, `/projects/cub3d/`, `/projects/philosopher/`, and `/projects/push-swap/`.
+- `grep dist/projects/index.html dist/projects/inception/index.html` after phase-20 → confirmed project cards now link to `Case detail →` and project detail pages expose `Project case` context with internal reading surfaces.
+- `grep dist/studio/index.html` after phase-20 project detail routes → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- `npm run check` after phase-21 domain article differentiation → success (`tsc --noEmit`).
+- `npm run build` after phase-21 domain article differentiation → success; rebuilt the full split route set, project detail routes, compatibility pages, and `/studio`.
+- `npx tsc --noEmit --project tsconfig.json` via LSP diagnostics after phase-21 → 0 errors, 0 warnings.
+- `grep dist/projects/inception/index.html dist/42/42-push-swap/index.html` after phase-21 → confirmed project detail pages now render `Project context` metadata panels while 42 detail pages render richer `Entry context` chips including order/difficulty.
+- `grep dist/studio/index.html` after phase-21 domain article differentiation → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- `npm run check` after phase-22 home hub scaffold → success (`tsc --noEmit`).
+- `npm run build` after phase-22 home hub scaffold → success; rebuilt the full split route set, project detail routes, compatibility pages, and `/studio`.
+- `grep dist/home/index.html` after phase-22 → confirmed `/home` now renders quick-access cards, current-board items, and a dedicated home scaffold panel.
+- `grep dist/studio/index.html` after phase-22 home hub scaffold → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- `npm run check` after phase-23 blog article differentiation → success (`tsc --noEmit`).
+- `npm run build` after phase-23 blog article differentiation → success; rebuilt the full split route set, project detail routes, compatibility pages, and `/studio`.
+- `npx tsc --noEmit --project tsconfig.json` via LSP diagnostics after phase-23 → 0 errors, 0 warnings.
+- `grep dist/blog/rebuilding-a-legacy-github-pages-site-with-astro/index.html` after phase-23 → confirmed the general technical article route now renders its own `Entry context` panel and blog-specific reading kicker.
+- `grep dist/studio/index.html` after phase-23 blog article differentiation → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- `npm run check` after phase-24 home hub features → success (`tsc --noEmit`).
+- `npm run build` after phase-24 home hub features → success; rebuilt the full split route set, project detail routes, compatibility pages, and `/studio`.
+- `grep dist/home/index.html` after phase-24 → confirmed `/home` now shows strengthened current-board values plus a `Next to update` section alongside the quick-access hub structure.
+- `grep dist/studio/index.html` after phase-24 home hub features → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- `npm run check` after phase-25 projects hub features → success (`tsc --noEmit`).
+- `npm run build` after phase-25 projects hub features → success; rebuilt the full split route set, project detail routes, compatibility pages, and `/studio`.
+- `npx tsc --noEmit --project tsconfig.json` via LSP diagnostics after phase-25 → 0 errors, 0 warnings.
+- `grep dist/projects/index.html dist/projects/inception/index.html` after phase-25 → confirmed `/projects` now renders project-state grouping and project detail pages expose `state`, `focus`, `next step`, and `updated` metadata.
+- `grep dist/studio/index.html` after phase-25 projects hub features → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- `npm run check` after phase-26 collection split → success (`tsc --noEmit`).
+- `npm run build` after phase-26 collection split → success; rebuilt the full split route set, project detail routes, compatibility pages, and `/studio`.
+- `npx tsc --noEmit --project tsconfig.json` via LSP diagnostics after phase-26 → 0 errors, 0 warnings.
+- `find src/content -maxdepth 2 -type f` after phase-26 → confirmed 42 markdown now lives under `src/content/forty-two/` while general notes remain in `src/content/blog/`.
+- `find dist/42 dist/blog -maxdepth 2 -type f` after phase-26 → confirmed `/42/*` and `/blog/*` still build as expected, with legacy `/blog/42-*` compatibility pages preserved.
+- source checks against `src/pages/studio.astro`, `src/components/WritingStudioApp.astro`, and `src/lib/studio/blogStudio.ts` after phase-26 → confirmed studio now points 42 content to `src/content/forty-two` and `/42/...` while keeping general notes on `src/content/blog` and `/blog/...`.
+- `grep dist/studio/index.html` after phase-26 collection split → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- `npm run check` after phase-27 mobile nav/header UX → success (`tsc --noEmit`).
+- `npm run build` after phase-27 mobile nav/header UX → success; rebuilt the full split route set, project detail routes, compatibility pages, and `/studio`.
+- `grep src/components/SiteHeader.astro src/styles/global.css` after phase-27 → confirmed the new scroll-aware mobile header hook and horizontal nav chip behavior are present in source.
+- `grep dist/studio/index.html` after phase-27 mobile nav/header UX → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- `npm run check` after phase-26 collection split → success (`tsc --noEmit`).
+- `npm run build` after phase-26 collection split → success; rebuilt the full split route set, project detail routes, compatibility pages, and `/studio`.
+- `npx tsc --noEmit --project tsconfig.json` via LSP diagnostics after phase-26 → 0 errors, 0 warnings.
+- `find src/content -maxdepth 2 -type f` after phase-26 → confirmed 42 markdown now lives under `src/content/forty-two/` while general notes remain in `src/content/blog/`.
+- `find dist/42 dist/blog -maxdepth 2 -type f` after phase-26 → confirmed `/42/*` and `/blog/*` still build as expected, with legacy `/blog/42-*` compatibility pages preserved.
+- source checks against `src/pages/studio.astro`, `src/components/WritingStudioApp.astro`, and `src/lib/studio/blogStudio.ts` after phase-26 → confirmed studio now points 42 content to `src/content/forty-two` and `/42/...` while keeping general notes on `src/content/blog` and `/blog/...`.
+- `grep dist/studio/index.html` after phase-26 collection split → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- `npm run check` after phase-22 home hub scaffold → success (`tsc --noEmit`).
+- `npm run build` after phase-22 home hub scaffold → success; rebuilt the full split route set, project detail routes, compatibility pages, and `/studio`.
+- `grep dist/home/index.html` after phase-22 → confirmed `/home` now renders quick-access cards, current-board items, and a dedicated home scaffold panel.
+- `grep dist/studio/index.html` after phase-22 home hub scaffold → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- `npm run check` after phase-23 blog article differentiation → success (`tsc --noEmit`).
+- `npm run build` after phase-23 blog article differentiation → success; rebuilt the full split route set, project detail routes, compatibility pages, and `/studio`.
+- `npx tsc --noEmit --project tsconfig.json` via LSP diagnostics after phase-23 → 0 errors, 0 warnings.
+- `grep dist/blog/rebuilding-a-legacy-github-pages-site-with-astro/index.html` after phase-23 → confirmed the general technical article route now renders its own `Entry context` panel and blog-specific reading kicker.
+- `grep dist/studio/index.html` after phase-23 blog article differentiation → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- `npm run check` after phase-22 home hub scaffold → success (`tsc --noEmit`).
+- `npm run build` after phase-22 home hub scaffold → success; rebuilt the full split route set, project detail routes, compatibility pages, and `/studio`.
+- `grep dist/home/index.html` after phase-22 → confirmed `/home` now renders quick-access cards, current-board items, and a dedicated home scaffold panel.
+- `grep dist/studio/index.html` after phase-22 home hub scaffold → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- `npm run check` after phase-21 domain article differentiation → success (`tsc --noEmit`).
+- `npm run build` after phase-21 domain article differentiation → success; rebuilt the full split route set, project detail routes, compatibility pages, and `/studio`.
+- `npx tsc --noEmit --project tsconfig.json` via LSP diagnostics after phase-21 → 0 errors, 0 warnings.
+- `grep dist/projects/inception/index.html dist/42/42-push-swap/index.html` after phase-21 → confirmed project detail pages now render `Project context` metadata panels while 42 detail pages render richer `Entry context` chips including order/difficulty.
+- `grep dist/studio/index.html` after phase-21 domain article differentiation → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- `npx tsc --noEmit --project tsconfig.json` via LSP diagnostics after phase-19 → 0 errors, 0 warnings.
+- `grep dist/home/index.html dist/projects/index.html dist/42/index.html dist/blog/rebuilding-a-legacy-github-pages-site-with-astro/index.html dist/42/42-push-swap/index.html` after phase-19 → confirmed the new hub/archive/article chrome markers render in built output.
+- `grep dist/studio/index.html` after phase-19 layout chrome differentiation → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- `npm run check` after phase-20 project detail routes → success (`tsc --noEmit`).
+- `npm run build` after phase-20 project detail routes → success; built `/projects/[slug]` detail routes for every current project plus the existing split route set and `/studio`.
+- `npx tsc --noEmit --project tsconfig.json` via LSP diagnostics after phase-20 project detail routes → 0 errors, 0 warnings.
+- `find dist/projects -maxdepth 2 -type f` after phase-20 → confirmed project detail routes now build under `/projects/inception/`, `/projects/cub3d/`, `/projects/philosopher/`, and `/projects/push-swap/`.
+- `grep dist/projects/index.html dist/projects/inception/index.html` after phase-20 → confirmed project cards now link to `Case detail →` and project detail pages expose `Project case` context with internal reading surfaces.
+- `grep dist/studio/index.html` after phase-20 project detail routes → production output still contains the locked `/studio` notice and excludes the active editor markers.
 
 ## Known Blockers / User-Action-Required Items
 - GitHub push/PR and Pages settings updates will require the user's GitHub auth later.

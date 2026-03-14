@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import { getPostPath } from '../lib/content';
 
 interface Props {
   post: CollectionEntry<'blog'>;
@@ -7,6 +8,7 @@ interface Props {
 
 const { post } = Astro.props;
 const formattedDate = new Intl.DateTimeFormat('en', { dateStyle: 'medium' }).format(post.data.pubDate);
+const postPath = getPostPath(post);
 ---
 
 <article class="card post-card">
@@ -15,7 +17,7 @@ const formattedDate = new Intl.DateTimeFormat('en', { dateStyle: 'medium' }).for
     {post.data.seriesTitle && <span class="muted">series · {post.data.seriesTitle}</span>}
   </div>
   <div>
-    <h3><a class="post-card__title" href={`/blog/${post.id}/`}>{post.data.title}</a></h3>
+    <h3><a class="post-card__title" href={postPath}>{post.data.title}</a></h3>
     <p class="post-card__summary">{post.data.description}</p>
   </div>
   <div class="card__footer post-card__footer">
@@ -27,6 +29,6 @@ const formattedDate = new Intl.DateTimeFormat('en', { dateStyle: 'medium' }).for
         </ul>
       )}
     </div>
-    <a class="post-card__link" href={`/blog/${post.id}/`}>Open note →</a>
+    <a class="post-card__link" href={postPath}>Open note →</a>
   </div>
 </article>

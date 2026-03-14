@@ -2,6 +2,7 @@
 title: "cub3d"
 description: "A MiniLibX-powered raycasting project with `.cub` parsing, map preprocessing, texture lookup, and a custom rendering loop."
 summary: "A graphics-heavy 42 project that adds visual variety and low-level rendering detail to the portfolio."
+updatedDate: 2026-03-13
 stack:
   - C
   - MiniLibX
@@ -10,6 +11,9 @@ stack:
   - Texture mapping
 badge: "42 graphics"
 status: "Archived implementation imported into template layout"
+state: "stable"
+focus: "Rendering flow, parser structure, and why the project matters visually."
+nextStep: "Document more of the rendering pipeline and map preprocessing tradeoffs."
 featured: true
 order: 2
 repoUrl: "https://github.com/justini0715/cub3d"

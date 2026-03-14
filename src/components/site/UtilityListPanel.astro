@@ -1,0 +1,23 @@
+---
+interface Props {
+  eyebrow: string;
+  title?: string;
+  description?: string;
+  items?: string[];
+  className?: string;
+}
+
+const { eyebrow, title, description, items = [], className = 'panel utility-panel' } = Astro.props;
+---
+
+<aside class={className}>
+  <p class="eyebrow">{eyebrow}</p>
+  {title && <h2>{title}</h2>}
+  {description && <p class="meta-note">{description}</p>}
+  {items.length > 0 && (
+    <ul class="utility-list">
+      {items.map((item) => <li>{item}</li>)}
+    </ul>
+  )}
+  <slot />
+</aside>

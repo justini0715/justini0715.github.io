@@ -70,3 +70,17 @@ Then open the localhost URL printed by `npm run dev`, add `/studio`, connect the
 - `phase/12-sitewide-ui-system-polish`
 - `phase/13-content-copy-seo-polish`
 - `phase/14-public-reading-typography-polish`
+- `phase/15-route-ui-separation`
+- `phase/16-layout-component-split`
+- `phase/17-route-compatibility-hardening`
+- `phase/18-project-42-hub-enrichment`
+- `phase/19-layout-chrome-differentiation`
+- `phase/20-project-detail-routes`
+- `phase/21-domain-article-differentiation`
+- `phase/22-home-hub-scaffold`
+- `phase/23-blog-article-differentiation`
+- `phase/24-home-hub-features`
+- `phase/25-projects-hub-features`
+- `phase/26-collection-split-prep`
+- `phase/27-mobile-nav-and-header-ux`
+- `phase/26-collection-split-prep`

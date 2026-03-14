@@ -1,21 +1,30 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 
+const postSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  pubDate: z.coerce.date(),
+  updatedDate: z.coerce.date().optional(),
+  category: z.enum(['42', 'project', 'devlog', 'setup', 'retrospective']),
+  tags: z.array(z.string()).default([]),
+  series: z.string().optional(),
+  seriesTitle: z.string().optional(),
+  seriesOrder: z.number().int().optional(),
+  difficulty: z.string().optional(),
+  featured: z.boolean().default(false),
+  draft: z.boolean().default(false)
+});
+
 const blog = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/blog' }),
-  schema: z.object({
-    title: z.string(),
-    description: z.string(),
-    pubDate: z.coerce.date(),
-    updatedDate: z.coerce.date().optional(),
-    category: z.enum(['42', 'project', 'devlog', 'setup', 'retrospective']),
-    tags: z.array(z.string()).default([]),
-    series: z.string().optional(),
-    seriesTitle: z.string().optional(),
-    seriesOrder: z.number().int().optional(),
-    difficulty: z.string().optional(),
-    featured: z.boolean().default(false),
-    draft: z.boolean().default(false)
+  schema: postSchema
+});
+
+const fortyTwo = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/forty-two' }),
+  schema: postSchema.extend({
+    category: z.literal('42')
   })
 });
 
@@ -25,9 +34,13 @@ const projects = defineCollection({
     title: z.string(),
     description: z.string(),
     summary: z.string().optional(),
+    updatedDate: z.coerce.date().optional(),
     stack: z.array(z.string()),
     badge: z.string(),
     status: z.string(),
+    state: z.enum(['active', 'stable', 'archived', 'planned']).default('stable'),
+    focus: z.string().optional(),
+    nextStep: z.string().optional(),
     featured: z.boolean().default(false),
     order: z.number().int().optional(),
     repoUrl: z.string().url(),
@@ -37,4 +50,4 @@ const projects = defineCollection({
   })
 });
 
-export const collections = { blog, projects };
+export const collections = { blog, fortyTwo, projects };

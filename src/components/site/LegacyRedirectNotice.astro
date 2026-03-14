@@ -1,0 +1,30 @@
+---
+interface Props {
+  title: string;
+  target: string;
+  description?: string;
+}
+
+const {
+  title,
+  target,
+  description = 'This page moved to a new route. You will be redirected automatically.'
+} = Astro.props;
+---
+
+<section class="page-hero page-hero--error">
+  <div class="container narrow-flow">
+    <p class="eyebrow">Legacy route</p>
+    <h1>{title}</h1>
+    <p>{description}</p>
+    <div class="hero__actions">
+      <a class="button" href={target}>새 경로로 이동</a>
+      <a class="button button--ghost" href="/42">42 허브 열기</a>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  const target = document.querySelector('[href^="/42/"]')?.getAttribute('href');
+  if (target) window.location.replace(target);
+</script>

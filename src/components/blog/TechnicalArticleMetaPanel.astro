@@ -1,0 +1,28 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+  formattedDate: string;
+  seriesContext: string;
+}
+
+const { post, formattedDate, seriesContext } = Astro.props;
+---
+
+<aside class="panel utility-panel technical-article-meta-panel">
+  <p class="eyebrow">Entry context</p>
+  <p class="meta-note">{seriesContext}</p>
+
+  <div class="meta-chip-grid">
+    <span class="chip">{formattedDate}</span>
+    <span class="chip">{post.data.category}</span>
+    {post.data.seriesTitle && <span class="chip">{post.data.seriesTitle}</span>}
+  </div>
+
+  {post.data.tags.length > 0 && (
+    <ul class="inline-tags">
+      {post.data.tags.map((tag) => <li>{tag}</li>)}
+    </ul>
+  )}
+</aside>

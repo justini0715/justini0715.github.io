@@ -1,0 +1,32 @@
+---
+import MainLayout from './MainLayout.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  imageAlt?: string;
+}
+
+const { title, description, image, imageAlt } = Astro.props;
+const hubLinks = [
+  { href: '/home', label: 'Home' },
+  { href: '/projects', label: 'Projects' },
+  { href: '/42', label: '42' },
+  { href: '/blog', label: 'Blog' }
+] as const;
+---
+
+<MainLayout title={title} description={description} image={image} imageAlt={imageAlt}>
+  <section class="layout-utility-bar">
+    <div class="container route-link-row">
+      <p class="eyebrow">Hub links</p>
+      <div class="route-link-row__links">
+        {hubLinks.map((item) => (
+          <a class="route-link-chip" href={item.href}>{item.label}</a>
+        ))}
+      </div>
+    </div>
+  </section>
+  <slot />
+</MainLayout>

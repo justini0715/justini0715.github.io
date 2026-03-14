@@ -2,6 +2,7 @@
 title: "push_swap"
 description: "A constrained sorting project where performance is measured by how efficiently stack operations are used."
 summary: "An algorithmic case study centered on parsing, move minimization, and scoring-driven tradeoffs."
+updatedDate: 2026-03-13
 stack:
   - C
   - Algorithms
@@ -10,6 +11,9 @@ stack:
   - CLI tooling
 badge: "42 systems"
 status: "Archived source integrated into shared repo layout"
+state: "archived"
+focus: "Algorithmic tradeoffs and the scoring-driven move budget story."
+nextStep: "Refine the strategy-band explanation and add a clearer optimization retrospective."
 featured: false
 order: 4
 repoUrl: "https://github.com/justini0715/push_swap"

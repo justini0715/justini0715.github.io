@@ -1,116 +1,69 @@
 ---
-import MainLayout from '../layouts/MainLayout.astro';
-import SectionTitle from '../components/SectionTitle.astro';
-import ProjectCard from '../components/ProjectCard.astro';
-import PostCard from '../components/PostCard.astro';
-import { focusAreas, siteMeta, strengths, writingPrinciples } from '../data/site';
-import { getFeaturedProjects, getRecentPosts } from '../lib/content';
+import LandingLayout from '../layouts/LandingLayout.astro';
+import SplitHero from '../components/site/SplitHero.astro';
+import LandingEntryCard from '../components/landing/LandingEntryCard.astro';
+import { siteMeta } from '../data/site';
 
-const featuredProjects = await getFeaturedProjects(3);
-const recentPosts = await getRecentPosts(4);
+const entryLanes = [
+  {
+    href: '/home',
+    eyebrow: 'Personal hub',
+    title: '나만의 홈',
+    description: '내가 지금 뭘 만들고 있는지, 어떤 흐름으로 사이트를 쓰고 있는지 가장 먼저 보는 개인 허브.'
+  },
+  {
+    href: '/projects',
+    eyebrow: 'Project directory',
+    title: 'Projects',
+    description: '현재 진행하는 개발 프로젝트의 추이, 개요, 그리고 참고 자료를 프로젝트 단위로 정리한 공간.'
+  },
+  {
+    href: '/42',
+    eyebrow: '42 archive',
+    title: '42',
+    description: '42 과제들을 시리즈와 흐름 중심으로 모아둔 전용 허브. 과제별 맥락과 연결을 따라 읽기 좋게 구성.'
+  },
+  {
+    href: '/blog',
+    eyebrow: 'Study notebook',
+    title: 'Blog',
+    description: '알고리즘, 네트워크, 시스템 프로그래밍, 웹 개발 개념을 개발하면서 정리하는 학습 노트 아카이브.'
+  }
+] as const;
 ---
 
-<MainLayout
-  title="Developer portfolio, 42 projects, and technical blog"
-  description="Developer portfolio and technical blog with 42 project writeups, systems programming notes, concurrency lessons, infrastructure work, and source-first Astro publishing."
+<LandingLayout
+  title="Developer showcase landing"
+  description="changwpa landing page for choosing between the personal home, project directory, 42 archive, and technical study blog."
 >
-  <section class="hero hero--home">
-    <div class="container hero__grid">
-      <div class="narrow-flow">
-        <p class="eyebrow">Developer portfolio · 42 projects · technical blog</p>
-        <h1>Developer portfolio, 42 project writeups, and technical posts in one source-first site.</h1>
-        <p class="hero__lede">{siteMeta.intro}</p>
-        <p class="hero-microcopy">{siteMeta.statusLine}</p>
-        <div class="hero__actions">
-          <a class="button" href="/projects">View projects</a>
-          <a class="button button--ghost" href="/blog">Read technical posts</a>
-        </div>
-      </div>
-
-      <aside class="hero-note archive-panel">
-        <div>
-          <p class="eyebrow">What you will find here</p>
-          <h2>Case studies and writeups grounded in real repository work.</h2>
-          <p class="page-kicker">
-            Expect 42 assignments, C and systems programming notes, debugging lessons, infrastructure work, and source-first web publishing experiments.
-          </p>
-        </div>
-        <ul class="utility-list">
-          {focusAreas.map((item) => <li>{item}</li>)}
-        </ul>
-      </aside>
+  <SplitHero
+    sectionClass="hero hero--landing"
+    eyebrow="Developer showcase"
+    title="개발자로서의 방향, 프로젝트, 42 기록, 기술 노트를 한눈에 고를 수 있는 시작점."
+    description="이 페이지는 설명을 길게 늘어놓기보다, 지금 보고 싶은 영역으로 바로 들어가게 만드는 진입점이다."
+    panelEyebrow="Quick read"
+    panelItems={[
+      '프로젝트를 먼저 보고 싶다면 Projects',
+      '42 흐름을 보고 싶다면 42',
+      '공부한 내용을 읽고 싶다면 Blog',
+      '전체 요약과 현재 흐름은 Home'
+    ]}
+    panelClassName="hero-note landing-shell__note"
+  >
+    <Fragment slot="body">
+      <p class="hero-microcopy">{siteMeta.statusLine}</p>
+    </Fragment>
+    <div slot="actions" class="hero__actions">
+      <a class="button" href="/home">나만의 홈 열기</a>
+      <a class="button button--ghost" href={siteMeta.github} target="_blank" rel="noreferrer">GitHub ↗</a>
     </div>
-  </section>
+  </SplitHero>
 
   <section class="section">
-    <div class="container two-column">
-      <article class="panel utility-panel">
-        <p class="eyebrow">What this site optimizes for</p>
-        <h2>Fast context for developers who want technical signal, not filler.</h2>
-        <p>
-          Each page aims to answer the practical questions quickly: what the project was, what constraints mattered, what broke, and what changed after the first pass.
-        </p>
-      </article>
-
-      <div class="feature-grid feature-grid--compact">
-        {strengths.map((item) => (
-          <article class="card stat-card">
-            <p>{item}</p>
-          </article>
-        ))}
-      </div>
+    <div class="container landing-grid">
+      {entryLanes.map((lane) => (
+        <LandingEntryCard {...lane} />
+      ))}
     </div>
   </section>
-
-  <section class="section">
-    <div class="container">
-      <SectionTitle
-        eyebrow="Featured work"
-        title="Repository-backed project cases with different technical textures"
-        description="Infrastructure, graphics, concurrency, and algorithmic work presented as focused developer case studies rather than a flat repo grid."
-      />
-      <div class="card-grid">
-        {featuredProjects.map((project) => <ProjectCard project={project} />)}
-      </div>
-    </div>
-  </section>
-
-  <section class="section section--tint">
-    <div class="container">
-      <SectionTitle
-        eyebrow="Recent writing"
-        title="Technical posts and 42 writeups collected in one readable blog archive"
-        description="Setup notes, retrospectives, debugging lessons, and assignment writeups stay connected without losing their own context."
-      />
-      <div class="card-grid">
-        {recentPosts.length ? (
-          recentPosts.map((post) => <PostCard post={post} />)
-        ) : (
-          <article class="card empty-state">
-            <h3>Launch posts are next</h3>
-            <p>
-              The structure already supports categories, tags, series ordering, and draft control. The next phase fills it with technical and 42 content.
-            </p>
-          </article>
-        )}
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="container">
-      <SectionTitle
-        eyebrow="Writing principles"
-        title="Editorial rules for what makes it into the archive"
-        description="Each entry should earn its place by clarifying a real implementation detail, technical decision, or lesson."
-      />
-      <div class="feature-grid">
-        {writingPrinciples.map((item) => (
-          <article class="card stat-card">
-            <p>{item}</p>
-          </article>
-        ))}
-      </div>
-    </div>
-  </section>
-</MainLayout>
+</LandingLayout>

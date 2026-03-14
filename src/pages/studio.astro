@@ -1,25 +1,54 @@
 ---
 import MainLayout from '../layouts/MainLayout.astro';
-import { getCollection } from 'astro:content';
+import { readdir, readFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
 import WritingStudioApp from '../components/WritingStudioApp.astro';
+import { parsePostFile, type StudioCollectionKey } from '../lib/studio/blogStudio';
 
 const studioEnabled = import.meta.env.DEV;
-const initialBlogPosts = (await getCollection('blog')).map((post) => ({
-  slug: post.id,
-  title: post.data.title,
-  description: post.data.description,
-  pubDate: post.data.pubDate.toISOString().slice(0, 10),
-  updatedDate: post.data.updatedDate?.toISOString().slice(0, 10) ?? '',
-  category: post.data.category,
-  tags: post.data.tags,
-  series: post.data.series ?? '',
-  seriesTitle: post.data.seriesTitle ?? '',
-  seriesOrder: post.data.seriesOrder ? String(post.data.seriesOrder) : '',
-  difficulty: post.data.difficulty ?? '',
-  featured: post.data.featured,
-  draft: post.data.draft,
-  body: post.body ?? ''
-}));
+
+async function loadStudioSeed() {
+  const directories: { key: StudioCollectionKey; path: string }[] = [
+    { key: 'blog', path: resolve('src/content/blog') },
+    { key: 'forty-two', path: resolve('src/content/forty-two') }
+  ];
+  const posts = [];
+
+  for (const directory of directories) {
+    try {
+      const entries = await readdir(directory.path, { withFileTypes: true });
+      for (const entry of entries) {
+        if (!entry.isFile() || !entry.name.endsWith('.md') || entry.name === '.gitkeep') continue;
+        const raw = await readFile(resolve(directory.path, entry.name), 'utf-8');
+        posts.push(parsePostFile(entry.name, raw, directory.key));
+      }
+    } catch {
+      // Missing collection directories are okay in local studio mode.
+    }
+  }
+
+  return posts
+    .sort((left, right) => right.pubDate.localeCompare(left.pubDate) || left.title.localeCompare(right.title))
+    .map((post) => ({
+      collection: post.collection,
+      slug: post.slug,
+      title: post.title,
+      description: post.description,
+      pubDate: post.pubDate,
+      updatedDate: post.updatedDate,
+      category: post.category,
+      tags: post.tags,
+      series: post.series,
+      seriesTitle: post.seriesTitle,
+      seriesOrder: post.seriesOrder,
+      difficulty: post.difficulty,
+      featured: post.featured,
+      draft: post.draft,
+      body: post.body
+    }));
+}
+
+const initialBlogPosts = studioEnabled ? await loadStudioSeed() : [];
 ---
 
 <MainLayout
@@ -47,7 +76,8 @@ const initialBlogPosts = (await getCollection('blog')).map((post) => ({
 npm run dev
 
 # 예: http://127.0.0.1:4328/studio
-# 글 파일 위치: src/content/blog/*.md</code></pre>
+# 일반 글: src/content/blog/*.md
+# 42 글: src/content/forty-two/*.md</code></pre>
           </div>
         </details>
       </div>

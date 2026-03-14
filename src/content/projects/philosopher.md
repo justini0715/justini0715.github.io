@@ -2,6 +2,7 @@
 title: "philosopher"
 description: "A concurrency-focused C project about thread coordination, fork ownership, timing constraints, and starvation monitoring."
 summary: "A systems-oriented case study for synchronization, monitoring, and debugging under timing pressure."
+updatedDate: 2026-03-13
 stack:
   - C
   - POSIX threads
@@ -10,6 +11,9 @@ stack:
   - Helgrind
 badge: "42 systems"
 status: "Mandatory implementation preserved from archive"
+state: "stable"
+focus: "Concurrency reasoning, monitoring design, and debugging visibility."
+nextStep: "Add clearer notes about lock ordering, monitor behavior, and debugging workflow."
 featured: true
 order: 3
 repoUrl: "https://github.com/justini0715/philosopher"

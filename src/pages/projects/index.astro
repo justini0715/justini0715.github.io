@@ -1,37 +1,58 @@
 ---
-import MainLayout from '../../layouts/MainLayout.astro';
+import ArchiveLayout from '../../layouts/ArchiveLayout.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
 import SectionTitle from '../../components/SectionTitle.astro';
-import { getProjects } from '../../lib/content';
+import SplitHero from '../../components/site/SplitHero.astro';
+import { getProjects, groupProjectsByBadge, groupProjectsByState } from '../../lib/content';
 
 const projects = await getProjects();
+const projectGroups = groupProjectsByBadge(projects);
+const projectStates = groupProjectsByState(projects);
+const featuredCount = projects.filter((project) => project.data.featured).length;
+const uniqueStacks = new Set(projects.flatMap((project) => project.data.stack)).size;
 ---
 
-<MainLayout
+<ArchiveLayout
   title="Projects and 42 case studies"
   description="Developer portfolio projects and 42 case studies covering infrastructure, graphics, concurrency, algorithms, and source-first engineering work."
 >
-  <section class="page-hero page-hero--projects">
-    <div class="container hero__grid">
-      <div class="narrow-flow">
-        <p class="eyebrow">Developer projects · 42 case studies</p>
-        <h1>Project case studies across infrastructure, graphics, concurrency, and algorithms.</h1>
-        <p>
-          This directory is built from existing repositories and shaped for technical readers: what the project covered, which constraints mattered, and why the implementation is worth reviewing.
-        </p>
-        <p class="page-kicker">
-          Expect 42 projects, Docker and web infrastructure work, graphics experiments, and operation-constrained algorithm cases.
-        </p>
-      </div>
+  <SplitHero
+    sectionClass="page-hero page-hero--projects"
+    eyebrow="Developer projects · 42 case studies"
+    title="Project case studies across infrastructure, graphics, concurrency, and algorithms."
+    description="This directory is built from existing repositories and shaped for technical readers: what the project covered, which constraints mattered, and why the implementation is worth reviewing."
+    kicker="Expect 42 projects, Docker and web infrastructure work, graphics experiments, and operation-constrained algorithm cases."
+    panelEyebrow="What each case tracks"
+    panelItems={[
+      'Project role and current status',
+      'One implementation highlight instead of generic marketing copy',
+      'Stack markers plus repository access'
+    ]}
+    panelClassName="panel archive-panel"
+  />
 
-      <aside class="panel archive-panel">
-        <p class="eyebrow">What each case tracks</p>
-        <ul class="utility-list">
-          <li>Project role and current status</li>
-          <li>One implementation highlight instead of generic marketing copy</li>
-          <li>Stack markers plus repository access</li>
-        </ul>
-      </aside>
+  <section class="section">
+    <div class="container feature-grid feature-grid--compact">
+      <article class="card stat-card hub-metric-card">
+        <p class="eyebrow">Total</p>
+        <h3>{projects.length}</h3>
+        <p>현재 정리된 프로젝트 수</p>
+      </article>
+      <article class="card stat-card hub-metric-card">
+        <p class="eyebrow">Featured</p>
+        <h3>{featuredCount}</h3>
+        <p>첫 화면에서 우선적으로 보여주는 프로젝트</p>
+      </article>
+      <article class="card stat-card hub-metric-card">
+        <p class="eyebrow">Domains</p>
+        <h3>{projectGroups.length}</h3>
+        <p>현재 카드가 묶이는 주요 프로젝트 분야</p>
+      </article>
+      <article class="card stat-card hub-metric-card">
+        <p class="eyebrow">Stacks</p>
+        <h3>{uniqueStacks}</h3>
+        <p>지금까지 공개된 주요 기술 스택 개수</p>
+      </article>
     </div>
   </section>
 
@@ -47,4 +68,62 @@ const projects = await getProjects();
       </div>
     </div>
   </section>
-</MainLayout>
+
+  <section class="section section--tint">
+    <div class="container">
+      <SectionTitle
+        eyebrow="Project states"
+        title="현재 상태 기준으로 보는 프로젝트 판"
+        description="지금 유지 중인 프로젝트와 이미 아카이브된 프로젝트를 따로 보면, 다음에 어디를 손봐야 하는지 더 빨리 판단할 수 있다."
+      />
+
+      <div class="hub-lane-grid">
+        {projectStates.map((group) => (
+          <section class="panel hub-lane-panel">
+            <div class="hub-lane-panel__head">
+              <p class="eyebrow">{group.state}</p>
+              <h3>{group.items.length} project{group.items.length > 1 ? 's' : ''}</h3>
+            </div>
+            <div class="hub-stack-cluster">
+              {group.items.map((project) => (
+                <a class="hub-project-link" href={`/projects/${project.id}/`}>
+                  <strong>{project.data.title}</strong>
+                  <span>{project.data.focus ?? project.data.highlight}</span>
+                </a>
+              ))}
+            </div>
+          </section>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tint">
+    <div class="container">
+      <SectionTitle
+        eyebrow="Project lanes"
+        title="분야별로 다시 보는 프로젝트 흐름"
+        description="단순히 카드 전체를 훑는 대신, 어떤 분야의 작업이 어떻게 쌓였는지 영역별로 다시 읽을 수 있게 정리한다."
+      />
+
+      <div class="hub-lane-grid">
+        {projectGroups.map((group) => (
+          <section class="panel hub-lane-panel">
+            <div class="hub-lane-panel__head">
+              <p class="eyebrow">{group.badge}</p>
+              <h3>{group.items.length} project{group.items.length > 1 ? 's' : ''}</h3>
+            </div>
+            <div class="hub-stack-cluster">
+              {group.items.map((project) => (
+                <a class="hub-project-link" href={project.data.repoUrl} target="_blank" rel="noreferrer">
+                  <strong>{project.data.title}</strong>
+                  <span>{project.data.highlight}</span>
+                </a>
+              ))}
+            </div>
+          </section>
+        ))}
+      </div>
+    </div>
+  </section>
+</ArchiveLayout>

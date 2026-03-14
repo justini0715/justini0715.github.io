@@ -2,6 +2,7 @@
 import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/blogStudio';
 
 interface SeedPost {
+  collection: 'blog' | 'forty-two';
   slug: string;
   title: string;
   description: string;
@@ -44,6 +45,7 @@ const { initialPosts = [] } = Astro.props;
           <span id="studio-dirty-badge" class="studio-pill">파일 저장됨</span>
         </div>
         <p id="studio-folder" class="studio-topbar__hint">저장 위치: 폴더 미연결</p>
+        <p id="studio-folder-detail" class="studio-topbar__hint studio-topbar__hint--sub">blog · 42 디렉터리 상태를 아직 확인하지 못했습니다.</p>
       </div>
 
       <div class="studio-topbar__actions-block">
@@ -352,10 +354,15 @@ const { initialPosts = [] } = Astro.props;
     BLOG_CATEGORIES,
     CATEGORY_LABELS,
     SERIES_PRESETS,
+    STUDIO_COLLECTION_META,
+    collectionKeyForCategory,
     clonePost,
     collectSeriesStats,
     collectTagStats,
     createPostTemplate,
+    getCollectionDirectory,
+    getPostFilePath,
+    getPostRoute,
     parsePostFile,
     renderMarkdownPreview,
     serializePost,
@@ -374,7 +381,9 @@ const { initialPosts = [] } = Astro.props;
 
   const state = {
     repoHandle: null,
+    contentRootHandle: null,
     blogHandle: null,
+    fortyTwoHandle: null,
     posts: [],
     currentId: '',
     search: '',
@@ -401,6 +410,7 @@ const { initialPosts = [] } = Astro.props;
     layout: $('#studio-layout'),
     libraryShell: $('#studio-library-shell'),
     folder: $('#studio-folder'),
+    folderDetail: $('#studio-folder-detail'),
     fileChip: $('#studio-file-chip'),
     route: $('#studio-route'),
     search: $('#studio-search'),
@@ -470,6 +480,8 @@ const { initialPosts = [] } = Astro.props;
 
   function createSeedRecord(seed) {
     return makeRecord({
+      collection: seed.collection ?? collectionKeyForCategory(seed.category === '42' ? '42' : 'devlog'),
+      originalCollection: seed.collection ?? collectionKeyForCategory(seed.category === '42' ? '42' : 'devlog'),
       slug: seed.slug,
       originalSlug: seed.slug,
       title: seed.title,
@@ -578,14 +590,75 @@ const { initialPosts = [] } = Astro.props;
     }
   }
 
-  async function resolveBlogHandle(rootHandle) {
+  async function getDirectoryIfExists(parentHandle, name) {
     try {
-      const src = await rootHandle.getDirectoryHandle('src');
-      const content = await src.getDirectoryHandle('content');
-      return await content.getDirectoryHandle('blog');
+      return await parentHandle.getDirectoryHandle(name);
     } catch {
-      return rootHandle;
+      return null;
     }
+  }
+
+  async function resolveContentHandles(selectedHandle) {
+    let contentRootHandle = null;
+    let blogHandle = null;
+    let fortyTwoHandle = null;
+
+    const srcHandle = await getDirectoryIfExists(selectedHandle, 'src');
+    if (srcHandle) {
+      const contentHandle = await getDirectoryIfExists(srcHandle, 'content');
+      if (contentHandle) contentRootHandle = contentHandle;
+    }
+
+    if (!contentRootHandle) {
+      const directBlog = await getDirectoryIfExists(selectedHandle, 'blog');
+      const directFortyTwo = await getDirectoryIfExists(selectedHandle, 'forty-two');
+      if (directBlog || directFortyTwo) {
+        contentRootHandle = selectedHandle;
+        blogHandle = directBlog;
+        fortyTwoHandle = directFortyTwo;
+      }
+    }
+
+    if (!contentRootHandle) {
+      if (selectedHandle.name === 'blog') {
+        blogHandle = selectedHandle;
+      }
+      if (selectedHandle.name === 'forty-two') {
+        fortyTwoHandle = selectedHandle;
+      }
+    }
+
+    if (contentRootHandle) {
+      blogHandle ||= await getDirectoryIfExists(contentRootHandle, 'blog');
+      fortyTwoHandle ||= await getDirectoryIfExists(contentRootHandle, 'forty-two');
+    }
+
+    return { contentRootHandle, blogHandle, fortyTwoHandle };
+  }
+
+  function collectionHandleFor(key) {
+    return key === 'forty-two' ? state.fortyTwoHandle : state.blogHandle;
+  }
+
+  async function ensureCollectionHandle(key) {
+    const current = collectionHandleFor(key);
+    if (current) return current;
+    if (!state.contentRootHandle) return null;
+    const created = await state.contentRootHandle.getDirectoryHandle(key, { create: true });
+    if (key === 'forty-two') state.fortyTwoHandle = created;
+    else state.blogHandle = created;
+    return created;
+  }
+
+  function collectionStatusText() {
+    const labels = {
+      blog: STUDIO_COLLECTION_META.blog.directory,
+      'forty-two': STUDIO_COLLECTION_META['forty-two'].directory
+    };
+    return [
+      `blog: ${state.blogHandle ? labels.blog : `${labels.blog} 미연결`}`,
+      `42: ${state.fortyTwoHandle ? labels['forty-two'] : `${labels['forty-two']} 미연결`}`
+    ].join(' · ');
   }
 
   async function connectRepo(forcePicker = false, silent = false) {
@@ -613,14 +686,25 @@ const { initialPosts = [] } = Astro.props;
       if (!repoHandle) {
         repoHandle = await window.showDirectoryPicker();
       }
-      const blogHandle = await resolveBlogHandle(repoHandle);
+      const { contentRootHandle, blogHandle, fortyTwoHandle } = await resolveContentHandles(repoHandle);
       state.repoHandle = repoHandle;
+      state.contentRootHandle = contentRootHandle;
       state.blogHandle = blogHandle;
+      state.fortyTwoHandle = fortyTwoHandle;
       await saveRepoHandle(repoHandle);
       await loadPostsFromFolder();
-      elements.folder.textContent = `저장 위치: ${repoHandle.name}${blogHandle !== repoHandle ? ' → src/content/blog' : ''}`;
-      setPill(elements.connectionBadge, '폴더 연결됨', 'ok');
-      toast('레포 폴더 연결 완료. 이제 저장이 실제 Markdown 파일에 반영됩니다.', 'ok');
+      const connectedCount = Number(Boolean(blogHandle)) + Number(Boolean(fortyTwoHandle));
+      elements.folder.textContent = contentRootHandle
+        ? `저장 위치: ${repoHandle.name} → src/content`
+        : `저장 위치: ${repoHandle.name}`;
+      elements.folderDetail.textContent = collectionStatusText();
+      setPill(elements.connectionBadge, connectedCount ? `${connectedCount}개 폴더 연결` : '폴더 연결 필요', connectedCount ? 'ok' : 'warn');
+      toast(
+        connectedCount
+          ? '레포 폴더 연결 완료. 일반 글과 42 글 컬렉션을 로컬 Markdown으로 불러옵니다.'
+          : '폴더를 찾았지만 blog / forty-two 컬렉션은 아직 없습니다. 저장 시 필요한 폴더를 만듭니다.',
+        connectedCount ? 'ok' : 'warn'
+      );
     } catch (error) {
       console.error(error);
       if (silent) {
@@ -628,18 +712,23 @@ const { initialPosts = [] } = Astro.props;
         return;
       }
       setPill(elements.connectionBadge, '연결 실패', 'error');
-      toast('폴더 연결에 실패했습니다. 레포 루트 또는 src/content/blog 폴더를 선택해주세요.', 'error');
+      toast('폴더 연결에 실패했습니다. 레포 루트, src/content, blog, 또는 forty-two 폴더를 선택해주세요.', 'error');
     }
   }
 
   async function loadPostsFromFolder() {
-    if (!state.blogHandle) return;
     const loaded = [];
 
-    for await (const [name, handle] of state.blogHandle.entries()) {
-      if (handle.kind !== 'file' || !name.endsWith('.md') || name === '.gitkeep') continue;
-      const file = await handle.getFile();
-      loaded.push(makeRecord(parsePostFile(name, await file.text())));
+    for (const [collectionKey, directoryHandle] of [
+      ['blog', state.blogHandle],
+      ['forty-two', state.fortyTwoHandle]
+    ]) {
+      if (!directoryHandle) continue;
+      for await (const [name, handle] of directoryHandle.entries()) {
+        if (handle.kind !== 'file' || !name.endsWith('.md') || name === '.gitkeep') continue;
+        const file = await handle.getFile();
+        loaded.push(makeRecord(parsePostFile(name, await file.text(), collectionKey)));
+      }
     }
 
     loaded.sort((a, b) => b.pubDate.localeCompare(a.pubDate) || a.title.localeCompare(b.title));
@@ -650,13 +739,15 @@ const { initialPosts = [] } = Astro.props;
 
   function updateBadges() {
     const post = currentPost();
+    const connectedCount = Number(Boolean(state.blogHandle)) + Number(Boolean(state.fortyTwoHandle));
     setPill(elements.hostBadge, '로컬 작업중', 'ok');
-    setPill(elements.connectionBadge, state.blogHandle ? '폴더 연결됨' : '폴더 연결 필요', state.blogHandle ? 'ok' : 'warn');
+    setPill(elements.connectionBadge, connectedCount ? `${connectedCount}개 폴더 연결` : '폴더 연결 필요', connectedCount ? 'ok' : 'warn');
     setPill(elements.dirtyBadge, post?.dirty ? '임시저장' : '파일 저장됨', post?.dirty ? 'warn' : 'ok');
-    elements.fileChip.textContent = `src/content/blog/${post?.slug || 'post-slug'}.md`;
-    elements.folder.textContent = state.blogHandle ? `저장 위치: 연결됨` : '저장 위치: 폴더 미연결';
+    elements.fileChip.textContent = post ? getPostFilePath(post) : `${getCollectionDirectory('blog')}/post-slug.md`;
+    elements.folder.textContent = state.repoHandle ? `저장 위치: ${state.repoHandle.name}` : '저장 위치: 폴더 미연결';
+    elements.folderDetail.textContent = collectionStatusText();
     elements.libraryToggle.textContent = state.libraryOpen ? '라이브러리 닫기' : '라이브러리';
-    elements.connect.textContent = state.blogHandle ? '폴더 변경' : '폴더 연결';
+    elements.connect.textContent = connectedCount ? '폴더 변경' : '폴더 연결';
   }
 
   function selectPost(id) {
@@ -700,7 +791,7 @@ const { initialPosts = [] } = Astro.props;
     elements.seriesOrder.value = post.seriesOrder;
     elements.difficulty.value = post.difficulty;
     elements.body.value = post.body;
-    elements.route.textContent = `/blog/${post.slug || 'post-slug'}/`;
+    elements.route.textContent = getPostRoute(post);
     renderSelectedTags(post);
   }
 
@@ -715,6 +806,7 @@ const { initialPosts = [] } = Astro.props;
     post.updatedDate = elements.updatedDate.value;
     post.featured = elements.featured.checked;
     post.slug = elements.slug.value.trim();
+    post.collection = collectionKeyForCategory(post.category);
     post.series = elements.series.value.trim();
     post.seriesTitle = elements.seriesTitle.value.trim();
     post.seriesOrder = elements.seriesOrder.value.trim();
@@ -725,7 +817,7 @@ const { initialPosts = [] } = Astro.props;
       post.seriesTitle = seriesTitleFor(post.series);
       elements.seriesTitle.value = post.seriesTitle;
     }
-    elements.route.textContent = `/blog/${post.slug || 'post-slug'}/`;
+    elements.route.textContent = getPostRoute(post);
     saveSnapshot();
     renderLibrary();
     renderPanels();
@@ -882,7 +974,7 @@ const { initialPosts = [] } = Astro.props;
         </div>
         <strong>${post.title || '제목 없음'}</strong>
         <p>${post.description || '설명 없음'}</p>
-        <small>${post.pubDate} · /blog/${post.slug || 'post-slug'}/</small>
+        <small>${post.pubDate} · ${getPostRoute(post)}</small>
         ${post.dirty ? '<span class="studio-library-card__dirty">임시저장</span>' : ''}
       `;
       button.addEventListener('click', () => selectPost(post.id));
@@ -929,36 +1021,46 @@ const { initialPosts = [] } = Astro.props;
     if (!post.slug.trim() && post.title.trim()) {
       post.slug = slugifyTitle(post.title);
     }
+    post.collection = collectionKeyForCategory(post.category);
     const errors = validatePost(post, state.posts).filter((issue) => issue.level === 'error');
     if (errors.length) {
       toast(errors[0].message, 'error');
       return;
     }
 
-    if (!state.blogHandle) {
+    const targetCollection = collectionKeyForCategory(post.category);
+    const targetHandle = await ensureCollectionHandle(targetCollection);
+    if (!targetHandle) {
       toast('폴더 미연결 상태입니다. 다운로드만 가능합니다.', 'warn');
       return;
     }
 
     const nextFileName = `${post.slug}.md`;
     const previousFileName = post.originalSlug ? `${post.originalSlug}.md` : null;
+    const previousHandle = collectionHandleFor(post.originalCollection);
 
     try {
-      const fileHandle = await state.blogHandle.getFileHandle(nextFileName, { create: true });
+      const fileHandle = await targetHandle.getFileHandle(nextFileName, { create: true });
       const writable = await fileHandle.createWritable();
       await writable.write(serializePost(post));
       await writable.close();
-      if (previousFileName && previousFileName !== nextFileName) {
-        await state.blogHandle.removeEntry(previousFileName);
+      if (previousFileName && previousHandle) {
+        const movedCollection = post.originalCollection !== targetCollection;
+        const renamedFile = previousFileName !== nextFileName;
+        if (movedCollection || renamedFile) {
+          await previousHandle.removeEntry(previousFileName);
+        }
       }
+      post.collection = targetCollection;
+      post.originalCollection = targetCollection;
       post.originalSlug = post.slug;
       post.dirty = false;
       clearSnapshot();
       renderAll();
-      toast(`src/content/blog/${nextFileName} 저장 완료`, 'ok');
+      toast(`${getPostFilePath(post)} 저장 완료`, 'ok');
     } catch (error) {
       console.error(error);
-      toast('파일 저장에 실패했습니다. 폴더 권한을 다시 확인해주세요.', 'error');
+      toast('파일 저장에 실패했습니다. 레포 루트 또는 src/content 폴더 권한을 다시 확인해주세요.', 'error');
     }
   }
 
@@ -983,13 +1085,13 @@ const { initialPosts = [] } = Astro.props;
     if (!post.updatedDate) post.updatedDate = nowDate();
     post.dirty = true;
     fillForm(post);
-      if (state.blogHandle) {
-        await saveCurrent();
-      } else {
-        saveSnapshot();
-        renderAll();
-        toast('비공개 상태로 바꿨습니다. 저장하거나 다운로드해주세요.', 'warn');
-      }
+    if (collectionHandleFor(post.originalCollection) || state.contentRootHandle) {
+      await saveCurrent();
+    } else {
+      saveSnapshot();
+      renderAll();
+      toast('비공개 상태로 바꿨습니다. 저장하거나 다운로드해주세요.', 'warn');
+    }
   }
 
   async function hardDeleteCurrent() {
@@ -997,8 +1099,11 @@ const { initialPosts = [] } = Astro.props;
     if (!post) return;
     if (!window.confirm(`정말 ${post.title || post.slug} 글을 완전히 삭제할까요?`)) return;
     try {
-      if (state.blogHandle && post.originalSlug) {
-        await state.blogHandle.removeEntry(`${post.originalSlug}.md`);
+      if (post.originalSlug) {
+        const originalHandle = collectionHandleFor(post.originalCollection) ?? collectionHandleFor(collectionKeyForCategory(post.category));
+        if (originalHandle) {
+          await originalHandle.removeEntry(`${post.originalSlug}.md`);
+        }
       }
       state.posts = state.posts.filter((candidate) => candidate.id !== post.id);
       if (!state.posts.length) state.posts = [makeRecord(createPostTemplate('tech'))];
@@ -1317,6 +1422,11 @@ const { initialPosts = [] } = Astro.props;
     margin: 0;
     font-size: 0.88rem;
     color: rgba(237, 242, 255, 0.7);
+  }
+
+  .studio-topbar__hint--sub {
+    font-size: 0.8rem;
+    color: rgba(237, 242, 255, 0.55);
   }
 
   .studio-topbar__actions .button {
