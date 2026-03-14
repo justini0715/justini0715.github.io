@@ -7,8 +7,8 @@
 - Domain target: `https://changwpa.kro.kr`
 
 ## Current Phase
-- Phase: Phase 39 — Studio Local Runtime Fix
-- Branch: `phase/39-studio-local-runtime-fix-v2`
+- Phase: Phase 40 — Remove Studio
+- Branch: `phase/40-remove-studio`
 - Status: Complete
 
 ## Official Phase List
@@ -51,16 +51,17 @@
 37. Phase 37 — Performance / SEO / A11y Hardening
 38. Phase 38 — Korean Editing Manual
 39. Phase 39 — Studio Local Runtime Fix
+40. Phase 40 — Remove Studio
 
 ## Current Phase Scope
-- Restore the local-only `/studio` runtime so the interactive buttons respond again in dev mode.
-- Fix the client-side initialization bug without changing the public production lock behavior.
-- Verify the local dev page renders a real JSON seed payload so the Studio script can boot successfully.
+- Remove the `/studio` route and its local-only editor implementation from the project.
+- Shift the repo fully to direct file-based editing through `src/pages` and `src/content` instead of a custom writing tool.
+- Update README and local manuals so future edits follow the direct-edit workflow only.
 
 ## Current Phase Non-Scope
-- Reworking the public route map, design system, or Studio IA again.
-- Adding new Studio features beyond fixing the dead-button runtime regression.
-- Changing production `/studio` behavior; it must remain lock-only.
+- Reworking the public IA or design system again.
+- Adding a replacement CMS, backend, auth, or admin workflow.
+- Changing existing content collections beyond removing the Studio authoring layer.
 
 ## Architecture Summary
 - Astro static output with content collections for blog posts and projects.
@@ -73,15 +74,15 @@
 - blog taxonomy: `42`, `project`, `devlog`, `setup`, `retrospective`.
 
 ## Deliverables Checklist
-- [x] local Studio seed script now renders actual JSON instead of a literal template string
-- [x] client-side Studio initialization can parse the seed payload and attach button handlers again
-- [x] production `/studio` remains lock-only after the fix
-- [x] Phase 39 verification completed
+- [x] `/studio` route and Studio runtime files removed
+- [x] README and editing manual now point to direct file-based editing only
+- [x] sitemap / route-class logic no longer carry Studio-specific behavior
+- [x] Phase 40 verification completed
 
 ## Verification Plan
-1. Run local type checks and a full static build after the Studio runtime fix.
-2. Confirm the local dev `/studio` HTML now contains a real JSON seed payload instead of the literal `{JSON.stringify(initialPosts)}` string.
-3. Re-check the production `/studio` page to confirm the lock notice remains intact.
+1. Run local type checks and a full static build after removing Studio.
+2. Confirm `/studio` is no longer built and that the rest of the public routes still build cleanly.
+3. Confirm the README and Korean editing manual now describe direct file-based editing instead of the removed Studio flow.
 
 ## Work Log
 - Cloned the remote user-site repository into the writable workspace.
@@ -466,3 +467,9 @@
 - `npm run check` after phase-39 Studio runtime fix → success (`tsc --noEmit`).
 - `npm run build` after phase-39 Studio runtime fix → success; rebuilt the public routes while keeping production `/studio` locked.
 - local dev `/studio` source check after phase-39 → confirmed the `studio-seed` script now contains actual JSON content instead of a literal template expression.
+
+- Started `phase/40-remove-studio` after the user explicitly decided to remove the Studio feature and rely on direct page/content editing instead.
+- Deleted the `/studio` route, `WritingStudioApp.astro`, the studio parsing/saving helper, and the dedicated writing-studio runbook.
+- Updated the public build config, README, and Korean editing manual to reflect the new direct file-based editing workflow.
+- `npm run check` after phase-40 remove studio → success (`tsc --noEmit`).
+- `npm run build` after phase-40 remove studio → success; rebuilt the public route set without `/studio`.

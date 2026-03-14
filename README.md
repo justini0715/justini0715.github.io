@@ -22,7 +22,8 @@ npm run check
 
 ## Content model
 - `src/content/projects/*.md` — project cards used on home and `/projects`
-- `src/content/blog/*.md` — technical posts and 42 entries used on `/blog` and `/blog/[slug]`
+- `src/content/blog/*.{md,mdx}` — general technical posts used on `/blog` and `/blog/[slug]`
+- `src/content/forty-two/*.{md,mdx}` — 42 posts used on `/42` and `/42/[slug]`
 - `src/content.config.ts` — collection schema for categories, tags, series metadata, and project metadata
 
 ## Repository structure
@@ -35,18 +36,11 @@ npm run check
 - `public/CNAME.example` — custom-domain marker file to copy from during cutover
 
 
-## Writing Studio
-- route: `/studio`
-- purpose: personal-only writing UI for blog post CRUD without backend/auth
-- recommended browser: Chrome / Edge / Brave desktop
-- docs: `docs/runbooks/writing-studio.md`
-- production behavior: deployed site shows only a locked notice; the full editor is included only in `npm run dev`
+## Editing workflow
+- create or edit routes directly in `src/pages/`
+- create or edit content directly in `src/content/blog`, `src/content/forty-two`, and `src/content/projects`
+- see `docs/runbooks/사이트-수정-실전-메뉴얼.md` for the practical editing manual
 
-Typical flow:
-```bash
-npm run dev
-```
-Then open the localhost URL printed by `npm run dev`, add `/studio`, connect the repo folder, write/save the post, and finish with normal git commit/push.
 
 ## Deployment notes
 - `astro.config.mjs` defaults `site` to `https://justini0715.github.io` so the fallback GitHub Pages URL stays correct before the custom domain is connected.
@@ -54,33 +48,8 @@ Then open the localhost URL printed by `npm run dev`, add `/studio`, connect the
 - The repository name already matches the special `username.github.io` pattern, so no Astro `base` value is needed.
 - Custom-domain cutover steps are documented in `docs/runbooks/deployment.md`.
 
-## Current local phase branches
-- `recovery/legacy-site-20260313`
-- `phase/1-foundation`
-- `phase/2-portfolio-structure`
-- `phase/3-blog-system`
-- `phase/4-polish-deployment`
-- `phase/5-writing-studio`
-- `phase/6-studio-hardening`
-- `phase/7-studio-usability`
-- `phase/8-studio-completion`
-- `phase/9-studio-ui-cleanup`
-- `phase/10-studio-ui-polish`
-- `phase/11-studio-visual-polish`
-- `phase/12-sitewide-ui-system-polish`
-- `phase/13-content-copy-seo-polish`
-- `phase/14-public-reading-typography-polish`
-- `phase/15-route-ui-separation`
-- `phase/16-layout-component-split`
-- `phase/17-route-compatibility-hardening`
-- `phase/18-project-42-hub-enrichment`
-- `phase/19-layout-chrome-differentiation`
-- `phase/20-project-detail-routes`
-- `phase/21-domain-article-differentiation`
-- `phase/22-home-hub-scaffold`
-- `phase/23-blog-article-differentiation`
-- `phase/24-home-hub-features`
-- `phase/25-projects-hub-features`
-- `phase/26-collection-split-prep`
-- `phase/27-mobile-nav-and-header-ux`
-- `phase/26-collection-split-prep`
+## Editing notes
+- This repo now uses direct file-based editing only.
+- Routes live in `src/pages/`.
+- Content lives in `src/content/projects/`, `src/content/blog/`, and `src/content/forty-two/`.
+- See `docs/runbooks/사이트-수정-실전-메뉴얼.md` for the full editing manual.
