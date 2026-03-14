@@ -7,8 +7,8 @@
 - Domain target: `https://changwpa.kro.kr`
 
 ## Current Phase
-- Phase: Phase 28 — Responsive Shell & Profile Menu
-- Branch: `phase/28-header-profile-popover`
+- Phase: Phase 29 — Dedicated Profile Page
+- Branch: `phase/29-profile-page-route`
 - Status: Complete
 
 ## Official Phase List
@@ -40,12 +40,12 @@
 26. Phase 26 — 42 / Blog Collection Split
 27. Phase 27 — Mobile Nav & Header UX
 28. Phase 28 — Responsive Shell & Profile Menu
+29. Phase 29 — Dedicated Profile Page
 
 ## Current Phase Scope
-- Remove the extra hub/archive utility bars now that the primary navigation is established.
-- Tighten the global shell so public pages no longer introduce unintended horizontal overflow on mobile.
-- Replace the header GitHub CTA with a right-aligned profile avatar that opens a compact profile card / bio popover.
-- Keep the mobile scroll-aware header behavior intact while refining the top navigation layout.
+- Replace the fragile header profile popover with a direct avatar link to a dedicated profile page.
+- Turn `/about` into the actual profile destination with a strong single-card intro and expanded biography sections.
+- Keep the mobile responsive/header fixes from phase 28 while removing scroll-linked profile behavior entirely.
 
 ## Current Phase Non-Scope
 - Replacing the static content architecture with a hosted CMS.
@@ -53,9 +53,9 @@
 - Building a full multi-user publishing product.
 - Changing the underlying Markdown storage/file IO model.
 - Reworking the public route map again after the phase-15/27 split.
-- Replacing the current static About page with a richer account/settings system.
+- Introducing a brand-new authenticated account page or settings surface.
 - Adding authenticated profile state, comments, or backend-backed profile data.
-- Using a real personal headshot before the user provides one; this phase may use a polished static avatar asset instead.
+- Using a real personal headshot before the user provides one; this phase continues to use the polished static avatar asset.
 - Reworking the already-polished studio beyond compatibility checks after shared-header changes.
 
 ## Architecture Summary
@@ -69,17 +69,16 @@
 - blog taxonomy: `42`, `project`, `devlog`, `setup`, `retrospective`.
 
 ## Deliverables Checklist
-- [x] public pages no longer ship the redundant hub/archive utility bars
-- [x] top-level shell clamps horizontal overflow on mobile widths
-- [x] navbar right edge now uses an avatar trigger instead of the old GitHub CTA
-- [x] profile popover exposes a richer bio card with About and GitHub actions
-- [x] Phase 28 verification completed
+- [x] navbar right edge now links directly to the dedicated profile page instead of opening a popover
+- [x] `/about` now works as the detailed profile destination with a strong single-card profile surface
+- [x] mobile scrolling no longer dismisses profile detail because the profile UI is page-based
+- [x] Phase 29 verification completed
 
 ## Verification Plan
-1. Run local type checks and a full static build after the header/profile-shell pass.
-2. Confirm the built public HTML includes the new avatar-triggered profile popover on representative routes.
-3. Confirm the built HTML no longer includes the old hub/archive utility bars on `/home`, `/projects`, `/42`, and `/blog`.
-4. Confirm the generated CSS now clamps page-level horizontal overflow while preserving horizontally scrollable nav chips inside the header.
+1. Run local type checks and a full static build after removing the popover interaction.
+2. Confirm the built public HTML uses the avatar as a direct link on representative routes.
+3. Confirm `/about` now renders the dedicated profile-card layout in built output.
+4. Confirm no `profile-menu` popover CSS/markup remains in the generated assets.
 5. Re-check `/studio` after shared header/style changes for compatibility.
 
 ## Work Log
@@ -374,6 +373,16 @@
 - `rg -n "profile-menu|Detailed bio|profile-avatar" dist -g '*.html'` after phase-28 → confirmed the avatar-triggered profile card renders across the built public routes.
 - `rg -n "overflow-x:hidden|overflow-x:clip|profile-menu__popover|site-nav__tools" dist/_astro -g '*.css'` after phase-28 → confirmed the generated CSS now clamps page-level overflow and includes the new profile/header rules.
 - `grep dist/studio/index.html` after phase-28 responsive shell/profile menu → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- Started `phase/29-profile-page-route` from the merged `main` state after the phase-28 profile popover went live.
+- Removed the header popover interaction and turned the right-edge avatar into a stable direct link to `/about`, eliminating the mobile scroll/popover conflict.
+- Reworked `/about` into the actual profile destination with a large contrasted profile card, expanded bio copy, current lanes, highlights, and direct route links.
+- Removed the obsolete `ProfileMenu.astro` component and the old popover-only CSS rules, keeping the simplified responsive shell intact.
+- `npm run check` after phase-29 dedicated profile page → success (`tsc --noEmit`).
+- `npm run build` after phase-29 dedicated profile page → success; rebuilt the full public route set, project detail routes, compatibility pages, and `/studio`.
+- `npx tsc --noEmit --pretty false --project tsconfig.json` via LSP diagnostics after phase-29 → 0 errors, 0 warnings.
+- `rg -n "site-profile-link|profile-page-card|Open profile page" dist -g '*.html'` after phase-29 → confirmed public routes now use a direct avatar link and `/about` renders the dedicated profile-card layout.
+- `rg -n "profile-menu" dist/_astro -g '*.css'` after phase-29 → no matches; confirmed the old popover styles are gone from generated assets.
+- `grep dist/studio/index.html` after phase-29 dedicated profile page → production output still contains the locked `/studio` notice and excludes the active editor markers.
 
 ## Known Blockers / User-Action-Required Items
 - GitHub push/PR and Pages settings updates will require the user's GitHub auth later.

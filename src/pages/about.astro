@@ -1,34 +1,70 @@
 ---
 import MainLayout from '../layouts/MainLayout.astro';
 import SectionTitle from '../components/SectionTitle.astro';
-import { currentFocus, focusAreas, siteMeta, stackSummary, strengths } from '../data/site';
+import { currentFocus, focusAreas, profileCard, siteMeta, stackSummary, strengths } from '../data/site';
 ---
 
 <MainLayout
-  title="About changwpa"
-  description="About changwpa: a developer portfolio focused on 42 projects, systems programming, technical writing, and source-first Astro publishing."
+  title="Profile"
+  description="Profile page for changwpa covering current focus, systems work, 42 archives, and source-first publishing."
 >
-  <section class="page-hero page-hero--about">
-    <div class="container hero__grid">
-      <div class="narrow-flow">
-        <p class="eyebrow">About changwpa</p>
-        <h1>A developer portfolio centered on 42 projects, systems-flavored work, and technical writing.</h1>
-        <p>
-          This site exists to turn active repository work into clear project summaries and useful technical posts. The stack stays source-first, static, and easy to keep current so the archive can grow without turning into clutter.
-        </p>
-        <p class="page-kicker">
-          Expect portfolio notes, 42 assignment writeups, and practical lessons from C, concurrency, infrastructure, and static publishing.
-        </p>
-      </div>
+  <section class="page-hero page-hero--profile">
+    <div class="container">
+      <article class="profile-page-card">
+        <div class="profile-page-card__hero">
+          <img
+            class="profile-page-card__avatar"
+            src={profileCard.avatar}
+            alt={`${siteMeta.shortTitle} profile avatar`}
+            width="160"
+            height="160"
+            loading="eager"
+            decoding="async"
+          />
 
-      <aside class="panel utility-panel">
-        <p class="eyebrow">Profile snapshot</p>
-        <h2>{siteMeta.shortTitle}</h2>
-        <p>{siteMeta.statusLine}</p>
-        <ul class="stack-list">
-          {strengths.map((item) => <li>{item}</li>)}
-        </ul>
-      </aside>
+          <div class="profile-page-card__intro narrow-flow">
+            <p class="eyebrow">Profile</p>
+            <h1>42, 시스템 프로그래밍, 프로젝트 문서화, 정적 퍼블리싱을 하나의 흐름으로 묶어 기록하는 개발자.</h1>
+            <p>{profileCard.shortBio}</p>
+            <p class="page-kicker">{profileCard.detailBio}</p>
+
+            <div class="hero__actions">
+              <a class="button" href={siteMeta.github} target="_blank" rel="noreferrer">GitHub ↗</a>
+              <a class="button button--ghost" href="/projects">Projects 보기</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-page-card__grid">
+          <section class="profile-page-card__section">
+            <p class="eyebrow">Detailed bio</p>
+            <p>
+              이 사이트는 결과만 전시하는 포트폴리오보다, 프로젝트를 실제로 진행하며 남긴 판단과 제약을 같이 보여주는 작업 아카이브에 가깝다.
+              저장소 구조, 구현 근거, 디버깅 과정, 회고, 다음 단계까지 한 흐름으로 남기는 방식을 선호한다.
+            </p>
+            <p>
+              그래서 Projects는 진행 중인 개발 프로젝트의 추이와 자료 허브 역할을 하고, 42는 과제별 맥락을 이어 읽는 전용 아카이브,
+              Blog는 알고리즘, 네트워크, 시스템 개념 정리처럼 개발하면서 공부한 내용을 쌓는 노트 공간으로 분리해 두고 있다.
+            </p>
+          </section>
+
+          <aside class="profile-page-card__sidebar">
+            <div class="profile-page-card__panel">
+              <p class="eyebrow">Current lanes</p>
+              <ul class="utility-list">
+                {currentFocus.map((item) => <li>{item}</li>)}
+              </ul>
+            </div>
+
+            <div class="profile-page-card__panel">
+              <p class="eyebrow">Highlights</p>
+              <div class="profile-page-card__chips">
+                {profileCard.highlights.map((item) => <span class="chip">{item}</span>)}
+              </div>
+            </div>
+          </aside>
+        </div>
+      </article>
     </div>
   </section>
 
@@ -36,20 +72,25 @@ import { currentFocus, focusAreas, siteMeta, stackSummary, strengths } from '../
     <div class="container two-column">
       <div>
         <SectionTitle
-          eyebrow="Short biography"
-          title="A systems-minded developer archive anchored in 42 work"
-          description="The site focuses on C projects, infrastructure exercises, and practical notes about debugging, building, and shipping source-first websites."
+          eyebrow="Working style"
+          title="설명보다 구조, 결과보다 맥락을 먼저 보여주는 방식"
+          description="포트폴리오도 아카이브처럼 운영하고, 글도 다음 작업과 이어지도록 남기는 편이다."
         />
-        <p>
-          Instead of separating portfolio, blog, and assignment notes into different silos, this site keeps them in one place. The result should help visitors move quickly from a project summary to a technical note to the next 42 entry in the same learning arc.
-        </p>
+        <div class="feature-grid feature-grid--compact">
+          {strengths.map((item) => (
+            <article class="card stat-card">
+              <p>{item}</p>
+            </article>
+          ))}
+        </div>
       </div>
-      <div class="panel utility-panel">
-        <p class="eyebrow">Current focus</p>
+
+      <aside class="panel utility-panel">
+        <p class="eyebrow">Archive lanes</p>
         <ul class="utility-list">
-          {currentFocus.map((item) => <li>{item}</li>)}
+          {focusAreas.map((item) => <li>{item}</li>)}
         </ul>
-      </div>
+      </aside>
     </div>
   </section>
 
@@ -57,9 +98,9 @@ import { currentFocus, focusAreas, siteMeta, stackSummary, strengths } from '../
     <div class="container two-column">
       <div>
         <SectionTitle
-          eyebrow="Stack summary"
-          title="Chosen for maintainability over novelty"
-          description="Static output, structured content, and GitHub Pages deployment keep the workflow lightweight enough to update often."
+          eyebrow="Stack snapshot"
+          title="유지 가능성과 반복 가능한 배포를 우선한 선택"
+          description="새로운 기술보다, 자주 고칠 수 있고 실제로 계속 운영 가능한 조합을 더 중요하게 본다."
         />
         <div class="feature-grid feature-grid--compact">
           {stackSummary.map((item) => (
@@ -69,10 +110,14 @@ import { currentFocus, focusAreas, siteMeta, stackSummary, strengths } from '../
           ))}
         </div>
       </div>
+
       <aside class="panel utility-panel">
-        <p class="eyebrow">Archive lanes</p>
+        <p class="eyebrow">Direct routes</p>
         <ul class="utility-list">
-          {focusAreas.map((item) => <li>{item}</li>)}
+          <li><a href="/projects">Projects</a>에서 현재 만드는 것과 자료 흐름 보기</li>
+          <li><a href="/42">42</a>에서 과제 맥락과 순서대로 읽기</li>
+          <li><a href="/blog">Blog</a>에서 일반 기술 노트와 개념 정리 읽기</li>
+          <li><a href="/home">Home</a>에서 전체 허브와 다음 작업 보기</li>
         </ul>
       </aside>
     </div>
