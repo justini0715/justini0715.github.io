@@ -1,0 +1,48 @@
+---
+import { getCollection, render } from 'astro:content';
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((project) => ({ params: { slug: project.id }, props: { project } }));
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+---
+
+<ArticleLayout
+  title={project.data.title}
+  description={project.data.description}
+>
+  <section class="page-hero page-hero--post">
+    <div class="container hero__grid">
+      <div class="reading-surface narrow-flow">
+        <p class="eyebrow">{project.data.badge}</p>
+        <h1>{project.data.title}</h1>
+        <p>{project.data.description}</p>
+        <div class="post-meta-row">
+          <span class="chip">{project.data.status}</span>
+          {project.data.year && <span class="chip">{project.data.year}</span>}
+        </div>
+      </div>
+
+      <aside class="panel utility-panel">
+        <p class="eyebrow">Project context</p>
+        {project.data.summary && <p class="meta-note">{project.data.summary}</p>}
+        <ul class="utility-list">
+          <li>{project.data.highlight}</li>
+          <li>Stack: {project.data.stack.join(' · ')}</li>
+          <li><a href={project.data.repoUrl} target="_blank" rel="noreferrer">Repository ↗</a></li>
+          {project.data.demoUrl && <li><a href={project.data.demoUrl} target="_blank" rel="noreferrer">Demo ↗</a></li>}
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  <article class="section">
+    <div class="container prose-shell">
+      <Content />
+    </div>
+  </article>
+</ArticleLayout>

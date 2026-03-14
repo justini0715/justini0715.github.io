@@ -40,6 +40,10 @@ export async function getProjects() {
   return projects.sort(byProjectOrder);
 }
 
+export function getProjectPath(project: ProjectEntry) {
+  return `/projects/${project.id}/`;
+}
+
 export function groupProjectsByBadge(projects: ProjectEntry[]) {
   const groups = new Map<string, ProjectEntry[]>();
 

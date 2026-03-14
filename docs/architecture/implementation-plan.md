@@ -7,9 +7,9 @@
 - Domain target: `https://changwpa.kro.kr`
 
 ## Current Phase
-- Phase: Phase 19 — Layout Chrome Differentiation
-- Branch: `phase/19-layout-chrome-differentiation`
-- Status: In Progress
+- Phase: Phase 20 — Project Detail Routes
+- Branch: `phase/20-project-detail-routes`
+- Status: Complete
 
 ## Official Phase List
 1. Phase 1 — Foundation
@@ -31,11 +31,12 @@
 17. Phase 17 — Route Compatibility Hardening
 18. Phase 18 — Project / 42 Hub Enrichment
 19. Phase 19 — Layout Chrome Differentiation
+20. Phase 20 — Project Detail Routes
 
 ## Current Phase Scope
-- Make the new route-specific layouts feel more meaningfully different instead of behaving like thin wrappers.
-- Add archive/hub/article-specific chrome so each route family carries clearer local navigation and context.
-- Preserve the route split from phases 15-18 while reducing the feeling that every route still shares the same surrounding shell.
+- Add a dedicated project detail route family under `/projects/[slug]`.
+- Let project cards lead into fuller project dossiers instead of only external repository links.
+- Keep the new project detail routes consistent with the route split and layout system introduced in phases 15-19.
 
 ## Current Phase Non-Scope
 - Replacing the static content architecture with a hosted CMS.
@@ -50,6 +51,7 @@
 - A full content-collection migration; this phase is compatibility-focused only.
 - Adding the user-specific `/home` features that still require separate product decisions.
 - Rewriting the core content model or adding backend features.
+- Reworking blog/42 routing again; this phase is project-detail specific.
 
 ## Architecture Summary
 - Astro static output with content collections for blog posts and projects.
@@ -62,16 +64,16 @@
 - blog taxonomy: `42`, `project`, `devlog`, `setup`, `retrospective`.
 
 ## Deliverables Checklist
-- [ ] archive layout subnav / chrome
-- [ ] hub layout quick-link chrome
-- [ ] article layout context / back bar
-- [ ] Phase 19 verification completed
+- [x] `/projects/[slug]` route added
+- [x] project cards link into internal case-detail pages
+- [x] project detail layout context / back navigation works
+- [x] Phase 20 verification completed
 
 ## Verification Plan
-1. Run local build and type checks after the layout chrome pass.
-2. Verify archive routes now share a useful archive switcher / subnav.
-3. Verify article routes now expose clearer context back to their parent archive.
-4. Re-check `/studio` after shared layout changes for compatibility.
+1. Run local build and type checks after the project-detail pass.
+2. Verify `/projects/[slug]` pages build and render the project content correctly.
+3. Verify project cards now link to internal detail pages while preserving external repo/demo links.
+4. Re-check `/studio` after shared layout/helper changes for compatibility.
 5. Confirm production `/studio` remains locked and the public routes remain static-output compatible.
 
 ## Work Log
@@ -158,6 +160,14 @@
 - Started `phase/17-route-compatibility-hardening` immediately after the split because old `/blog/42-*` links would otherwise break once the dedicated `/42` route family went live.
 - Added explicit legacy notice/redirect pages for the currently published 42 slugs under their old `/blog/...` paths, pointing readers to the new canonical `/42/...` routes.
 - Updated sitemap filtering so those compatibility pages are not promoted as first-class archive pages.
+- Started `phase/18-project-42-hub-enrichment` immediately after route compatibility hardening so the new `/projects` and `/42` routes feel like actual hubs instead of shallow archive pages.
+- Added project hub summary metrics plus badge-grouped lanes so `/projects` now reads more like an overview / trajectory surface rather than only one flat grid.
+- Added 42 hub summary metrics plus ordered series-group sections so `/42` now exposes both archive browsing and reading-order context.
+- Added supporting content helpers for grouping projects by badge and 42 posts by series so the hub pages can keep their logic smaller and more reusable.
+- Started `phase/19-layout-chrome-differentiation` so the new route-specific layouts stop behaving like thin wrappers and instead carry visible route-family context.
+- Added a hub quick-link row to `HubLayout`, an archive switcher to `ArchiveLayout`, and a context/back bar to `ArticleLayout`.
+- Started `phase/20-project-detail-routes` so the project hub can lead into full internal project dossiers instead of stopping at external repository links.
+- Added `/projects/[slug]` routes, internal project case links from project cards, and a project-detail article-style reading surface with context metadata and repository/demo links.
 
 ## Verification Results
 - `npm install -D astro @astrojs/sitemap @astrojs/check typescript` → dependencies installed successfully.
@@ -238,6 +248,23 @@
 - `npx tsc --noEmit --project tsconfig.json` via LSP diagnostics after phase-17 compatibility hardening → 0 errors, 0 warnings.
 - `grep dist/blog/42-push-swap/index.html dist/blog/42-philosopher/index.html` after phase-17 → confirmed both legacy pages render redirect/notice surfaces pointing to the new `/42/...` routes.
 - `grep dist/studio/index.html` after phase-17 compatibility hardening → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- `npm run check` after phase-18 hub enrichment → success (`tsc --noEmit`).
+- `npm run build` after phase-18 hub enrichment → success; rebuilt the full split route set plus the existing compatibility pages and `/studio`.
+- `npx tsc --noEmit --project tsconfig.json` via LSP diagnostics after phase-18 hub enrichment → 0 errors, 0 warnings.
+- `grep dist/projects/index.html` after phase-18 → confirmed project hub summary metrics and grouped project lanes render in the built output.
+- `grep dist/42/index.html` after phase-18 → confirmed 42 hub summary metrics and ordered reading-lane sections render in the built output.
+- `grep dist/studio/index.html` after phase-18 hub enrichment → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- `npm run check` after phase-19 layout chrome differentiation → success (`tsc --noEmit`).
+- `npm run build` after phase-19 layout chrome differentiation → success; rebuilt the full split route set plus the compatibility pages and `/studio`.
+- `npx tsc --noEmit --project tsconfig.json` via LSP diagnostics after phase-19 → 0 errors, 0 warnings.
+- `grep dist/home/index.html dist/projects/index.html dist/42/index.html dist/blog/rebuilding-a-legacy-github-pages-site-with-astro/index.html dist/42/42-push-swap/index.html` after phase-19 → confirmed the new hub/archive/article chrome markers render in built output.
+- `grep dist/studio/index.html` after phase-19 layout chrome differentiation → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- `npm run check` after phase-20 project detail routes → success (`tsc --noEmit`).
+- `npm run build` after phase-20 project detail routes → success; built `/projects/[slug]` detail routes for every current project plus the existing split route set and `/studio`.
+- `npx tsc --noEmit --project tsconfig.json` via LSP diagnostics after phase-20 project detail routes → 0 errors, 0 warnings.
+- `find dist/projects -maxdepth 2 -type f` after phase-20 → confirmed project detail routes now build under `/projects/inception/`, `/projects/cub3d/`, `/projects/philosopher/`, and `/projects/push-swap/`.
+- `grep dist/projects/index.html dist/projects/inception/index.html` after phase-20 → confirmed project cards now link to `Case detail →` and project detail pages expose `Project case` context with internal reading surfaces.
+- `grep dist/studio/index.html` after phase-20 project detail routes → production output still contains the locked `/studio` notice and excludes the active editor markers.
 
 ## Known Blockers / User-Action-Required Items
 - GitHub push/PR and Pages settings updates will require the user's GitHub auth later.

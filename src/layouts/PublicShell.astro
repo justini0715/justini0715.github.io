@@ -25,8 +25,10 @@ const bodyClass = pathname === '/'
       ? 'route-about'
       : pathname === '/projects/'
         ? 'route-projects'
-        : pathname === '/42/'
-          ? 'route-forty-two-index'
+        : pathname.startsWith('/projects/')
+          ? 'route-project-detail'
+          : pathname === '/42/'
+            ? 'route-forty-two-index'
           : pathname.startsWith('/42/')
             ? 'route-forty-two-post'
             : pathname === '/blog/'

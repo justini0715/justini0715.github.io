@@ -73,3 +73,6 @@ Then open the localhost URL printed by `npm run dev`, add `/studio`, connect the
 - `phase/15-route-ui-separation`
 - `phase/16-layout-component-split`
 - `phase/17-route-compatibility-hardening`
+- `phase/18-project-42-hub-enrichment`
+- `phase/19-layout-chrome-differentiation`
+- `phase/20-project-detail-routes`
