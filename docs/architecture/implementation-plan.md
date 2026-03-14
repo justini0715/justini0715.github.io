@@ -7,8 +7,8 @@
 - Domain target: `https://changwpa.kro.kr`
 
 ## Current Phase
-- Phase: Phase 17 — Route Compatibility Hardening
-- Branch: `phase/17-route-compatibility-hardening`
+- Phase: Phase 18 — Project / 42 Hub Enrichment
+- Branch: `phase/18-project-42-hub-enrichment`
 - Status: Complete
 
 ## Official Phase List
@@ -29,11 +29,12 @@
 15. Phase 15 — Route / UI Separation
 16. Phase 16 — Layout / Component Split
 17. Phase 17 — Route Compatibility Hardening
+18. Phase 18 — Project / 42 Hub Enrichment
 
 ## Current Phase Scope
-- Preserve external/internal link stability after the route split by handling old 42 blog URLs safely.
-- Add compatibility behavior before deeper structural cleanup so the new route map does not strand old links.
-- Keep the route split from phase 15 intact while reducing migration risk for bookmarked/shared URLs.
+- Strengthen `/projects` so it behaves more like a project trajectory / overview hub than a plain directory.
+- Strengthen `/42` so it behaves more like a series-aware archive hub than a generic post list.
+- Use the new route structure from phases 15-17 and enrich the hub pages with higher-signal grouping and navigation.
 
 ## Current Phase Non-Scope
 - Replacing the static content architecture with a hosted CMS.
@@ -46,6 +47,7 @@
 - Splitting the underlying content collection into separate physical `blog` and `forty-two` collections in this phase.
 - Reworking the route map again immediately after phase 15.
 - A full content-collection migration; this phase is compatibility-focused only.
+- Adding the user-specific `/home` features that still require separate product decisions.
 
 ## Architecture Summary
 - Astro static output with content collections for blog posts and projects.
@@ -58,15 +60,16 @@
 - blog taxonomy: `42`, `project`, `devlog`, `setup`, `retrospective`.
 
 ## Deliverables Checklist
-- [x] old `/blog/42-*` URLs handled safely
-- [x] new `/42/*` routes remain canonical
-- [x] Phase 17 verification completed
+- [x] `/projects` hub summary and grouping improvements
+- [x] `/42` hub series / reading-order improvements
+- [x] supporting content helpers for hub views
+- [x] Phase 18 verification completed
 
 ## Verification Plan
-1. Run local build and type checks after the compatibility pass.
-2. Verify `/blog/42-push-swap/` and `/blog/42-philosopher/` no longer strand readers.
-3. Verify `/42/*` routes stay canonical and `/blog` still lists only non-42 content.
-4. Re-check `/studio` after any shared route helper changes for compatibility.
+1. Run local build and type checks after the hub enrichment pass.
+2. Verify `/projects` now exposes clearer grouping/summary structure.
+3. Verify `/42` now exposes clearer series / reading-order structure.
+4. Re-check `/studio` after any shared helpers or styles for compatibility.
 5. Confirm production `/studio` remains locked and the public routes remain static-output compatible.
 
 ## Work Log

@@ -435,6 +435,61 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .hub-metric-card h3 {
+    margin-top: 0;
+    font-size: clamp(1.15rem, 1.8vw, 1.5rem);
+  }
+
+  .hub-lane-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .hub-lane-panel {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .hub-lane-panel__head {
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .hub-lane-panel__head h3 {
+    margin-top: 0;
+  }
+
+  .hub-stack-cluster {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .hub-project-link {
+    display: grid;
+    gap: 0.3rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--line-faint);
+  }
+
+  .hub-project-link:first-child {
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .hub-project-link strong {
+    color: var(--text);
+  }
+
+  .hub-project-link span {
+    color: var(--muted);
+    font-size: 0.94rem;
+  }
+
+  .hub-project-link:hover strong {
+    color: var(--accent-strong);
+  }
+
   .card,
   .post-card,
   .project-card,
@@ -896,6 +951,7 @@
     .card-grid,
     .feature-grid,
     .feature-grid--compact,
+    .hub-lane-grid,
     .route-home .hero__grid,
     .route-forty-two-index .page-hero .hero__grid,
     .route-forty-two-post .page-hero .hero__grid,

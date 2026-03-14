@@ -40,6 +40,18 @@ export async function getProjects() {
   return projects.sort(byProjectOrder);
 }
 
+export function groupProjectsByBadge(projects: ProjectEntry[]) {
+  const groups = new Map<string, ProjectEntry[]>();
+
+  for (const project of projects) {
+    const key = project.data.badge;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key)?.push(project);
+  }
+
+  return [...groups.entries()].map(([badge, items]) => ({ badge, items }));
+}
+
 export async function getFeaturedProjects(limit = 3) {
   return (await getProjects()).filter((project) => project.data.featured).slice(0, limit);
 }
@@ -63,4 +75,20 @@ export function getAdjacentSeriesPosts(posts: BlogEntry[], current: BlogEntry) {
     previous: index > 0 ? seriesPosts[index - 1] : undefined,
     next: index >= 0 && index < seriesPosts.length - 1 ? seriesPosts[index + 1] : undefined
   };
+}
+
+export function groupPostsBySeries(posts: BlogEntry[]) {
+  const groups = new Map<string, BlogEntry[]>();
+
+  for (const post of posts) {
+    const key = post.data.series ?? 'standalone';
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key)?.push(post);
+  }
+
+  return [...groups.entries()].map(([series, items]) => ({
+    series,
+    title: items[0]?.data.seriesTitle ?? (series === 'standalone' ? 'Standalone' : series),
+    items: [...items].sort((a, b) => (a.data.seriesOrder ?? 0) - (b.data.seriesOrder ?? 0))
+  }));
 }

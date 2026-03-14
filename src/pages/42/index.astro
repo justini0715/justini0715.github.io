@@ -4,9 +4,10 @@ import PostCard from '../../components/PostCard.astro';
 import SectionTitle from '../../components/SectionTitle.astro';
 import SplitHero from '../../components/site/SplitHero.astro';
 import { seriesOverview } from '../../data/site';
-import { get42Posts } from '../../lib/content';
+import { get42Posts, groupPostsBySeries } from '../../lib/content';
 
 const posts = await get42Posts();
+const seriesGroups = groupPostsBySeries(posts);
 ---
 
 <ArchiveLayout
@@ -32,6 +33,31 @@ const posts = await get42Posts();
   </SplitHero>
 
   <section class="section">
+    <div class="container feature-grid feature-grid--compact">
+      <article class="card stat-card hub-metric-card">
+        <p class="eyebrow">Entries</p>
+        <h3>{posts.length}</h3>
+        <p>현재 42 허브에서 읽을 수 있는 글 수</p>
+      </article>
+      <article class="card stat-card hub-metric-card">
+        <p class="eyebrow">Series</p>
+        <h3>{seriesGroups.length}</h3>
+        <p>현재 42 글이 묶이는 시리즈 개수</p>
+      </article>
+      <article class="card stat-card hub-metric-card">
+        <p class="eyebrow">Latest</p>
+        <h3>{posts[0]?.data.title ?? '—'}</h3>
+        <p>가장 최근에 정리한 42 기록</p>
+      </article>
+      <article class="card stat-card hub-metric-card">
+        <p class="eyebrow">Read mode</p>
+        <h3>Track</h3>
+        <p>시리즈 순서와 전후 맥락을 기준으로 읽는 흐름</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section">
     <div class="container">
       <SectionTitle
         eyebrow="Series lanes"
@@ -44,6 +70,35 @@ const posts = await get42Posts();
             <h3>{series.title}</h3>
             <p>{series.description}</p>
           </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tint">
+    <div class="container">
+      <SectionTitle
+        eyebrow="Read in order"
+        title="시리즈 순서로 읽는 현재 흐름"
+        description="현재 들어온 글 수가 많지 않더라도, 어떤 순서와 시리즈로 쌓이고 있는지 바로 이해할 수 있게 한다."
+      />
+
+      <div class="hub-lane-grid">
+        {seriesGroups.map((group) => (
+          <section class="panel hub-lane-panel">
+            <div class="hub-lane-panel__head">
+              <p class="eyebrow">{group.title}</p>
+              <h3>{group.items.length} entry{group.items.length > 1 ? 'ies' : ''}</h3>
+            </div>
+            <div class="hub-stack-cluster">
+              {group.items.map((post) => (
+                <a class="hub-project-link" href={`/42/${post.id}/`}>
+                  <strong>{post.data.seriesOrder ? `${post.data.seriesOrder}. ` : ''}{post.data.title}</strong>
+                  <span>{post.data.description}</span>
+                </a>
+              ))}
+            </div>
+          </section>
         ))}
       </div>
     </div>
