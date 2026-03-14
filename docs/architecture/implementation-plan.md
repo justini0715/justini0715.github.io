@@ -7,8 +7,8 @@
 - Domain target: `https://changwpa.kro.kr`
 
 ## Current Phase
-- Phase: Phase 41 — 42 Archive Survey Fill
-- Branch: `phase/41-42-archive-docs-fill`
+- Phase: Phase 42 — 42 Cursus Circle Reframe
+- Branch: `phase/42-cursus-circle-reorg`
 - Status: Complete
 
 ## Official Phase List
@@ -53,16 +53,17 @@
 39. Phase 39 — Studio Local Runtime Fix
 40. Phase 40 — Remove Studio
 41. Phase 41 — 42 Archive Survey Fill
+42. Phase 42 — 42 Cursus Circle Reframe
 
 ## Current Phase Scope
-- Survey the real 42 repositories under `/home/iostream/Desktop/42-repo-workspace` and use code/comments/docs as evidence.
-- Expand the site’s 42 archive so the dedicated `/42` route is backed by a much fuller set of Korean writeups.
-- Fill the 42 series map and align the visible 42 series taxonomy with the newly surveyed project set.
+- Reframe the `/42` archive around public 42 cursus circles instead of the custom systems/graphics/infra/cpp lane split.
+- Update the visible 42 taxonomy, hub copy, detail metadata, and archive docs so they all use Circle 0~5 consistently.
+- Preserve the repository-evidence-based 42 posts from phase 41 while changing only the grouping model.
 
 ## Current Phase Non-Scope
-- Reworking the public layout again or touching unrelated non-42 pages.
-- Rewriting the project collection or general technical blog content in the same phase.
-- Inventing unsupported claims where the local 42 repo evidence is missing; incomplete repos should be labeled honestly.
+- Rewriting the actual 42 post bodies from scratch again.
+- Reworking unrelated public routes outside the 42 archive and its supporting docs/components.
+- Claiming a campus-specific cursus is universal where public materials differ; ambiguous placements should be called out as local/archive choices.
 
 ## Architecture Summary
 - Astro static output with content collections for blog posts and projects.
@@ -75,16 +76,16 @@
 - blog taxonomy: `42`, `project`, `devlog`, `setup`, `retrospective`.
 
 ## Deliverables Checklist
-- [x] 42 series map expanded from placeholder notes into a concrete Korean survey map
-- [x] 42 posts added for the surveyed workspace projects with Korean writeups
-- [x] existing 42 posts refreshed into the same Korean structure
-- [x] 42 hub series taxonomy updated to include the surveyed lanes
-- [x] Phase 41 verification completed
+- [x] 42 taxonomy changed from custom lanes to circle-based grouping
+- [x] 42 hub copy and summary cards rewritten around Circle 0~5
+- [x] 42 post metadata and same-circle navigation updated
+- [x] docs/templates/manual examples updated to the new circle keys
+- [x] Phase 42 verification completed
 
 ## Verification Plan
-1. Run local type checks and a full static build after adding the 42 archive content.
-2. Confirm the 42 hub and 42 detail routes build for the newly added slugs.
-3. Confirm the Korean series map and the public 42 series taxonomy stay aligned.
+1. Run local type checks and a full static build after the circle reframe.
+2. Confirm `/42` renders Circle 0~5 in order and that sample detail pages show `circle · Circle X` metadata.
+3. Confirm the 42 docs/templates/manual examples use the new `42-circle-*` keys consistently.
 
 ## Work Log
 - Cloned the remote user-site repository into the writable workspace.
@@ -465,6 +466,9 @@
 - `npm run check` after phase-41 42 archive survey fill → success (`tsc --noEmit`).
 - `npm run build` after phase-41 42 archive survey fill → success; built the expanded `/42` route set including libft, get_next_line, ft_printf, born2beroot, pipex, push_swap, philosopher, minishell, fdf, cub3d, inception, webserv, cpp modules 00-04, and cpp module 05.
 - built-output checks against `dist/42/index.html`, `dist/42/42-libft/index.html`, `dist/42/42-cub3d/index.html`, and `dist/42/42-cpp-module-05/index.html` → confirmed the new Korean archive entries and the updated 42 lane structure render in the static output.
+- `npm run check` after phase-42 cursus circle reframe → success (`tsc --noEmit`).
+- `npm run build` after phase-42 cursus circle reframe → success; rebuilt `/42` with Circle 0~5 grouping while preserving all expanded 42 detail routes.
+- built-output checks against `dist/42/index.html`, `dist/42/42-libft/index.html`, and `dist/42/42-cpp-module-05/index.html` after phase-42 → confirmed the public copy now uses `Circle` labels, ordered circle groups, and same-circle metadata.
 
 - Started `phase/39-studio-local-runtime-fix-v2` after the user reported that Studio buttons like save and folder connect did nothing in local dev.
 - Found the root cause: the seed payload script in `WritingStudioApp.astro` was rendering the literal `{JSON.stringify(initialPosts)}` text instead of actual JSON, so `JSON.parse(...)` threw before any button listeners were attached.
@@ -484,3 +488,8 @@
 - Expanded `docs/content/42-series-map.md` into a concrete Korean map covering 42 Core, Systems, Graphics, Infra, and C++ lanes, with explicit local survey paths and writing principles.
 - Added Korean 42 archive entries for the newly surveyed projects and refreshed the existing push_swap / philosopher writeups so the full `/42` surface is backed by repository-evidence-based posts.
 - Extended the visible 42 taxonomy with a new `42-cpp` lane so the public series overview matches the surveyed repository set.
+- Started `phase/42-cursus-circle-reorg` after the user asked to throw away the custom 42 lane split and regroup the archive around the public 42 cursus circle model instead.
+- Reframed the `/42` hub, 42 post metadata, and supporting docs from `core/systems/graphics/infra/cpp` lanes into `Circle 0` through `Circle 5`, while keeping the repository-evidence-based Korean writeups from phase 41 intact.
+- Used public 42 cursus material as the baseline and treated ambiguous placements such as `fdf` as explicit local archive choices rather than pretending the public curriculum is perfectly uniform.
+- Updated templates/manuals so future 42 entries use `42-circle-*` keys instead of the old custom lane keys.
+

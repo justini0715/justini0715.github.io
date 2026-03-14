@@ -47,7 +47,7 @@ export const strengths = [
 
 export const currentFocus = [
   'Rebuilding the user-site repo as a source-first Astro project',
-  'Publishing 42 assignments in a series-friendly technical blog flow',
+  'Publishing 42 assignments in a circle-based archive flow that matches the public cursus structure',
   'Curating a portfolio that balances algorithms, graphics, infra, and concurrency'
 ];
 
@@ -78,30 +78,35 @@ export const writingPrinciples = [
   'Keep posts maintainable enough to extend one assignment at a time.'
 ];
 
-export const seriesOverview = [
+export const fortyTwoCircleOverview = [
   {
-    key: '42-core',
-    title: '42 Core',
-    description: 'Foundational C projects such as libft, get_next_line, and ft_printf.'
+    key: '42-circle-0',
+    title: 'Circle 0',
+    description: '시작점. libft처럼 이후 과제의 기반이 되는 첫 라이브러리 과제가 놓이는 구간.'
   },
   {
-    key: '42-systems',
-    title: '42 Systems',
-    description: 'Assignments centered on processes, algorithms, concurrency, and shell behavior.'
+    key: '42-circle-1',
+    title: 'Circle 1',
+    description: 'libft 다음 확장 구간. ft_printf, get_next_line, born2beroot처럼 기본기를 실제 과제로 넓히는 단계.'
   },
   {
-    key: '42-graphics',
-    title: '42 Graphics',
-    description: 'Rendering and interaction notes around cub3d and related visual projects.'
+    key: '42-circle-2',
+    title: 'Circle 2',
+    description: '알고리즘, 프로세스, 초기 그래픽 과제가 섞이는 구간. 현재 로컬 아카이브에서는 push_swap, pipex, fdf를 여기에 둔다.'
   },
   {
-    key: '42-infra',
-    title: '42 Infra',
-    description: 'Infrastructure, containers, web serving, and deployment-oriented writeups.'
+    key: '42-circle-3',
+    title: 'Circle 3',
+    description: '동시성과 셸처럼 상태 관리와 복잡한 흐름 제어가 본격적으로 올라오는 단계.'
   },
   {
-    key: '42-cpp',
-    title: '42 C++',
-    description: 'C++ module notes covering OOP basics, canonical form, inheritance, polymorphism, and exception-driven design.'
+    key: '42-circle-4',
+    title: 'Circle 4',
+    description: '더 무거운 그래픽/엔진 흐름과 C++ 전환 구간. 현재 아카이브에서는 cub3d와 C++ Modules 00-04가 여기에 들어간다.'
+  },
+  {
+    key: '42-circle-5',
+    title: 'Circle 5',
+    description: '바깥쪽 공통 코어 구간. 인프라, 서버, 후반 C++ continuation처럼 큰 설계를 묶어 다루는 단계.'
   }
-];
+] as const;

@@ -4,8 +4,8 @@ description: "Docker Compose 기반으로 Nginx, WordPress, MariaDB와 bonus 서
 pubDate: 2026-03-11
 category: "42"
 tags: ["42", "docker", "nginx", "wordpress", "inception"]
-series: "42-infra"
-seriesTitle: "42 Infra"
+series: "42-circle-5"
+seriesTitle: "Circle 5"
 seriesOrder: 2
 difficulty: "컨테이너 오케스트레이션과 서비스 경계"
 featured: true

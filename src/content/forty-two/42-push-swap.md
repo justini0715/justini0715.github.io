@@ -4,9 +4,9 @@ description: "정렬 자체보다 제한된 연산 집합과 move budget이 본�
 pubDate: 2026-03-06
 category: "42"
 tags: ["42", "c", "algorithms", "push_swap"]
-series: "42-systems"
-seriesTitle: "42 Systems"
-seriesOrder: 2
+series: "42-circle-2"
+seriesTitle: "Circle 2"
+seriesOrder: 1
 difficulty: "연산 제한 기반 알고리즘 설계"
 featured: true
 draft: false

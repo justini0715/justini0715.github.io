@@ -13,13 +13,13 @@ const { post, formattedDate, seriesContext } = Astro.props;
 ---
 
 <aside class="panel utility-panel forty-two-meta-panel">
-  <p class="eyebrow">Entry context</p>
+  <p class="eyebrow">Circle context</p>
   <p class="meta-note">{seriesContext}</p>
 
   <MetaRow
     items={[
       formattedDate,
-      post.data.seriesTitle ?? '',
+      post.data.seriesTitle ? `circle · ${post.data.seriesTitle}` : '',
       post.data.seriesOrder ? `order · ${post.data.seriesOrder}` : '',
       post.data.difficulty ? `difficulty · ${post.data.difficulty}` : ''
     ]}

@@ -4,9 +4,9 @@ description: "Bureaucrat, Form, AForm, Intern 구조로 예외, 추상화, 실�
 pubDate: 2026-03-14
 category: "42"
 tags: ["42", "cpp", "exceptions", "bureaucrat"]
-series: "42-cpp"
-seriesTitle: "42 C++"
-seriesOrder: 2
+series: "42-circle-5"
+seriesTitle: "Circle 5"
+seriesOrder: 1
 difficulty: "예외 처리와 추상화 설계"
 featured: true
 draft: false

@@ -4,9 +4,9 @@ description: "height map을 isometric wireframe으로 그리면서 파싱, 좌�
 pubDate: 2026-03-09
 category: "42"
 tags: ["42", "c", "graphics", "fdf"]
-series: "42-graphics"
-seriesTitle: "42 Graphics"
-seriesOrder: 1
+series: "42-circle-2"
+seriesTitle: "Circle 2"
+seriesOrder: 3
 difficulty: "그래픽 좌표 변환과 map 파싱"
 featured: false
 draft: false

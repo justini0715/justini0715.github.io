@@ -4,9 +4,9 @@ description: "코드보다 VM 상태와 운영 정책이 핵심인 42 시스템 
 pubDate: 2026-03-04
 category: "42"
 tags: ["42", "linux", "vm", "security", "born2beroot"]
-series: "42-infra"
-seriesTitle: "42 Infra"
-seriesOrder: 1
+series: "42-circle-1"
+seriesTitle: "Circle 1"
+seriesOrder: 3
 difficulty: "시스템 설정과 운영 정책 검증"
 featured: false
 draft: false

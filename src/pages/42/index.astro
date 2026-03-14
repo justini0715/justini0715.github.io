@@ -3,49 +3,49 @@ import ArchiveLayout from '../../layouts/ArchiveLayout.astro';
 import SectionTitle from '../../components/SectionTitle.astro';
 import SplitHero from '../../components/site/SplitHero.astro';
 import ArchiveListItem from '../../components/site/ArchiveListItem.astro';
-import { seriesOverview } from '../../data/site';
-import { get42Posts, getPostPath, groupPostsBySeries } from '../../lib/content';
+import { fortyTwoCircleOverview } from '../../data/site';
+import { get42Posts, getPostPath, group42PostsByCircle } from '../../lib/content';
 
 const posts = await get42Posts();
-const seriesGroups = groupPostsBySeries(posts);
+const circleGroups = group42PostsByCircle(posts);
 const recentPosts = posts.slice(0, 3);
 const formatDate = (value: Date) => new Intl.DateTimeFormat('en', { dateStyle: 'medium' }).format(value);
 ---
 
 <ArchiveLayout
   title="42 hub"
-  description="Dedicated 42 archive with series lanes, read-in-order links, and recent assignment writeups."
+  description="Dedicated 42 archive organized around the public 42 cursus circle progression."
 >
   <SplitHero
     sectionClass="page-hero page-hero--blog"
     eyebrow="42 hub"
-    title="42 과제 흐름을 전용 허브로 분리해 읽는 아카이브."
-    description="이 경로는 42 글만 모아두는 허브다. 일반 기술 블로그와 합치지 않고, 시리즈와 읽는 순서를 중심으로 정리한다."
+    title="42 과제를 복잡한 주제 축 대신 서클 기준으로 다시 정리한 아카이브."
+    description="이 경로는 42 글만 모아두는 허브다. 공개 Common Core 자료에서 쓰는 circle 흐름을 기준으로 다시 묶고, 현재 로컬 workspace에 있는 과제만 남겨서 단순하게 본다."
     panelEyebrow="Hub structure"
     panelItems={[
-      'Series lanes로 42 트랙을 나눈다',
-      'Read in order에서 같은 흐름의 순서를 따라간다',
-      'Recent entries에서 최근 과제 기록을 바로 연다'
+      'Circle 0부터 Circle 5까지 바깥으로 확장되는 흐름으로 읽는다',
+      '같은 circle 안에서는 현재 로컬 archive 기준으로 읽기 순서를 잡는다',
+      '캠퍼스별 elective 차이나 placeholder 상태는 각 글 본문에서 명시한다'
     ]}
     panelClassName="panel archive-panel"
   >
     <p slot="body" class="page-kicker">
-      일반 기술 노트와 회고는 <a href="/blog">Blog</a>에서, 42 과제 흐름은 여기에서 읽는다.
+      일반 기술 노트와 회고는 <a href="/blog">Blog</a>에서, 42 Common Core 흐름은 여기에서 읽는다.
     </p>
   </SplitHero>
 
   <section class="section">
     <div class="container">
       <SectionTitle
-        eyebrow="Series lanes"
-        title="42 트랙별 읽기 축"
-        description="시스템, 그래픽, 인프라 같은 맥락으로 묶어서 각 과제가 어디에 속하는지 먼저 보여준다."
+        eyebrow="Circle overview"
+        title="42 Cursus를 서클 단위로 단순화"
+        description="공개 42 cursus 자료에서 쓰는 concentric circle 구조를 기준으로, 현재 로컬 archive에 있는 과제만 Circle 0~5로 다시 배치했다."
       />
       <div class="feature-grid feature-grid--compact">
-        {seriesOverview.map((series) => (
+        {fortyTwoCircleOverview.map((circle) => (
           <article class="card stat-card">
-            <h3>{series.title}</h3>
-            <p>{series.description}</p>
+            <h3>{circle.title}</h3>
+            <p>{circle.description}</p>
           </article>
         ))}
       </div>
@@ -55,17 +55,17 @@ const formatDate = (value: Date) => new Intl.DateTimeFormat('en', { dateStyle: '
   <section class="section section--tint">
     <div class="container">
       <SectionTitle
-        eyebrow="Read in order"
-        title="시리즈 순서로 이어 읽기"
-        description="같은 시리즈 안의 과제가 어떤 순서로 쌓였는지부터 이해할 수 있게 한다."
+        eyebrow="By circle"
+        title="서클별로 이어 읽기"
+        description="각 circle 안에서 현재 보유한 과제 기록을 순서대로 묶었다. 공식 cursus는 캠퍼스/기수에 따라 조금씩 다를 수 있어, local archive 기준 설명을 함께 붙인다."
       />
 
       <div class="hub-lane-grid">
-        {seriesGroups.map((group) => (
+        {circleGroups.map((group) => (
           <section class="panel hub-lane-panel">
             <div class="hub-lane-panel__head">
               <p class="eyebrow">{group.title}</p>
-              <h3>{group.items.length} {group.items.length > 1 ? 'entries' : 'entry'}</h3>
+              <h3>{group.items.length} {group.items.length > 1 ? 'projects' : 'project'}</h3>
             </div>
             <div class="hub-stack-cluster">
               {group.items.map((post) => (
@@ -86,7 +86,7 @@ const formatDate = (value: Date) => new Intl.DateTimeFormat('en', { dateStyle: '
       <SectionTitle
         eyebrow="Recent 42 entries"
         title="최근 과제 기록"
-        description="지금 막 추가되거나 업데이트된 42 글부터 바로 읽을 수 있게 최근 항목만 먼저 보여준다."
+        description="서클 구성이 바뀌어도 최근에 정리한 과제부터 바로 열 수 있게 최신 항목은 따로 보여준다."
       />
       <div class="archive-post-list">
         {recentPosts.map((post) => (
@@ -96,7 +96,7 @@ const formatDate = (value: Date) => new Intl.DateTimeFormat('en', { dateStyle: '
             description={post.data.description}
             meta={[
               formatDate(post.data.pubDate),
-              post.data.seriesTitle ? `series · ${post.data.seriesTitle}` : ''
+              post.data.seriesTitle ? `circle · ${post.data.seriesTitle}` : ''
             ]}
             tags={post.data.tags}
           />

@@ -52,18 +52,19 @@ Suggested metadata per post:
 
 Each 42 post should support:
 - project name
-- series group
-- series order
+- circle group
+- circle order
 - difficulty / constraints
 - lessons learned
 - real repository evidence
 
-Current 42 series keys:
-- `42-core`
-- `42-systems`
-- `42-graphics`
-- `42-infra`
-- `42-cpp`
+Current 42 circle keys:
+- `42-circle-0`
+- `42-circle-1`
+- `42-circle-2`
+- `42-circle-3`
+- `42-circle-4`
+- `42-circle-5`
 
 Recommended URL style:
 - `/42/42-libft`

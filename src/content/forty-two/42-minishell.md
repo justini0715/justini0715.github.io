@@ -4,9 +4,9 @@ description: "현재 로컬 기준으로는 구현보다 구조 스캐폴드가 
 pubDate: 2026-03-08
 category: "42"
 tags: ["42", "c", "shell", "minishell"]
-series: "42-systems"
-seriesTitle: "42 Systems"
-seriesOrder: 4
+series: "42-circle-3"
+seriesTitle: "Circle 3"
+seriesOrder: 2
 difficulty: "셸 파서와 실행기 설계"
 featured: false
 draft: false

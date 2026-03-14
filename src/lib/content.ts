@@ -1,4 +1,5 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
+import { fortyTwoCircleOverview } from '../data/site';
 
 export type BlogEntry = CollectionEntry<'blog'>;
 export type FortyTwoEntry = CollectionEntry<'fortyTwo'>;
@@ -10,6 +11,7 @@ export type ProjectState = (typeof PROJECT_STATE_ORDER)[number];
 
 export const GENERAL_BLOG_CATEGORY_ORDER = ['devlog', 'setup', 'retrospective', 'project'] as const;
 export type GeneralBlogCategory = (typeof GENERAL_BLOG_CATEGORY_ORDER)[number];
+const FORTY_TWO_CIRCLE_ORDER: string[] = fortyTwoCircleOverview.map((circle) => circle.key);
 
 const byNewest = (a: PostEntry, b: PostEntry) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf();
 const byProjectOrder = (a: ProjectEntry, b: ProjectEntry) => {
@@ -141,6 +143,17 @@ export function groupPostsBySeries(posts: PostEntry[]) {
     title: items[0]?.data.seriesTitle ?? (series === 'standalone' ? 'Standalone' : series),
     items: [...items].sort((a, b) => (a.data.seriesOrder ?? 0) - (b.data.seriesOrder ?? 0))
   }));
+}
+
+export function group42PostsByCircle(posts: FortyTwoEntry[]) {
+  const groups = groupPostsBySeries(posts);
+  const indexByKey = new Map(FORTY_TWO_CIRCLE_ORDER.map((key, index) => [key, index]));
+
+  return groups.sort((left, right) => {
+    const leftIndex = indexByKey.get(left.series) ?? Number.MAX_SAFE_INTEGER;
+    const rightIndex = indexByKey.get(right.series) ?? Number.MAX_SAFE_INTEGER;
+    return leftIndex - rightIndex || left.title.localeCompare(right.title);
+  });
 }
 
 export function groupGeneralPostsByCategory(posts: BlogEntry[]) {
