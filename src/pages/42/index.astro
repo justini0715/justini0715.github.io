@@ -1,14 +1,15 @@
 ---
 import ArchiveLayout from '../../layouts/ArchiveLayout.astro';
-import PostCard from '../../components/PostCard.astro';
 import SectionTitle from '../../components/SectionTitle.astro';
 import SplitHero from '../../components/site/SplitHero.astro';
+import ArchiveListItem from '../../components/site/ArchiveListItem.astro';
 import { seriesOverview } from '../../data/site';
-import { get42Posts, groupPostsBySeries } from '../../lib/content';
+import { get42Posts, getPostPath, groupPostsBySeries } from '../../lib/content';
 
 const posts = await get42Posts();
 const seriesGroups = groupPostsBySeries(posts);
 const recentPosts = posts.slice(0, 3);
+const formatDate = (value: Date) => new Intl.DateTimeFormat('en', { dateStyle: 'medium' }).format(value);
 ---
 
 <ArchiveLayout
@@ -87,8 +88,19 @@ const recentPosts = posts.slice(0, 3);
         title="최근 과제 기록"
         description="지금 막 추가되거나 업데이트된 42 글부터 바로 읽을 수 있게 최근 항목만 먼저 보여준다."
       />
-      <div class="card-grid">
-        {recentPosts.map((post) => <PostCard post={post} />)}
+      <div class="archive-post-list">
+        {recentPosts.map((post) => (
+          <ArchiveListItem
+            href={getPostPath(post)}
+            title={post.data.title}
+            description={post.data.description}
+            meta={[
+              formatDate(post.data.pubDate),
+              post.data.seriesTitle ? `series · ${post.data.seriesTitle}` : ''
+            ]}
+            tags={post.data.tags}
+          />
+        ))}
       </div>
     </div>
   </section>

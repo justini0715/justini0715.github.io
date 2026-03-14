@@ -1,0 +1,32 @@
+---
+import TagChipList from './TagChipList.astro';
+import MetaRow from './MetaRow.astro';
+
+interface Props {
+  href: string;
+  title: string;
+  description: string;
+  meta?: string[];
+  tags?: string[];
+  linkLabel?: string;
+}
+
+const {
+  href,
+  title,
+  description,
+  meta = [],
+  tags = [],
+  linkLabel = 'Read →'
+} = Astro.props;
+---
+
+<article class="archive-post-item archive-post-item--enhanced">
+  <div class="archive-post-item__copy">
+    <h4><a href={href}>{title}</a></h4>
+    <p>{description}</p>
+    <MetaRow items={meta} />
+    <TagChipList items={tags} max={4} />
+  </div>
+  <a class="post-card__link" href={href}>{linkLabel}</a>
+</article>
