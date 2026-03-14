@@ -31,15 +31,22 @@ const socialImage = new URL(image, Astro.site ?? Astro.url);
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="description" content={description} />
 <meta name="author" content={siteMeta.authorName} />
-<meta name="theme-color" content="#07111f" />
+<meta name="theme-color" content="#f5f7fb" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#18181b" media="(prefers-color-scheme: dark)" />
+<meta name="color-scheme" content="light dark" />
 <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
 <link rel="canonical" href={canonical.toString()} />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
 <link
   rel="stylesheet"
-  href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+  href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+/>
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
 />
 <title>{pageTitle}</title>
 <meta property="og:type" content={ogType} />

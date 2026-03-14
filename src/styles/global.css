@@ -2,30 +2,55 @@
 
 :root {
   color-scheme: dark;
-  --bg: #091018;
-  --bg-deep: #060b12;
-  --bg-elevated: rgba(13, 19, 29, 0.94);
-  --bg-panel: rgba(15, 22, 33, 0.9);
-  --bg-panel-strong: rgba(12, 18, 28, 0.97);
-  --bg-muted: rgba(20, 28, 40, 0.72);
-  --line-strong: rgba(196, 209, 235, 0.18);
-  --line-soft: rgba(196, 209, 235, 0.1);
-  --line-faint: rgba(196, 209, 235, 0.06);
-  --text: #edf3ff;
-  --text-soft: #c7d0e2;
-  --muted: #94a0b7;
-  --accent: #abc1ff;
-  --accent-strong: #dce5ff;
-  --accent-warm: #e7c28d;
-  --shadow: 0 24px 72px rgba(2, 7, 16, 0.32);
-  --shadow-soft: 0 14px 40px rgba(2, 7, 16, 0.2);
-  --radius-lg: 22px;
-  --radius-md: 16px;
-  --radius-sm: 10px;
+  --bg: #18181b;
+  --bg-deep: #121214;
+  --bg-elevated: rgba(24, 24, 27, 0.9);
+  --bg-panel: rgba(31, 31, 36, 0.86);
+  --bg-panel-strong: rgba(19, 19, 22, 0.94);
+  --bg-muted: rgba(39, 39, 43, 0.72);
+  --line-strong: rgba(244, 244, 245, 0.12);
+  --line-soft: rgba(244, 244, 245, 0.08);
+  --line-faint: rgba(244, 244, 245, 0.05);
+  --text: #f4f4f5;
+  --text-soft: #d4d4d8;
+  --muted: #a1a1aa;
+  --accent: #88aef7;
+  --accent-strong: #d5e2ff;
+  --accent-warm: #d8bc92;
+  --shadow: 0 32px 80px rgba(0, 0, 0, 0.24);
+  --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.16);
+  --radius-lg: 26px;
+  --radius-md: 18px;
+  --radius-sm: 12px;
   --max-width: 1120px;
   --measure: 72ch;
-  --font-sans: Inter, 'IBM Plex Sans', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-sans: 'Pretendard', 'Inter', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'IBM Plex Mono', 'SFMono-Regular', ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', monospace;
+  --surface-hover-shift: -4px;
+  --surface-hover-shadow: 0 24px 48px rgba(0, 0, 0, 0.18);
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color-scheme: light;
+    --bg: #f6f7fb;
+    --bg-deep: #eef1f7;
+    --bg-elevated: rgba(255, 255, 255, 0.84);
+    --bg-panel: rgba(255, 255, 255, 0.92);
+    --bg-panel-strong: rgba(248, 250, 252, 0.96);
+    --bg-muted: rgba(226, 232, 240, 0.76);
+    --line-strong: rgba(15, 23, 42, 0.14);
+    --line-soft: rgba(15, 23, 42, 0.1);
+    --line-faint: rgba(15, 23, 42, 0.06);
+    --text: #111827;
+    --text-soft: #374151;
+    --muted: #6b7280;
+    --accent: #2f62d6;
+    --accent-strong: #153f9e;
+    --accent-warm: #8c5b12;
+    --shadow: 0 30px 70px rgba(15, 23, 42, 0.12);
+    --shadow-soft: 0 18px 40px rgba(15, 23, 42, 0.09);
+  }
 }
 
 @layer reset {
@@ -43,8 +68,8 @@
 @layer base {
   html {
     background:
-      radial-gradient(circle at top, rgba(121, 147, 210, 0.12), transparent 30%),
-      linear-gradient(180deg, #0c1420 0%, #060b12 100%);
+      radial-gradient(circle at top, color-mix(in srgb, var(--accent) 14%, transparent), transparent 32%),
+      linear-gradient(180deg, color-mix(in srgb, var(--bg) 86%, white 2%) 0%, var(--bg-deep) 100%);
   }
 
   body {
@@ -55,9 +80,10 @@
     background: transparent;
     color: var(--text);
     line-height: 1.7;
-    letter-spacing: -0.011em;
+    letter-spacing: -0.012em;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   body::before,
@@ -73,34 +99,37 @@
     inset: 0 auto auto 0;
     width: min(38vw, 26rem);
     height: 18rem;
-    background: radial-gradient(circle at top left, rgba(171, 193, 255, 0.14), transparent 72%);
+    background: radial-gradient(circle at top left, color-mix(in srgb, var(--accent) 16%, transparent), transparent 72%);
   }
 
   body::after {
     inset: auto 0 10vh auto;
     width: min(26vw, 18rem);
     height: 14rem;
-    background: radial-gradient(circle at bottom right, rgba(231, 194, 141, 0.09), transparent 74%);
+    background: radial-gradient(circle at bottom right, color-mix(in srgb, var(--accent-warm) 12%, transparent), transparent 74%);
   }
 
   h1,
   h2,
   h3 {
     font-family: var(--font-sans);
-    font-weight: 700;
+    font-weight: 800;
     line-height: 1.08;
     letter-spacing: -0.04em;
     color: var(--text);
     text-wrap: balance;
   }
 
-  h1 { font-size: clamp(3rem, 5.6vw, 4.9rem); }
-  h2 { font-size: clamp(2rem, 3.2vw, 3rem); }
-  h3 { font-size: clamp(1.25rem, 2vw, 1.7rem); }
+  h1 { font-size: clamp(2.8rem, 5.6vw, 5.1rem); }
+  h2 { font-size: clamp(1.85rem, 3vw, 3.1rem); }
+  h3 { font-size: clamp(1.2rem, 1.8vw, 1.72rem); }
 
   p,
   li,
-  small { color: var(--text-soft); }
+  small {
+    color: var(--text-soft);
+    font-size: clamp(0.98rem, 0.92rem + 0.18vw, 1.06rem);
+  }
 
   strong,
   b { color: var(--text); }
@@ -124,22 +153,36 @@
   button,
   summary {
     transition:
-      color 160ms ease,
-      background-color 160ms ease,
-      border-color 160ms ease,
-      transform 160ms ease,
-      box-shadow 160ms ease,
-      opacity 160ms ease;
+      color 220ms ease,
+      background-color 300ms ease,
+      border-color 300ms ease,
+      transform 220ms ease,
+      box-shadow 220ms ease,
+      opacity 220ms ease;
   }
 
   :focus-visible {
-    outline: 2px solid rgba(171, 193, 255, 0.88);
+    outline: 2px solid color-mix(in srgb, var(--accent) 78%, white 8%);
     outline-offset: 3px;
   }
 
   ::selection {
-    background: rgba(171, 193, 255, 0.24);
+    background: color-mix(in srgb, var(--accent) 26%, transparent);
     color: var(--text);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }
 
@@ -187,7 +230,7 @@
     padding: 0.4rem 0.75rem;
     border-radius: 999px;
     border: 1px solid var(--line-soft);
-    background: rgba(255, 255, 255, 0.025);
+    background: color-mix(in srgb, var(--bg-panel) 88%, transparent);
     color: var(--text-soft);
     font-size: 0.82rem;
     letter-spacing: 0.02em;
@@ -196,8 +239,8 @@
   .route-link-chip:hover,
   .route-link-chip.is-active {
     color: var(--text);
-    border-color: rgba(171, 193, 255, 0.22);
-    background: rgba(171, 193, 255, 0.08);
+    border-color: color-mix(in srgb, var(--accent) 40%, var(--line-soft));
+    background: color-mix(in srgb, var(--accent) 12%, var(--bg-panel));
   }
 
   .route-link-chip--back {
@@ -235,10 +278,11 @@
     position: sticky;
     top: 0;
     z-index: 20;
-    backdrop-filter: blur(16px);
-    background: rgba(7, 11, 17, 0.78);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background: color-mix(in srgb, var(--bg-elevated) 92%, transparent);
     border-bottom: 1px solid var(--line-faint);
-    transition: transform 180ms ease, background-color 180ms ease, border-color 180ms ease;
+    transition: transform 220ms ease, background-color 300ms ease, border-color 300ms ease;
   }
 
   .site-shell__header.is-hidden {
@@ -312,14 +356,14 @@
     width: 2.5rem;
     aspect-ratio: 1;
     border-radius: 0.75rem;
-    border: 1px solid rgba(220, 229, 255, 0.12);
-    background: linear-gradient(180deg, rgba(16, 24, 36, 0.98), rgba(10, 16, 25, 0.98));
+    border: 1px solid var(--line-soft);
+    background: linear-gradient(180deg, color-mix(in srgb, var(--bg-panel) 88%, white 2%), color-mix(in srgb, var(--bg-deep) 92%, black 4%));
     color: var(--accent-strong);
     font-family: var(--font-mono);
     font-size: 0.9rem;
     font-weight: 700;
     letter-spacing: 0.08em;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    box-shadow: inset 0 1px 0 color-mix(in srgb, var(--text) 10%, transparent);
   }
 
   .site-nav__links {
@@ -331,7 +375,7 @@
     max-width: 100%;
     padding: 0.3rem;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.02);
+    background: color-mix(in srgb, var(--bg-panel) 86%, transparent);
     border: 1px solid var(--line-faint);
   }
 
@@ -355,8 +399,8 @@
   .site-nav__links a:hover,
   .site-nav__links a.is-active {
     color: var(--text);
-    background: rgba(171, 193, 255, 0.08);
-    box-shadow: inset 0 0 0 1px rgba(171, 193, 255, 0.1);
+    background: color-mix(in srgb, var(--accent) 12%, var(--bg-panel));
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 18%, transparent);
   }
 
   .site-profile-link {
@@ -367,21 +411,22 @@
     height: 3.4rem;
     padding: 0.26rem;
     border-radius: 999px;
-    border: 1px solid rgba(196, 209, 235, 0.18);
-    background: rgba(255, 255, 255, 0.03);
-    box-shadow: 0 10px 30px rgba(2, 7, 16, 0.16);
+    border: 1px solid var(--line-soft);
+    background: color-mix(in srgb, var(--bg-panel) 84%, transparent);
+    box-shadow: 0 10px 24px color-mix(in srgb, var(--bg-deep) 24%, transparent);
   }
 
   .site-profile-link.is-active {
-    border-color: rgba(231, 194, 141, 0.36);
-    background: rgba(231, 194, 141, 0.08);
-    box-shadow: 0 0 0 1px rgba(231, 194, 141, 0.12);
+    border-color: color-mix(in srgb, var(--accent-warm) 42%, transparent);
+    background: color-mix(in srgb, var(--accent-warm) 12%, var(--bg-panel));
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent-warm) 16%, transparent);
   }
 
   .site-profile-link:hover {
-    transform: translateY(-1px);
-    border-color: rgba(171, 193, 255, 0.26);
-    background: rgba(171, 193, 255, 0.06);
+    transform: translateY(var(--surface-hover-shift));
+    border-color: color-mix(in srgb, var(--accent) 34%, transparent);
+    background: color-mix(in srgb, var(--accent) 10%, var(--bg-panel));
+    box-shadow: var(--surface-hover-shadow);
   }
 
   .site-profile-link__avatar {
@@ -481,19 +526,20 @@
     min-height: 3rem;
     padding: 0.85rem 1.22rem;
     border-radius: 999px;
-    border: 1px solid rgba(171, 193, 255, 0.16);
-    background: rgba(171, 193, 255, 0.1);
+    border: 1px solid color-mix(in srgb, var(--accent) 18%, transparent);
+    background: color-mix(in srgb, var(--accent) 12%, var(--bg-panel));
     color: var(--text);
-    font-size: 0.96rem;
+    font-size: clamp(0.94rem, 0.9rem + 0.12vw, 1rem);
     font-weight: 600;
     letter-spacing: -0.01em;
     box-shadow: none;
   }
 
   .button:hover {
-    transform: translateY(-1px);
-    background: rgba(171, 193, 255, 0.14);
-    border-color: rgba(171, 193, 255, 0.24);
+    transform: translateY(var(--surface-hover-shift));
+    background: color-mix(in srgb, var(--accent) 16%, var(--bg-panel));
+    border-color: color-mix(in srgb, var(--accent) 28%, transparent);
+    box-shadow: var(--surface-hover-shadow);
   }
 
   .button--ghost {
@@ -504,8 +550,8 @@
 
   .button--ghost:hover {
     color: var(--text);
-    border-color: rgba(171, 193, 255, 0.24);
-    background: rgba(171, 193, 255, 0.05);
+    border-color: color-mix(in srgb, var(--accent) 28%, transparent);
+    background: color-mix(in srgb, var(--accent) 8%, var(--bg-panel));
     box-shadow: none;
   }
 
@@ -559,10 +605,11 @@
   .empty-state {
     position: relative;
     overflow: hidden;
-    background: linear-gradient(180deg, rgba(16, 23, 35, 0.95), rgba(11, 17, 26, 0.98));
+    background: linear-gradient(180deg, color-mix(in srgb, var(--bg-panel) 92%, white 1%), color-mix(in srgb, var(--bg-panel-strong) 94%, black 2%));
     border: 1px solid var(--line-soft);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-soft);
+    transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease, background-color 300ms ease;
   }
 
   .hero-note::before,
@@ -737,8 +784,17 @@
   .post-card:hover,
   .project-card:hover,
   .series-card:hover {
-    transform: translateY(-1px);
-    border-color: rgba(171, 193, 255, 0.18);
+    transform: translateY(var(--surface-hover-shift));
+    border-color: color-mix(in srgb, var(--accent) 24%, transparent);
+    box-shadow: var(--surface-hover-shadow);
+  }
+
+  .card:has(a:focus-visible),
+  .panel:has(a:focus-visible),
+  .series-card:has(a:focus-visible),
+  .archive-post-item:has(a:focus-visible) {
+    border-color: color-mix(in srgb, var(--accent) 34%, transparent);
+    box-shadow: var(--surface-hover-shadow);
   }
 
   .card h3,
@@ -771,8 +827,8 @@
     min-height: 1.9rem;
     padding: 0.28rem 0.7rem;
     border-radius: 999px;
-    background: rgba(171, 193, 255, 0.08);
-    border: 1px solid rgba(171, 193, 255, 0.12);
+    background: color-mix(in srgb, var(--accent) 12%, var(--bg-panel));
+    border: 1px solid color-mix(in srgb, var(--accent) 18%, transparent);
     color: var(--accent-strong);
     font-size: 0.73rem;
     font-weight: 500;
