@@ -20,8 +20,12 @@ export function getPostPath(post: PostEntry) {
   return is42Post(post) ? `/42/${post.id}/` : `/blog/${post.id}/`;
 }
 
-function sortPublishedPosts<T extends PostEntry>(posts: T[]) {
-  return posts.filter((post: T) => !post.data.draft).sort(byNewest);
+function sortPublishedBlogPosts(posts: BlogEntry[]) {
+  return posts.filter((post) => !post.data.draft).sort(byNewest);
+}
+
+function sortPublished42Posts(posts: FortyTwoEntry[]) {
+  return posts.filter((post) => !post.data.draft).sort(byNewest);
 }
 
 async function getPublishedCollectionPosts(collection: 'blog'): Promise<BlogEntry[]>;
@@ -29,11 +33,11 @@ async function getPublishedCollectionPosts(collection: 'fortyTwo'): Promise<Fort
 async function getPublishedCollectionPosts(collection: 'blog' | 'fortyTwo') {
   if (collection === 'blog') {
     const posts: BlogEntry[] = await getCollection('blog');
-    return sortPublishedPosts(posts);
+    return sortPublishedBlogPosts(posts);
   }
 
   const posts: FortyTwoEntry[] = await getCollection('fortyTwo');
-  return sortPublishedPosts(posts);
+  return sortPublished42Posts(posts);
 }
 
 export async function getPublishedPosts() {
