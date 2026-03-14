@@ -7,8 +7,8 @@
 - Domain target: `https://changwpa.kro.kr`
 
 ## Current Phase
-- Phase: Phase 33 — Profile Avatar Shape
-- Branch: `phase/33-profile-avatar-shape`
+- Phase: Phase 34 — Theme / Typography / Shared Shell
+- Branch: `phase/34-theme-shell-modernization`
 - Status: Complete
 
 ## Official Phase List
@@ -45,21 +45,17 @@
 31. Phase 31 — Public IA Refresh
 32. Phase 32 — Studio IA Alignment
 33. Phase 33 — Profile Avatar Shape
+34. Phase 34 — Theme / Typography / Shared Shell
 
 ## Current Phase Scope
-- Keep `/studio` as a single local-only editor route while tightening the IA around document type, save state, preview/settings/checks drawers, and browser fallback.
-- Separate general technical posts from 42 posts more clearly inside the studio form and saving model without changing the public collection layout.
-- Add `.mdx` loading support and preserve original source extensions when editing existing documents.
+- Modernize the shared design system with dark-first adaptive tokens, fluid typography, and smoother shell transitions.
+- Replace the old IBM Plex Sans-heavy stack with Pretendard + Inter for body/headings while keeping IBM Plex Mono for metadata/code.
+- Upgrade the sticky header and shared surfaces with restrained glassmorphism, better hover depth, and reduced-motion-safe transitions.
 
 ## Current Phase Non-Scope
-- Replacing the static content architecture with a hosted CMS.
-- Adding external backend, database, or authentication.
-- Building a full multi-user publishing product.
-- Changing the underlying Markdown storage/file IO model.
-- Reworking the public route map again after the phase-15/27 split.
-- Adding remote commit/push features, project-collection CRUD, or production editor exposure.
-- Introducing backend/auth/SSR/CMS behavior into the studio.
-- Rebuilding the studio into a multi-route admin dashboard.
+- Reworking route-level information architecture yet; Bento and route composition changes come in the next phase.
+- Adding new top-level routes, backend/auth/SSR/CMS behavior, or client-side routing libraries.
+- Reworking `/studio` behavior beyond ensuring it still inherits the refreshed shared shell safely.
 
 ## Architecture Summary
 - Astro static output with content collections for blog posts and projects.
@@ -72,14 +68,16 @@
 - blog taxonomy: `42`, `project`, `devlog`, `setup`, `retrospective`.
 
 ## Deliverables Checklist
-- [x] about-page profile image no longer shows a rounded-rectangle background box
-- [x] avatar shape now matches the actual image silhouette
-- [x] Phase 33 verification completed
+- [x] dark-first adaptive theme tokens added with system light-mode support
+- [x] Pretendard + Inter typography system applied in the shared shell
+- [x] sticky header, cards, and buttons refreshed with restrained glass / hover depth
+- [x] reduced-motion-safe transition rules added
+- [x] Phase 34 verification completed
 
 ## Verification Plan
-1. Run local type checks and a full static build after the avatar-shape CSS fix.
-2. Confirm the built about page still renders the profile image and no longer shows the old rounded-rectangle box.
-3. Re-check the rest of the public shell and production `/studio` for regressions.
+1. Run local type checks and a full static build after the shared-theme refactor.
+2. Confirm the built shell now loads Pretendard + Inter and emits dark/light adaptive theme metadata.
+3. Re-check the public routes and production `/studio` after the shared CSS refresh.
 
 ## Work Log
 - Cloned the remote user-site repository into the writable workspace.
@@ -427,3 +425,10 @@
 - Changed the large about-page avatar to a background-free circular treatment so the visible frame matches the image silhouette instead of a rounded rectangle.
 - `npm run check` after phase-33 profile avatar shape → success (`tsc --noEmit`).
 - `npm run build` after phase-33 profile avatar shape → success; rebuilt the public routes plus the locked production `/studio` page.
+
+- Started `phase/34-theme-shell-modernization` from merged `main` before the route-level redesign work.
+- Rebuilt the shared token system around dark-first adaptive variables, fluid type sizing, smoother transition timing, and reduced-motion handling.
+- Swapped the shared public font stack to Pretendard + Inter while keeping IBM Plex Mono for metadata and code.
+- Refined the sticky header, chips, cards, buttons, and shared surfaces toward a softer glassy shell with slightly deeper hover motion.
+- `npm run check` after phase-34 theme/shell modernization → success (`tsc --noEmit`).
+- `npm run build` after phase-34 theme/shell modernization → success; rebuilt the full public route set plus the locked production `/studio` page.
