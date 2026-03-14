@@ -7,8 +7,8 @@
 - Domain target: `https://changwpa.kro.kr`
 
 ## Current Phase
-- Phase: Phase 27 — Mobile Nav & Header UX
-- Branch: `phase/27-mobile-nav-and-header-ux`
+- Phase: Phase 28 — Responsive Shell & Profile Menu
+- Branch: `phase/28-header-profile-popover`
 - Status: Complete
 
 ## Official Phase List
@@ -39,32 +39,24 @@
 25. Phase 25 — Projects Hub Features
 26. Phase 26 — 42 / Blog Collection Split
 27. Phase 27 — Mobile Nav & Header UX
+28. Phase 28 — Responsive Shell & Profile Menu
 
 ## Current Phase Scope
-- Fix the public mobile navigation so it no longer stacks links vertically into a clumsy mobile menu.
-- Add a scroll-aware header behavior on smaller screens so the header gets out of the way while reading.
-- Keep the route/layout split intact while improving the actual mobile browsing experience.
+- Remove the extra hub/archive utility bars now that the primary navigation is established.
+- Tighten the global shell so public pages no longer introduce unintended horizontal overflow on mobile.
+- Replace the header GitHub CTA with a right-aligned profile avatar that opens a compact profile card / bio popover.
+- Keep the mobile scroll-aware header behavior intact while refining the top navigation layout.
 
 ## Current Phase Non-Scope
 - Replacing the static content architecture with a hosted CMS.
 - Adding external backend, database, or authentication.
 - Building a full multi-user publishing product.
 - Changing the underlying Markdown storage/file IO model.
-- Reworking the already-polished studio beyond compatibility checks after global style changes.
-- Rebuilding the public UI system again immediately after phase 12.
-- Another large copy/SEO rewrite immediately after phase 13.
-- Splitting the underlying content collection into separate physical `blog` and `forty-two` collections in this phase.
-- Reworking the route map again immediately after phase 15.
-- A full content-collection migration; this phase is compatibility-focused only.
-- Adding the user-specific `/home` features that still require separate product decisions.
-- Rewriting the core content model or adding backend features.
-- Reworking blog/42 routing again; this phase is project-detail specific.
-- Reworking the general technical blog article family in the same phase.
-- Implementing backend-driven widgets or persistence for `/home` yet.
-- Adding real persistence or authenticated state for `/home`.
-- Reworking project or 42 article routing again; this phase is blog-article specific.
-- Splitting the 42/blog collections physically in this phase.
-- Reworking the content model again; this phase is header/mobile UX specific.
+- Reworking the public route map again after the phase-15/27 split.
+- Replacing the current static About page with a richer account/settings system.
+- Adding authenticated profile state, comments, or backend-backed profile data.
+- Using a real personal headshot before the user provides one; this phase may use a polished static avatar asset instead.
+- Reworking the already-polished studio beyond compatibility checks after shared-header changes.
 
 ## Architecture Summary
 - Astro static output with content collections for blog posts and projects.
@@ -77,17 +69,18 @@
 - blog taxonomy: `42`, `project`, `devlog`, `setup`, `retrospective`.
 
 ## Deliverables Checklist
-- [x] mobile nav links no longer stack vertically
-- [x] horizontal mobile nav scrolling enabled
-- [x] mobile scroll-down header hide behavior added
-- [x] Phase 27 verification completed
+- [x] public pages no longer ship the redundant hub/archive utility bars
+- [x] top-level shell clamps horizontal overflow on mobile widths
+- [x] navbar right edge now uses an avatar trigger instead of the old GitHub CTA
+- [x] profile popover exposes a richer bio card with About and GitHub actions
+- [x] Phase 28 verification completed
 
 ## Verification Plan
-1. Run local build and type checks after the mobile-nav pass.
-2. Verify the public header keeps nav links horizontally accessible on smaller screens.
-3. Verify the header hides on downward scroll and reappears when scrolling up on mobile widths.
-4. Re-check `/studio` after shared header/style changes for compatibility.
-5. Confirm the public routes remain static-output compatible.
+1. Run local type checks and a full static build after the header/profile-shell pass.
+2. Confirm the built public HTML includes the new avatar-triggered profile popover on representative routes.
+3. Confirm the built HTML no longer includes the old hub/archive utility bars on `/home`, `/projects`, `/42`, and `/blog`.
+4. Confirm the generated CSS now clamps page-level horizontal overflow while preserving horizontally scrollable nav chips inside the header.
+5. Re-check `/studio` after shared header/style changes for compatibility.
 
 ## Work Log
 - Cloned the remote user-site repository into the writable workspace.
@@ -370,6 +363,17 @@
 - `find dist/projects -maxdepth 2 -type f` after phase-20 → confirmed project detail routes now build under `/projects/inception/`, `/projects/cub3d/`, `/projects/philosopher/`, and `/projects/push-swap/`.
 - `grep dist/projects/index.html dist/projects/inception/index.html` after phase-20 → confirmed project cards now link to `Case detail →` and project detail pages expose `Project case` context with internal reading surfaces.
 - `grep dist/studio/index.html` after phase-20 project detail routes → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- Started `phase/28-header-profile-popover` from the verified merged `main` state after the phase-27 mobile/header work was live.
+- Removed the redundant hub/archive utility bars from hub/archive layouts so the global navbar remains the single primary route switcher.
+- Replaced the header GitHub CTA with a right-aligned avatar trigger, a contrasting profile popover card, and a new static avatar asset that keeps the profile affordance consistent across all public routes.
+- Tightened the shared shell CSS with page-level horizontal overflow clamping, additional `min-width: 0` safeguards on grid children, and smaller mobile brand/header adjustments to stop narrow screens from drifting sideways.
+- `npm run check` after phase-28 responsive shell/profile menu → success (`tsc --noEmit`).
+- `npm run build` after phase-28 responsive shell/profile menu → success; rebuilt the full public route set, project detail routes, compatibility pages, and `/studio`.
+- `npx tsc --noEmit --pretty false --project tsconfig.json` via LSP diagnostics after phase-28 → 0 errors, 0 warnings.
+- `rg -n "Hub links|Archive switcher" dist -g '*.html'` after phase-28 → no matches; confirmed the redundant utility bars are gone from built output.
+- `rg -n "profile-menu|Detailed bio|profile-avatar" dist -g '*.html'` after phase-28 → confirmed the avatar-triggered profile card renders across the built public routes.
+- `rg -n "overflow-x:hidden|overflow-x:clip|profile-menu__popover|site-nav__tools" dist/_astro -g '*.css'` after phase-28 → confirmed the generated CSS now clamps page-level overflow and includes the new profile/header rules.
+- `grep dist/studio/index.html` after phase-28 responsive shell/profile menu → production output still contains the locked `/studio` notice and excludes the active editor markers.
 
 ## Known Blockers / User-Action-Required Items
 - GitHub push/PR and Pages settings updates will require the user's GitHub auth later.

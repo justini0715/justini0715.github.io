@@ -12,6 +12,7 @@ export const siteMeta = {
   defaultOgAlt: 'changwpa developer portfolio, 42 projects, and technical blog',
   github: 'https://github.com/justini0715',
   repo: 'https://github.com/justini0715/justini0715.github.io',
+  profileAvatar: '/profile-avatar.svg',
   nav: [
     { href: '/home', label: 'Home' },
     { href: '/projects', label: 'Projects' },
@@ -19,6 +20,17 @@ export const siteMeta = {
     { href: '/blog', label: 'Blog' },
     { href: '/about', label: 'About' }
   ]
+} as const;
+
+
+export const profileCard = {
+  avatar: siteMeta.profileAvatar,
+  role: 'Systems-minded developer',
+  shortBio:
+    '42 기반의 C, 시스템 프로그래밍, 인프라, 그리고 source-first Astro publishing을 한 저장소 안에서 엮어 정리하는 개발자.',
+  detailBio:
+    '프로젝트 결과만 전시하기보다, 제약 조건, 디버깅 과정, 운영 메모까지 같이 남겨서 다음 작업과 다음 글로 바로 이어질 수 있는 아카이브를 만드는 중이다.',
+  highlights: ['C · systems', '42 archive', 'Project case studies', 'Astro static publishing']
 } as const;
 
 export const focusAreas = [
