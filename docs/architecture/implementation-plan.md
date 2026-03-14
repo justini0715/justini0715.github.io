@@ -7,8 +7,8 @@
 - Domain target: `https://changwpa.kro.kr`
 
 ## Current Phase
-- Phase: Phase 37 — Performance / SEO / A11y Hardening
-- Branch: `phase/37-perf-seo-a11y-hardening`
+- Phase: Phase 38 — Korean Editing Manual
+- Branch: `phase/38-korean-editing-manual`
 - Status: Complete
 
 ## Official Phase List
@@ -49,16 +49,17 @@
 35. Phase 35 — Targeted Bento Layout
 36. Phase 36 — Archive / Article Experience
 37. Phase 37 — Performance / SEO / A11y Hardening
+38. Phase 38 — Korean Editing Manual
 
 ## Current Phase Scope
-- Finish the redesign pass with lightweight performance, SEO, and accessibility hardening that fits a static GitHub Pages portfolio/blog.
-- Tighten social/meta tags, external-link accessibility labels, and route-level reading ergonomics without introducing new runtime complexity.
-- Re-check that the production `/studio` lock surface still ships cleanly after the shared refinements.
+- Add a detailed Korean manual that explains how to modify the site later without re-learning the repo from scratch.
+- Document routing, page creation, shared component boundaries, content collections, Studio behavior, verification, and Git workflow in practical terms.
+- Leave the site implementation unchanged while making future self-serve editing easier.
 
 ## Current Phase Non-Scope
-- Adding a new image optimization pipeline, backend/auth/SSR/CMS behavior, or client-heavy routing/search features.
-- Reworking the public IA or Bento composition again; this phase is hardening-only.
-- Changing the content schema or the local-only studio authoring model.
+- Further UI refactors, route changes, schema changes, or Studio behavior changes.
+- Rewriting existing docs wholesale beyond adding the new manual and phase log entry.
+- Adding new runtime behavior, build tooling, or deployment config changes.
 
 ## Architecture Summary
 - Astro static output with content collections for blog posts and projects.
@@ -71,16 +72,15 @@
 - blog taxonomy: `42`, `project`, `devlog`, `setup`, `retrospective`.
 
 ## Deliverables Checklist
-- [x] shared head metadata is stronger for theme/color-scheme/social previews
-- [x] external navigation/repository/demo links expose clearer accessibility labels
-- [x] archive/article routes keep their refined reading flows without regressions
-- [x] production `/studio` remains locked after the hardening pass
-- [x] Phase 37 verification completed
+- [x] Korean manual added with a Korean filename under `docs/runbooks/`
+- [x] routing, page creation, nav, content collections, styles, and Studio are explained in practical detail
+- [x] future editing workflow and common troubleshooting notes are included
+- [x] Phase 38 verification completed
 
 ## Verification Plan
-1. Run local type checks and a full static build after the hardening pass.
-2. Confirm the built HTML includes the stronger social/meta tags and accessibility labels.
-3. Re-check representative public routes and the production `/studio` lock page after the final shared refinements.
+1. Verify the new manual file exists at the intended Korean path under `docs/runbooks/`.
+2. Run `git diff --check` to catch broken markdown formatting or whitespace issues in the new documentation changes.
+3. Confirm no production code paths changed in this phase.
 
 ## Work Log
 - Cloned the remote user-site repository into the writable workspace.
@@ -453,3 +453,8 @@
 - Re-verified the refined public routes and kept production `/studio` locked after the final hardening pass.
 - `npm run check` after phase-37 performance/SEO/a11y hardening → success (`tsc --noEmit`).
 - `npm run build` after phase-37 performance/SEO/a11y hardening → success; rebuilt the full public route set plus the locked production `/studio` page.
+
+- Started `phase/38-korean-editing-manual` from merged `main` after the redesign phases were fully deployed.
+- Added `docs/runbooks/사이트-수정-실전-메뉴얼.md` as a detailed Korean manual covering routing, page creation, shared UI, content collections, Studio behavior, verification commands, Git workflow, and troubleshooting.
+- Kept the phase docs-only so the site behavior itself does not change while future edits become much easier to perform safely.
+- `git diff --check` after phase-38 Korean editing manual → success.
