@@ -7,8 +7,8 @@
 - Domain target: `https://changwpa.kro.kr`
 
 ## Current Phase
-- Phase: Phase 25 — Projects Hub Features
-- Branch: `phase/25-projects-hub-features`
+- Phase: Phase 26 — 42 / Blog Collection Split
+- Branch: `phase/26-collection-split-prep`
 - Status: Complete
 
 ## Official Phase List
@@ -35,12 +35,15 @@
 21. Phase 21 — Domain Article Differentiation
 22. Phase 22 — Home Hub Scaffold
 23. Phase 23 — Blog Article Differentiation
+24. Phase 24 — Home Hub Features
 25. Phase 25 — Projects Hub Features
+26. Phase 26 — 42 / Blog Collection Split
+26. Phase 26 — 42 / Blog Collection Split
 
 ## Current Phase Scope
-- Promote `/projects` from a strong archive into a more explicit status / materials hub.
-- Add project-level fields that expose current focus and next actions directly in content.
-- Keep the route/layout structure intact while making project state and project trajectory easier to read.
+- Physically split 42 content from the general blog content source.
+- Keep the public route split (`/42` vs `/blog`) while aligning the content model behind it.
+- Update the local writing studio so it can seed, load, preview, and save both content families safely.
 
 ## Current Phase Non-Scope
 - Replacing the static content architecture with a hosted CMS.
@@ -73,17 +76,18 @@
 - blog taxonomy: `42`, `project`, `devlog`, `setup`, `retrospective`.
 
 ## Deliverables Checklist
-- [x] project `state` / `focus` / `nextStep` structure added
-- [x] `/projects` status-oriented hub view improved
-- [x] `/projects/[slug]` project-state context improved
-- [x] Phase 25 verification completed
+- [x] separate `fortyTwo` collection added
+- [x] 42 markdown files moved out of `src/content/blog`
+- [x] public helpers/routes read separate collections correctly
+- [x] studio aligned to both content directories and route families
+- [x] Phase 26 verification completed
 
 ## Verification Plan
-1. Run local build and type checks after the projects-hub feature pass.
-2. Verify `/projects` now surfaces project state, focus, or next-step information beyond plain card/archive browsing.
-3. Verify `/projects/[slug]` pages now expose clearer project trajectory metadata.
-4. Re-check `/studio` after any shared style/data changes for compatibility.
-5. Confirm production `/studio` remains locked and the public routes remain static-output compatible.
+1. Run local build and type checks after the collection split pass.
+2. Verify `/42/*` routes read from the new 42 collection and `/blog/*` from the general blog collection.
+3. Verify the writing studio can load/save preview routes and file paths for both general and 42 content correctly.
+4. Re-check `/studio` production lock after the studio alignment changes.
+5. Confirm the public routes remain static-output compatible.
 
 ## Work Log
 - Cloned the remote user-site repository into the writable workspace.
@@ -188,6 +192,9 @@
 - Started `phase/25-projects-hub-features` to make `/projects` read more like a status/materials hub instead of only an archive grid.
 - Added project-level `state`, `focus`, `nextStep`, and `updatedDate` fields to the project content model and filled them into the existing project content files.
 - Added state-based grouping to the `/projects` hub and expanded project detail context so visitors can see what is stable, what is archived, and what should be updated next.
+- Started `phase/26-collection-split-prep` to physically separate 42 content from the general blog content source while keeping the already-shipped route split intact.
+- Added a dedicated `fortyTwo` content collection, moved the 42 markdown files into `src/content/forty-two/`, and updated shared content helpers so `/42/*` reads from the new collection while `/blog/*` reads from the general blog collection only.
+- Aligned the local writing studio to the split content model by teaching it to seed, load, preview, and save both `blog` and `forty-two` content families safely.
 - Started `phase/22-home-hub-scaffold` to make `/home` a more realistic personal hub shell before any user-specific functions exist.
 - Added quick-access cards, a current board summary, and a home scaffold panel so `/home` can evolve into a richer personal control surface without another structural rewrite.
 - Started `phase/21-domain-article-differentiation` so project detail pages and 42 detail pages stop looking like the same generic article type with only text changes.
@@ -313,6 +320,13 @@
 - `npx tsc --noEmit --project tsconfig.json` via LSP diagnostics after phase-25 → 0 errors, 0 warnings.
 - `grep dist/projects/index.html dist/projects/inception/index.html` after phase-25 → confirmed `/projects` now renders project-state grouping and project detail pages expose `state`, `focus`, `next step`, and `updated` metadata.
 - `grep dist/studio/index.html` after phase-25 projects hub features → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- `npm run check` after phase-26 collection split → success (`tsc --noEmit`).
+- `npm run build` after phase-26 collection split → success; rebuilt the full split route set, project detail routes, compatibility pages, and `/studio`.
+- `npx tsc --noEmit --project tsconfig.json` via LSP diagnostics after phase-26 → 0 errors, 0 warnings.
+- `find src/content -maxdepth 2 -type f` after phase-26 → confirmed 42 markdown now lives under `src/content/forty-two/` while general notes remain in `src/content/blog/`.
+- `find dist/42 dist/blog -maxdepth 2 -type f` after phase-26 → confirmed `/42/*` and `/blog/*` still build as expected, with legacy `/blog/42-*` compatibility pages preserved.
+- source checks against `src/pages/studio.astro`, `src/components/WritingStudioApp.astro`, and `src/lib/studio/blogStudio.ts` after phase-26 → confirmed studio now points 42 content to `src/content/forty-two` and `/42/...` while keeping general notes on `src/content/blog` and `/blog/...`.
+- `grep dist/studio/index.html` after phase-26 collection split → production output still contains the locked `/studio` notice and excludes the active editor markers.
 - `npm run check` after phase-22 home hub scaffold → success (`tsc --noEmit`).
 - `npm run build` after phase-22 home hub scaffold → success; rebuilt the full split route set, project detail routes, compatibility pages, and `/studio`.
 - `grep dist/home/index.html` after phase-22 → confirmed `/home` now renders quick-access cards, current-board items, and a dedicated home scaffold panel.

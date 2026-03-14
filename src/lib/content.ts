@@ -1,34 +1,44 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 
 export type BlogEntry = CollectionEntry<'blog'>;
+export type FortyTwoEntry = CollectionEntry<'fortyTwo'>;
+export type PostEntry = BlogEntry | FortyTwoEntry;
 export type ProjectEntry = CollectionEntry<'projects'>;
 
-const byNewest = (a: BlogEntry, b: BlogEntry) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf();
+const byNewest = (a: PostEntry, b: PostEntry) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf();
 const byProjectOrder = (a: ProjectEntry, b: ProjectEntry) => {
   const left = a.data.order ?? Number.MAX_SAFE_INTEGER;
   const right = b.data.order ?? Number.MAX_SAFE_INTEGER;
   return left - right || a.data.title.localeCompare(b.data.title);
 };
 
-export function is42Post(post: BlogEntry) {
-  return post.data.category === '42';
+export function is42Post(post: PostEntry) {
+  return post.collection === 'fortyTwo';
 }
 
-export function getPostPath(post: BlogEntry) {
+export function getPostPath(post: PostEntry) {
   return is42Post(post) ? `/42/${post.id}/` : `/blog/${post.id}/`;
 }
 
+async function getPublishedCollectionPosts<C extends 'blog' | 'fortyTwo'>(collection: C) {
+  return (await getCollection(collection)).filter((post) => !post.data.draft).sort(byNewest);
+}
+
 export async function getPublishedPosts() {
-  const posts: BlogEntry[] = await getCollection('blog');
-  return posts.filter((post) => !post.data.draft).sort(byNewest);
+  const [blogPosts, fortyTwoPosts] = await Promise.all([
+    getPublishedCollectionPosts('blog'),
+    getPublishedCollectionPosts('fortyTwo')
+  ]);
+
+  return [...blogPosts, ...fortyTwoPosts].sort(byNewest);
 }
 
 export async function get42Posts() {
-  return (await getPublishedPosts()).filter(is42Post);
+  return getPublishedCollectionPosts('fortyTwo');
 }
 
 export async function getGeneralPosts() {
-  return (await getPublishedPosts()).filter((post) => !is42Post(post));
+  return getPublishedCollectionPosts('blog');
 }
 
 export async function getRecentPosts(limit = 3) {
@@ -72,16 +82,16 @@ export async function getFeaturedProjects(limit = 3) {
   return (await getProjects()).filter((project) => project.data.featured).slice(0, limit);
 }
 
-export function getSeriesPosts(posts: BlogEntry[], seriesKey?: string) {
-  if (!seriesKey) return [];
+export function getSeriesPosts<T extends PostEntry>(posts: T[], seriesKey?: string) {
+  if (!seriesKey) return [] as T[];
   return posts
     .filter((post) => post.data.series === seriesKey)
     .sort((a, b) => (a.data.seriesOrder ?? 0) - (b.data.seriesOrder ?? 0));
 }
 
-export function getAdjacentSeriesPosts(posts: BlogEntry[], current: BlogEntry) {
+export function getAdjacentSeriesPosts<T extends PostEntry>(posts: T[], current: T) {
   if (!current.data.series) {
-    return { previous: undefined, next: undefined };
+    return { previous: undefined, next: undefined } as { previous: T | undefined; next: T | undefined };
   }
 
   const seriesPosts = getSeriesPosts(posts, current.data.series);
@@ -93,8 +103,8 @@ export function getAdjacentSeriesPosts(posts: BlogEntry[], current: BlogEntry) {
   };
 }
 
-export function groupPostsBySeries(posts: BlogEntry[]) {
-  const groups = new Map<string, BlogEntry[]>();
+export function groupPostsBySeries<T extends PostEntry>(posts: T[]) {
+  const groups = new Map<string, T[]>();
 
   for (const post of posts) {
     const key = post.data.series ?? 'standalone';

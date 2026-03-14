@@ -112,7 +112,7 @@ const seriesGroups = groupPostsBySeries(posts);
         description="Browse 42 posts with dates, tags, and series context visible at a glance."
       />
       <div class="card-grid">
-        {posts.map((post) => <PostCard post={post} />)}
+        {posts.map((post) => <PostCard post={post as any} />)}
       </div>
     </div>
   </section>
