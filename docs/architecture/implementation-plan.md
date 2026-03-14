@@ -7,8 +7,8 @@
 - Domain target: `https://changwpa.kro.kr`
 
 ## Current Phase
-- Phase: Phase 26 — 42 / Blog Collection Split
-- Branch: `phase/26-collection-split-prep`
+- Phase: Phase 27 — Mobile Nav & Header UX
+- Branch: `phase/27-mobile-nav-and-header-ux`
 - Status: Complete
 
 ## Official Phase List
@@ -38,12 +38,12 @@
 24. Phase 24 — Home Hub Features
 25. Phase 25 — Projects Hub Features
 26. Phase 26 — 42 / Blog Collection Split
-26. Phase 26 — 42 / Blog Collection Split
+27. Phase 27 — Mobile Nav & Header UX
 
 ## Current Phase Scope
-- Physically split 42 content from the general blog content source.
-- Keep the public route split (`/42` vs `/blog`) while aligning the content model behind it.
-- Update the local writing studio so it can seed, load, preview, and save both content families safely.
+- Fix the public mobile navigation so it no longer stacks links vertically into a clumsy mobile menu.
+- Add a scroll-aware header behavior on smaller screens so the header gets out of the way while reading.
+- Keep the route/layout split intact while improving the actual mobile browsing experience.
 
 ## Current Phase Non-Scope
 - Replacing the static content architecture with a hosted CMS.
@@ -64,6 +64,7 @@
 - Adding real persistence or authenticated state for `/home`.
 - Reworking project or 42 article routing again; this phase is blog-article specific.
 - Splitting the 42/blog collections physically in this phase.
+- Reworking the content model again; this phase is header/mobile UX specific.
 
 ## Architecture Summary
 - Astro static output with content collections for blog posts and projects.
@@ -76,17 +77,16 @@
 - blog taxonomy: `42`, `project`, `devlog`, `setup`, `retrospective`.
 
 ## Deliverables Checklist
-- [x] separate `fortyTwo` collection added
-- [x] 42 markdown files moved out of `src/content/blog`
-- [x] public helpers/routes read separate collections correctly
-- [x] studio aligned to both content directories and route families
-- [x] Phase 26 verification completed
+- [x] mobile nav links no longer stack vertically
+- [x] horizontal mobile nav scrolling enabled
+- [x] mobile scroll-down header hide behavior added
+- [x] Phase 27 verification completed
 
 ## Verification Plan
-1. Run local build and type checks after the collection split pass.
-2. Verify `/42/*` routes read from the new 42 collection and `/blog/*` from the general blog collection.
-3. Verify the writing studio can load/save preview routes and file paths for both general and 42 content correctly.
-4. Re-check `/studio` production lock after the studio alignment changes.
+1. Run local build and type checks after the mobile-nav pass.
+2. Verify the public header keeps nav links horizontally accessible on smaller screens.
+3. Verify the header hides on downward scroll and reappears when scrolling up on mobile widths.
+4. Re-check `/studio` after shared header/style changes for compatibility.
 5. Confirm the public routes remain static-output compatible.
 
 ## Work Log
@@ -192,6 +192,11 @@
 - Started `phase/25-projects-hub-features` to make `/projects` read more like a status/materials hub instead of only an archive grid.
 - Added project-level `state`, `focus`, `nextStep`, and `updatedDate` fields to the project content model and filled them into the existing project content files.
 - Added state-based grouping to the `/projects` hub and expanded project detail context so visitors can see what is stable, what is archived, and what should be updated next.
+- Started `phase/26-collection-split-prep` to physically separate 42 content from the general blog content source while keeping the public route split intact.
+- Added a dedicated `fortyTwo` collection, moved the 42 markdown files into `src/content/forty-two/`, and updated helpers/routes so `/42/*` reads from the new collection while `/blog/*` reads only the general blog collection.
+- Updated the writing studio so it can seed, load, preview, and save both `blog` and `forty-two` content families to the correct directories and public routes.
+- Started `phase/27-mobile-nav-and-header-ux` after noticing that the mobile header still stacked navigation awkwardly and stayed fixed on screen while reading.
+- Changed the mobile nav to a horizontal scrollable chip row and added a small scroll-direction-aware hide/show behavior for the header on mobile widths.
 - Started `phase/26-collection-split-prep` to physically separate 42 content from the general blog content source while keeping the already-shipped route split intact.
 - Added a dedicated `fortyTwo` content collection, moved the 42 markdown files into `src/content/forty-two/`, and updated shared content helpers so `/42/*` reads from the new collection while `/blog/*` reads from the general blog collection only.
 - Aligned the local writing studio to the split content model by teaching it to seed, load, preview, and save both `blog` and `forty-two` content families safely.
@@ -320,6 +325,17 @@
 - `npx tsc --noEmit --project tsconfig.json` via LSP diagnostics after phase-25 → 0 errors, 0 warnings.
 - `grep dist/projects/index.html dist/projects/inception/index.html` after phase-25 → confirmed `/projects` now renders project-state grouping and project detail pages expose `state`, `focus`, `next step`, and `updated` metadata.
 - `grep dist/studio/index.html` after phase-25 projects hub features → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- `npm run check` after phase-26 collection split → success (`tsc --noEmit`).
+- `npm run build` after phase-26 collection split → success; rebuilt the full split route set, project detail routes, compatibility pages, and `/studio`.
+- `npx tsc --noEmit --project tsconfig.json` via LSP diagnostics after phase-26 → 0 errors, 0 warnings.
+- `find src/content -maxdepth 2 -type f` after phase-26 → confirmed 42 markdown now lives under `src/content/forty-two/` while general notes remain in `src/content/blog/`.
+- `find dist/42 dist/blog -maxdepth 2 -type f` after phase-26 → confirmed `/42/*` and `/blog/*` still build as expected, with legacy `/blog/42-*` compatibility pages preserved.
+- source checks against `src/pages/studio.astro`, `src/components/WritingStudioApp.astro`, and `src/lib/studio/blogStudio.ts` after phase-26 → confirmed studio now points 42 content to `src/content/forty-two` and `/42/...` while keeping general notes on `src/content/blog` and `/blog/...`.
+- `grep dist/studio/index.html` after phase-26 collection split → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- `npm run check` after phase-27 mobile nav/header UX → success (`tsc --noEmit`).
+- `npm run build` after phase-27 mobile nav/header UX → success; rebuilt the full split route set, project detail routes, compatibility pages, and `/studio`.
+- `grep src/components/SiteHeader.astro src/styles/global.css` after phase-27 → confirmed the new scroll-aware mobile header hook and horizontal nav chip behavior are present in source.
+- `grep dist/studio/index.html` after phase-27 mobile nav/header UX → production output still contains the locked `/studio` notice and excludes the active editor markers.
 - `npm run check` after phase-26 collection split → success (`tsc --noEmit`).
 - `npm run build` after phase-26 collection split → success; rebuilt the full split route set, project detail routes, compatibility pages, and `/studio`.
 - `npx tsc --noEmit --project tsconfig.json` via LSP diagnostics after phase-26 → 0 errors, 0 warnings.

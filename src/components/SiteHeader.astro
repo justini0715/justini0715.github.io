@@ -12,7 +12,7 @@ const isActive = (href: string) => {
 };
 ---
 
-<header class="site-shell__header">
+<header class="site-shell__header" data-scroll-header>
   <div class="container site-nav">
     <a class="site-brand" href="/">
       <span class="site-brand__mark">42</span>
@@ -41,3 +41,38 @@ const isActive = (href: string) => {
     </a>
   </div>
 </header>
+
+<script is:inline>
+  const header = document.querySelector('[data-scroll-header]');
+  if (header) {
+    const media = window.matchMedia('(max-width: 960px)');
+    let lastY = window.scrollY;
+    let ticking = false;
+
+    const updateHeader = () => {
+      const currentY = window.scrollY;
+
+      if (!media.matches || currentY < 12) {
+        header.classList.remove('is-hidden');
+      } else if (currentY > lastY) {
+        header.classList.add('is-hidden');
+      } else {
+        header.classList.remove('is-hidden');
+      }
+
+      lastY = currentY;
+      ticking = false;
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateHeader);
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', updateHeader);
+    updateHeader();
+  }
+</script>

@@ -82,3 +82,5 @@ Then open the localhost URL printed by `npm run dev`, add `/studio`, connect the
 - `phase/24-home-hub-features`
 - `phase/25-projects-hub-features`
 - `phase/26-collection-split-prep`
+- `phase/27-mobile-nav-and-header-ux`
+- `phase/26-collection-split-prep`
