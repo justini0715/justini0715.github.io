@@ -35,27 +35,36 @@ const stateLabels = {
     panelClassName="panel archive-panel"
   />
 
-  {featuredProjects.length > 0 && (
-    <section class="section">
-      <div class="container">
-        <SectionTitle
-          eyebrow="Selected work"
-          title="먼저 열어볼 대표 케이스"
-          description="현재 기준으로 가장 설명력이 높은 프로젝트 케이스 두 개만 먼저 배치한다."
-        />
-        <div class="card-grid card-grid--selected">
-          {featuredProjects.map((project) => <ProjectCard project={project} />)}
+  <section class="section">
+    <div class="container projects-bento-grid">
+      {featuredProjects.map((project) => (
+        <div class="projects-bento-grid__item projects-bento-grid__item--feature">
+          <ProjectCard project={project} />
         </div>
-      </div>
-    </section>
-  )}
+      ))}
+
+      <article class="panel projects-bento-grid__item projects-bento-grid__item--states-overview">
+        <p class="eyebrow">Project states</p>
+        <h2>상태 요약</h2>
+        <div class="projects-state-summary">
+          {projectStates.map((group) => (
+            <div class="projects-state-summary__item">
+              <strong>{stateLabels[group.state]}</strong>
+              <span>{group.items.length}</span>
+            </div>
+          ))}
+        </div>
+        <p class="meta-note">active → stable → archived → planned 순서로 읽으면 지금 손볼 프로젝트가 더 빨리 보인다.</p>
+      </article>
+    </div>
+  </section>
 
   <section class="section section--tint">
     <div class="container">
       <SectionTitle
         eyebrow="Project states"
         title="현재 상태 기준으로 보는 프로젝트 판"
-        description="active → stable → archived → planned 순서로 읽으면 지금 무엇을 더 살펴봐야 하는지 판단하기 쉽다."
+        description="대표 카드와 별개로, 상태별로 다시 훑을 수 있게 리스트를 유지한다."
       />
 
       <div class="hub-lane-grid">

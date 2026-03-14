@@ -1,15 +1,14 @@
 ---
 import HubLayout from '../layouts/HubLayout.astro';
-import SectionTitle from '../components/SectionTitle.astro';
-import ProjectCard from '../components/ProjectCard.astro';
-import PostCard from '../components/PostCard.astro';
 import SplitHero from '../components/site/SplitHero.astro';
+import TagChipList from '../components/site/TagChipList.astro';
 import { currentFocus, homeNextUp } from '../data/site';
-import { getFeaturedProjects, getLatest42Posts, getLatestGeneralPosts } from '../lib/content';
+import { getFeaturedProjects, getLatest42Posts, getLatestGeneralPosts, getPostPath, getProjectPath } from '../lib/content';
 
 const [featuredProject] = await getFeaturedProjects(1);
 const latestGeneralPosts = await getLatestGeneralPosts(3);
 const latest42Posts = await getLatest42Posts(3);
+const formatDate = (value: Date) => new Intl.DateTimeFormat('en', { dateStyle: 'medium' }).format(value);
 ---
 
 <HubLayout
@@ -31,78 +30,64 @@ const latest42Posts = await getLatest42Posts(3);
   />
 
   <section class="section">
-    <div class="container two-column">
-      <div>
-        <SectionTitle
-          eyebrow="Current focus"
-          title="지금 가장 신경 쓰는 작업 축"
-          description="현재 사이트와 작업 흐름을 유지하는 데 직접 연결되는 주제만 남겨둔다."
-        />
-      </div>
-
-      <aside class="panel utility-panel">
+    <div class="container home-bento-grid">
+      <article class="panel home-bento-card home-bento-card--focus">
+        <p class="eyebrow">Current focus</p>
+        <h2>지금 가장 신경 쓰는 작업 축</h2>
         <ul class="utility-list">
           {currentFocus.map((item) => <li>{item}</li>)}
         </ul>
-      </aside>
-    </div>
-  </section>
+      </article>
 
-  {featuredProject && (
-    <section class="section section--tint">
-      <div class="container">
-        <SectionTitle
-          eyebrow="Featured project"
-          title="지금 기준 대표 프로젝트 한 개"
-          description="현재 포트폴리오에서 가장 먼저 열어보길 원하는 프로젝트 케이스 하나만 고정한다."
-        />
-        <div class="home-featured-project">
-          <ProjectCard project={featuredProject} />
+      {featuredProject && (
+        <article class="panel home-bento-card home-bento-card--feature">
+          <p class="eyebrow">Featured project</p>
+          <h2><a href={getProjectPath(featuredProject)}>{featuredProject.data.title}</a></h2>
+          <p>{featuredProject.data.description}</p>
+          <p class="meta-note">{featuredProject.data.highlight}</p>
+          <TagChipList items={featuredProject.data.stack} max={5} />
+          <div class="project-links">
+            <a href={getProjectPath(featuredProject)}>Case detail →</a>
+            <a href={featuredProject.data.repoUrl} target="_blank" rel="noreferrer">Repository ↗</a>
+          </div>
+        </article>
+      )}
+
+      <article class="panel home-bento-card home-bento-card--updates">
+        <p class="eyebrow">Next to update</p>
+        <h2>다음 액션</h2>
+        <ul class="utility-list">
+          {homeNextUp.map((item) => <li>{item}</li>)}
+        </ul>
+      </article>
+
+      <article class="panel home-bento-card home-bento-card--notes">
+        <p class="eyebrow">Latest technical posts</p>
+        <h2>최근 일반 기술 노트</h2>
+        <div class="compact-link-list">
+          {latestGeneralPosts.map((post) => (
+            <a class="compact-link-list__item" href={getPostPath(post)}>
+              <strong>{post.data.title}</strong>
+              <span>{post.data.description}</span>
+              <small>{formatDate(post.data.pubDate)}</small>
+            </a>
+          ))}
         </div>
-      </div>
-    </section>
-  )}
+      </article>
 
-  <section class="section">
-    <div class="container">
-      <SectionTitle
-        eyebrow="Latest technical blog posts"
-        title="최근 일반 기술 노트"
-        description="42와 분리된 일반 기술 글만 따로 묶어서 지금 무엇을 공부하고 정리했는지 보여준다."
-      />
-      <div class="card-grid">
-        {latestGeneralPosts.map((post) => <PostCard post={post} />)}
-      </div>
-    </div>
-  </section>
-
-  <section class="section section--tint">
-    <div class="container">
-      <SectionTitle
-        eyebrow="Latest 42 posts"
-        title="최근 42 기록"
-        description="42 전용 허브로 이어지는 최근 과제 글만 따로 노출해서 학습 흐름을 바로 확인하게 한다."
-      />
-      <div class="card-grid">
-        {latest42Posts.map((post) => <PostCard post={post} />)}
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="container">
-      <SectionTitle
-        eyebrow="Next to update"
-        title="다음으로 손볼 작업"
-        description="지금 바로 업데이트할 만한 항목만 간결하게 유지해서 `/home`이 실제 시작점이 되게 한다."
-      />
-      <div class="feature-grid feature-grid--compact">
-        {homeNextUp.map((item) => (
-          <article class="card stat-card">
-            <p>{item}</p>
-          </article>
-        ))}
-      </div>
+      <article class="panel home-bento-card home-bento-card--forty-two">
+        <p class="eyebrow">Latest 42 posts</p>
+        <h2>최근 42 기록</h2>
+        <div class="compact-link-list">
+          {latest42Posts.map((post) => (
+            <a class="compact-link-list__item" href={getPostPath(post)}>
+              <strong>{post.data.title}</strong>
+              <span>{post.data.description}</span>
+              <small>{formatDate(post.data.pubDate)}</small>
+            </a>
+          ))}
+        </div>
+      </article>
     </div>
   </section>
 </HubLayout>
