@@ -1,4 +1,5 @@
 ---
+import ProfileMenu from './ProfileMenu.astro';
 import { siteMeta } from '../data/site';
 
 interface Props {
@@ -23,7 +24,7 @@ const isActive = (href: string) => {
     </a>
 
     <div class="site-nav__group">
-      <nav aria-label="Primary navigation">
+      <nav aria-label="Primary navigation" class="site-nav__primary">
         <ul class="site-nav__links">
           {siteMeta.nav.map((item) => (
             <li>
@@ -36,9 +37,9 @@ const isActive = (href: string) => {
       </nav>
     </div>
 
-    <a class="button button--ghost site-nav__cta" href={siteMeta.github} target="_blank" rel="noreferrer">
-      GitHub ↗
-    </a>
+    <div class="site-nav__tools">
+      <ProfileMenu />
+    </div>
   </div>
 </header>
 
@@ -46,8 +47,15 @@ const isActive = (href: string) => {
   const header = document.querySelector('[data-scroll-header]');
   if (header) {
     const media = window.matchMedia('(max-width: 960px)');
+    const profileMenu = header.querySelector('[data-profile-menu]');
     let lastY = window.scrollY;
     let ticking = false;
+
+    const closeProfileMenu = () => {
+      if (profileMenu instanceof HTMLDetailsElement) {
+        profileMenu.open = false;
+      }
+    };
 
     const updateHeader = () => {
       const currentY = window.scrollY;
@@ -56,6 +64,7 @@ const isActive = (href: string) => {
         header.classList.remove('is-hidden');
       } else if (currentY > lastY) {
         header.classList.add('is-hidden');
+        closeProfileMenu();
       } else {
         header.classList.remove('is-hidden');
       }
@@ -70,6 +79,18 @@ const isActive = (href: string) => {
         ticking = true;
       }
     };
+
+    document.addEventListener('click', (event) => {
+      if (profileMenu instanceof HTMLDetailsElement && profileMenu.open && !profileMenu.contains(event.target)) {
+        closeProfileMenu();
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        closeProfileMenu();
+      }
+    });
 
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', updateHeader);

@@ -30,7 +30,10 @@
 
 @layer reset {
   *, *::before, *::after { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
+  html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+  }
   body, h1, h2, h3, h4, p, ul, ol, figure { margin: 0; }
   img { max-width: 100%; display: block; }
   a { color: inherit; text-decoration: none; }
@@ -46,6 +49,8 @@
 
   body {
     min-height: 100vh;
+    width: 100%;
+    overflow-x: hidden;
     font-family: var(--font-sans);
     background: transparent;
     color: var(--text);
@@ -148,6 +153,7 @@
     display: grid;
     min-height: 100vh;
     grid-template-rows: auto 1fr auto;
+    overflow-x: clip;
   }
 
   .site-shell__main {
@@ -231,12 +237,25 @@
     align-items: center;
     gap: 1.25rem;
     min-height: 84px;
+    min-width: 0;
     padding-block: 0.8rem;
   }
 
   .site-nav__group {
     display: flex;
     justify-content: center;
+    min-width: 0;
+  }
+
+  .site-nav__primary {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .site-nav__tools {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
   }
 
   .site-brand {
@@ -249,6 +268,7 @@
   .site-brand__text {
     display: grid;
     gap: 0.16rem;
+    min-width: 0;
   }
 
   .site-brand strong {
@@ -294,10 +314,15 @@
     gap: 0.35rem;
     align-items: center;
     justify-content: center;
+    max-width: 100%;
     padding: 0.3rem;
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid var(--line-faint);
+  }
+
+  .site-nav__links li {
+    flex: 0 0 auto;
   }
 
   .site-nav__links a {
@@ -318,6 +343,144 @@
     color: var(--text);
     background: rgba(171, 193, 255, 0.08);
     box-shadow: inset 0 0 0 1px rgba(171, 193, 255, 0.1);
+  }
+
+  .profile-menu {
+    position: relative;
+  }
+
+  .profile-menu[open] .profile-menu__toggle {
+    border-color: rgba(231, 194, 141, 0.36);
+    background: rgba(231, 194, 141, 0.08);
+    box-shadow: 0 0 0 1px rgba(231, 194, 141, 0.12);
+  }
+
+  .profile-menu__toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.4rem;
+    height: 3.4rem;
+    padding: 0.26rem;
+    border-radius: 999px;
+    border: 1px solid rgba(196, 209, 235, 0.18);
+    background: rgba(255, 255, 255, 0.03);
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .profile-menu__toggle::-webkit-details-marker {
+    display: none;
+  }
+
+  .profile-menu__toggle:hover {
+    transform: translateY(-1px);
+    border-color: rgba(171, 193, 255, 0.26);
+    background: rgba(171, 193, 255, 0.06);
+  }
+
+  .profile-menu__avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 999px;
+    border: 1px solid rgba(231, 194, 141, 0.24);
+    background: linear-gradient(180deg, rgba(18, 27, 40, 0.98), rgba(11, 17, 26, 1));
+  }
+
+  .profile-menu__avatar--large {
+    width: 4.5rem;
+    height: 4.5rem;
+    flex: 0 0 auto;
+  }
+
+  .profile-menu__popover {
+    position: absolute;
+    top: calc(100% + 0.75rem);
+    right: 0;
+    width: min(26rem, calc(100vw - 1rem));
+    display: grid;
+    gap: 1rem;
+    padding: 1.15rem;
+    border-radius: 1.55rem;
+    border: 1px solid rgba(231, 194, 141, 0.26);
+    background:
+      linear-gradient(180deg, rgba(30, 39, 55, 0.98), rgba(15, 21, 31, 1)),
+      linear-gradient(180deg, rgba(231, 194, 141, 0.06), rgba(171, 193, 255, 0.02));
+    box-shadow: 0 24px 64px rgba(2, 7, 16, 0.42);
+  }
+
+  .profile-menu__popover::before {
+    content: '';
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(231, 194, 141, 0.34), rgba(171, 193, 255, 0));
+  }
+
+  .profile-menu__hero,
+  .profile-menu__identity,
+  .profile-menu__content,
+  .profile-menu__panel {
+    display: grid;
+    gap: 0.65rem;
+  }
+
+  .profile-menu__hero {
+    grid-template-columns: auto 1fr;
+    align-items: center;
+  }
+
+  .profile-menu__identity h2 {
+    font-size: clamp(1.45rem, 2vw, 1.7rem);
+    margin-top: 0;
+  }
+
+  .profile-menu__role {
+    color: var(--accent-warm);
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .profile-menu__detail {
+    color: var(--muted);
+    font-size: 0.94rem;
+  }
+
+  .profile-menu__panel {
+    padding: 0.95rem 1rem;
+    border-radius: 1.1rem;
+    background: rgba(8, 13, 20, 0.34);
+    border: 1px solid rgba(196, 209, 235, 0.08);
+  }
+
+  .profile-menu__list {
+    gap: 0.6rem;
+  }
+
+  .profile-menu__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .profile-menu__chips .chip {
+    background: rgba(231, 194, 141, 0.08);
+    border-color: rgba(231, 194, 141, 0.18);
+    color: #f6dfbf;
+  }
+
+  .profile-menu__actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .profile-menu__actions .button {
+    width: 100%;
   }
 
   .button {
@@ -375,6 +538,17 @@
     margin-top: 1.05rem;
     font-size: clamp(1.04rem, 1.55vw, 1.16rem);
     line-height: 1.78;
+  }
+
+  .hero__grid > *,
+  .two-column > *,
+  .footer-grid > *,
+  .series-nav > *,
+  .card-grid > *,
+  .feature-grid > *,
+  .home-quick-grid > *,
+  .landing-grid > * {
+    min-width: 0;
   }
 
   .hero__actions {
@@ -1030,7 +1204,7 @@
     .site-nav {
       grid-template-columns: auto auto;
       grid-template-areas:
-        'brand cta'
+        'brand tools'
         'nav nav';
       justify-content: space-between;
       align-items: center;
@@ -1047,8 +1221,8 @@
       justify-content: flex-start;
     }
 
-    .site-nav__cta {
-      grid-area: cta;
+    .site-nav__tools {
+      grid-area: tools;
       justify-self: end;
     }
 
@@ -1091,6 +1265,24 @@
   @media (max-width: 720px) {
     h1 { font-size: clamp(2.45rem, 11vw, 3.4rem); }
 
+    .site-nav {
+      gap: 0.8rem;
+      padding-block: 0.85rem;
+    }
+
+    .site-brand {
+      gap: 0.7rem;
+    }
+
+    .site-brand small {
+      display: none;
+    }
+
+    .site-brand__mark {
+      width: 2.25rem;
+      border-radius: 0.7rem;
+    }
+
     .site-nav__links {
       border-radius: 24px;
     }
@@ -1130,6 +1322,17 @@
     }
 
     .home-quick-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .profile-menu__popover {
+      right: -0.25rem;
+      width: min(24rem, calc(100vw - 0.75rem));
+      padding: 1rem;
+      border-radius: 1.3rem;
+    }
+
+    .profile-menu__actions {
       grid-template-columns: 1fr;
     }
 
