@@ -7,8 +7,8 @@
 - Domain target: `https://changwpa.kro.kr`
 
 ## Current Phase
-- Phase: Phase 29 — Dedicated Profile Page
-- Branch: `phase/29-profile-page-route`
+- Phase: Phase 30 — Real Profile Image
+- Branch: `phase/30-profile-photo`
 - Status: Complete
 
 ## Official Phase List
@@ -41,11 +41,12 @@
 27. Phase 27 — Mobile Nav & Header UX
 28. Phase 28 — Responsive Shell & Profile Menu
 29. Phase 29 — Dedicated Profile Page
+30. Phase 30 — Real Profile Image
 
 ## Current Phase Scope
-- Replace the fragile header profile popover with a direct avatar link to a dedicated profile page.
-- Turn `/about` into the actual profile destination with a strong single-card intro and expanded biography sections.
-- Keep the mobile responsive/header fixes from phase 28 while removing scroll-linked profile behavior entirely.
+- Replace the temporary generated avatar with the user-provided real `iostream` profile image.
+- Keep the dedicated profile-page flow from phase 29 intact while swapping only the actual image asset reference.
+- Verify the chosen image survives the static build and renders on both the navbar avatar and the profile page.
 
 ## Current Phase Non-Scope
 - Replacing the static content architecture with a hosted CMS.
@@ -55,7 +56,7 @@
 - Reworking the public route map again after the phase-15/27 split.
 - Introducing a brand-new authenticated account page or settings surface.
 - Adding authenticated profile state, comments, or backend-backed profile data.
-- Using a real personal headshot before the user provides one; this phase continues to use the polished static avatar asset.
+- Cropping, filtering, or building a full image-upload pipeline; this phase only swaps to the chosen provided asset.
 - Reworking the already-polished studio beyond compatibility checks after shared-header changes.
 
 ## Architecture Summary
@@ -69,17 +70,15 @@
 - blog taxonomy: `42`, `project`, `devlog`, `setup`, `retrospective`.
 
 ## Deliverables Checklist
-- [x] navbar right edge now links directly to the dedicated profile page instead of opening a popover
-- [x] `/about` now works as the detailed profile destination with a strong single-card profile surface
-- [x] mobile scrolling no longer dismisses profile detail because the profile UI is page-based
-- [x] Phase 29 verification completed
+- [x] chosen `iostream` profile image is now the active avatar source
+- [x] navbar avatar and `/about` profile card both point to the real provided image
+- [x] Phase 30 verification completed
 
 ## Verification Plan
-1. Run local type checks and a full static build after removing the popover interaction.
-2. Confirm the built public HTML uses the avatar as a direct link on representative routes.
-3. Confirm `/about` now renders the dedicated profile-card layout in built output.
-4. Confirm no `profile-menu` popover CSS/markup remains in the generated assets.
-5. Re-check `/studio` after shared header/style changes for compatibility.
+1. Run local type checks and a full static build after switching the image asset.
+2. Confirm built public HTML now references `/iostream.webp` in representative routes.
+3. Confirm the chosen image is emitted into `dist/`.
+4. Re-check `/studio` after the shared asset/config change for compatibility.
 
 ## Work Log
 - Cloned the remote user-site repository into the writable workspace.
@@ -390,3 +389,12 @@
 
 ## Next Phase Preview
 - After hardening, the next likely follow-up is deeper tag/project authoring utilities, not backend infrastructure.
+- Started `phase/30-profile-photo` from merged `main` after the dedicated profile-page flow was already live.
+- Swapped the active profile avatar reference from the temporary generated SVG to the user-provided `public/iostream.webp` image.
+- Kept the same dedicated profile-page route and header-link behavior, changing only the actual image asset so the new photo shows everywhere the profile avatar is rendered.
+- `npm run check` after phase-30 real profile image → success (`tsc --noEmit`).
+- `npm run build` after phase-30 real profile image → success; rebuilt the full public route set, project detail routes, compatibility pages, and `/studio`.
+- `npx tsc --noEmit --pretty false --project tsconfig.json` via LSP diagnostics after phase-30 → 0 errors, 0 warnings.
+- `rg -n "iostream.webp" dist -g '*.html'` after phase-30 → confirmed representative built routes now reference the real profile image.
+- `test -f dist/iostream.webp` after phase-30 → confirmed the chosen image is emitted in the static build output.
+- `grep dist/studio/index.html` after phase-30 real profile image → production output still contains the locked `/studio` notice and excludes the active editor markers.
