@@ -77,3 +77,4 @@ Then open the localhost URL printed by `npm run dev`, add `/studio`, connect the
 - `phase/19-layout-chrome-differentiation`
 - `phase/20-project-detail-routes`
 - `phase/21-domain-article-differentiation`
+- `phase/22-home-hub-scaffold`

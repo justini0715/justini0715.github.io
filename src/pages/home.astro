@@ -3,6 +3,7 @@ import HubLayout from '../layouts/HubLayout.astro';
 import SectionTitle from '../components/SectionTitle.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import PostCard from '../components/PostCard.astro';
+import HomeQuickAccessCard from '../components/home/HomeQuickAccessCard.astro';
 import SplitHero from '../components/site/SplitHero.astro';
 import { currentFocus, siteMeta, stackSummary, strengths } from '../data/site';
 import { getFeaturedProjects, getPublishedPosts } from '../lib/content';
@@ -11,6 +12,32 @@ const featuredProjects = await getFeaturedProjects(3);
 const allPosts = await getPublishedPosts();
 const recentGeneralPosts = allPosts.filter((post) => post.data.category !== '42').slice(0, 3);
 const recent42Posts = allPosts.filter((post) => post.data.category === '42').slice(0, 3);
+const quickAccess = [
+  {
+    href: '/projects',
+    eyebrow: 'Project hub',
+    title: 'Projects',
+    description: '프로젝트 흐름, 개요, 상세 케이스로 바로 이동.'
+  },
+  {
+    href: '/42',
+    eyebrow: '42 hub',
+    title: '42',
+    description: '과제 흐름, 시리즈 순서, 전용 아카이브를 바로 확인.'
+  },
+  {
+    href: '/blog',
+    eyebrow: 'Study notes',
+    title: 'Blog',
+    description: '알고리즘, 네트워크, 개념 정리 등 일반 기술 노트로 이동.'
+  },
+  {
+    href: '/about',
+    eyebrow: 'Profile',
+    title: 'About',
+    description: '내 소개와 작업 방식, 현재 방향을 다시 확인.'
+  }
+] as const;
 ---
 
 <HubLayout
@@ -30,6 +57,19 @@ const recent42Posts = allPosts.filter((post) => post.data.category === '42').sli
   <section class="section">
     <div class="container">
       <SectionTitle
+        eyebrow="Quick access"
+        title="이 홈에서 가장 자주 이동할 핵심 영역"
+        description="나중에 기능이 더 붙더라도, 현재 기준으로는 이 네 영역이 홈의 기본 진입점 역할을 한다."
+      />
+      <div class="home-quick-grid">
+        {quickAccess.map((item) => <HomeQuickAccessCard {...item} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionTitle
         eyebrow="Featured projects"
         title="지금 기준으로 가장 먼저 보여주고 싶은 프로젝트"
         description="현재 포트폴리오의 중심이 되는 프로젝트를 먼저 배치해 전체 개발 범위를 빠르게 파악할 수 있게 한다."
@@ -37,6 +77,28 @@ const recent42Posts = allPosts.filter((post) => post.data.category === '42').sli
       <div class="card-grid">
         {featuredProjects.map((project) => <ProjectCard project={project} />)}
       </div>
+    </div>
+  </section>
+
+  <section class="section section--tint">
+    <div class="container two-column">
+      <aside class="panel utility-panel">
+        <p class="eyebrow">Current board</p>
+        <ul class="utility-list">
+          {featuredProjects[0] && <li>지금 기준 대표 프로젝트: <strong>{featuredProjects[0].data.title}</strong></li>}
+          {recentGeneralPosts[0] && <li>최근 일반 기술 글: <strong>{recentGeneralPosts[0].data.title}</strong></li>}
+          {recent42Posts[0] && <li>최근 42 기록: <strong>{recent42Posts[0].data.title}</strong></li>}
+        </ul>
+      </aside>
+
+      <aside class="panel utility-panel">
+        <p class="eyebrow">Home scaffold</p>
+        <ul class="utility-list">
+          <li>이 영역은 나중에 사용자 전용 기능을 넣기 위한 홈 스캐폴드로 유지한다.</li>
+          <li>지금은 빠른 진입과 현재 흐름 파악이 핵심 역할이다.</li>
+          <li>기능이 추가되더라도 landing / projects / 42 / blog 역할은 계속 분리된 상태를 유지한다.</li>
+        </ul>
+      </aside>
     </div>
   </section>
 
