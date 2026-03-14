@@ -5,7 +5,7 @@ import ProjectCard from '../components/ProjectCard.astro';
 import PostCard from '../components/PostCard.astro';
 import HomeQuickAccessCard from '../components/home/HomeQuickAccessCard.astro';
 import SplitHero from '../components/site/SplitHero.astro';
-import { currentFocus, siteMeta, stackSummary, strengths } from '../data/site';
+import { currentFocus, homeFocusBoard, homeNextUp, siteMeta, stackSummary, strengths } from '../data/site';
 import { getFeaturedProjects, getPublishedPosts } from '../lib/content';
 
 const featuredProjects = await getFeaturedProjects(3);
@@ -94,11 +94,26 @@ const quickAccess = [
       <aside class="panel utility-panel">
         <p class="eyebrow">Home scaffold</p>
         <ul class="utility-list">
-          <li>이 영역은 나중에 사용자 전용 기능을 넣기 위한 홈 스캐폴드로 유지한다.</li>
-          <li>지금은 빠른 진입과 현재 흐름 파악이 핵심 역할이다.</li>
-          <li>기능이 추가되더라도 landing / projects / 42 / blog 역할은 계속 분리된 상태를 유지한다.</li>
+          {homeFocusBoard.map((item) => <li>{item}</li>)}
         </ul>
       </aside>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionTitle
+        eyebrow="Next to update"
+        title="이 홈에서 다음으로 손볼 작업"
+        description="백엔드 없이도 바로 관리할 수 있는 다음 액션을 고정해두면, `/home`이 실제 시작점 역할을 하게 된다."
+      />
+      <div class="feature-grid feature-grid--compact">
+        {homeNextUp.map((item) => (
+          <article class="card stat-card">
+            <p>{item}</p>
+          </article>
+        ))}
+      </div>
     </div>
   </section>
 

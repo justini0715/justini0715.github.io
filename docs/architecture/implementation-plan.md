@@ -7,8 +7,8 @@
 - Domain target: `https://changwpa.kro.kr`
 
 ## Current Phase
-- Phase: Phase 23 — Blog Article Differentiation
-- Branch: `phase/23-blog-article-differentiation`
+- Phase: Phase 24 — Home Hub Features
+- Branch: `phase/24-home-hub-features`
 - Status: Complete
 
 ## Official Phase List
@@ -35,11 +35,13 @@
 21. Phase 21 — Domain Article Differentiation
 22. Phase 22 — Home Hub Scaffold
 23. Phase 23 — Blog Article Differentiation
+24. Phase 24 — Home Hub Features
+24. Phase 24 — Home Hub Features
 
 ## Current Phase Scope
-- Differentiate the general technical blog article family from both 42 entries and project cases.
-- Add a dedicated technical-article meta/context surface instead of keeping the general blog article as the default leftover article shape.
-- Keep the route/layout split intact while making all three article families intentionally distinct.
+- Turn `/home` into a genuinely useful personal start page rather than a structural placeholder.
+- Add static-first features that improve repeated use: quick access, current board, and next-to-update guidance.
+- Keep the route split intact while making `/home` the place you would actually choose to open first.
 
 ## Current Phase Non-Scope
 - Replacing the static content architecture with a hosted CMS.
@@ -57,6 +59,7 @@
 - Reworking blog/42 routing again; this phase is project-detail specific.
 - Reworking the general technical blog article family in the same phase.
 - Implementing backend-driven widgets or persistence for `/home` yet.
+- Adding real persistence or authenticated state for `/home`.
 - Reworking project or 42 article routing again; this phase is blog-article specific.
 
 ## Architecture Summary
@@ -70,15 +73,16 @@
 - blog taxonomy: `42`, `project`, `devlog`, `setup`, `retrospective`.
 
 ## Deliverables Checklist
-- [x] general technical article meta panel extracted
-- [x] blog article surface visibly differentiated from 42/project surfaces
-- [x] Phase 23 verification completed
+- [x] pinned routes / quick-access surface hardened
+- [x] current board strengthened
+- [x] next-to-update module added
+- [x] Phase 24 verification completed
 
 ## Verification Plan
-1. Run local build and type checks after the blog-article differentiation pass.
-2. Verify `/blog/[slug]` now exposes its own context/meta surface distinct from 42 and project detail pages.
-3. Verify `/projects/[slug]` and `/42/[slug]` remain healthy after the shared style changes.
-4. Re-check `/studio` after any shared style changes for compatibility.
+1. Run local build and type checks after the home-feature pass.
+2. Verify `/home` now exposes clearer quick-access, current-board, and next-up structure.
+3. Verify the route remains static and still works as a personal hub without backend state.
+4. Re-check `/studio` after any shared style/data changes for compatibility.
 5. Confirm production `/studio` remains locked and the public routes remain static-output compatible.
 
 ## Work Log
@@ -179,6 +183,8 @@
 - Added quick-access cards, a current-board summary, and a home scaffold panel so `/home` can grow into a richer personal control surface without another structural rewrite.
 - Started `phase/23-blog-article-differentiation` so the general technical blog article family also gets its own article-side context instead of remaining the default leftover article shape.
 - Added `TechnicalArticleMetaPanel` so project / 42 / general technical articles now each have their own article-side metadata pattern.
+- Started `phase/24-home-hub-features` to turn `/home` from a structural shell into a more useful personal start page.
+- Added static-first home feature data in `site.ts`, strengthened the current-board module, and introduced a “Next to update” block so `/home` now behaves more like a practical personal hub even without backend state.
 - Started `phase/22-home-hub-scaffold` to make `/home` a more realistic personal hub shell before any user-specific functions exist.
 - Added quick-access cards, a current board summary, and a home scaffold panel so `/home` can evolve into a richer personal control surface without another structural rewrite.
 - Started `phase/21-domain-article-differentiation` so project detail pages and 42 detail pages stop looking like the same generic article type with only text changes.
@@ -286,6 +292,19 @@
 - `npx tsc --noEmit --project tsconfig.json` via LSP diagnostics after phase-21 → 0 errors, 0 warnings.
 - `grep dist/projects/inception/index.html dist/42/42-push-swap/index.html` after phase-21 → confirmed project detail pages now render `Project context` metadata panels while 42 detail pages render richer `Entry context` chips including order/difficulty.
 - `grep dist/studio/index.html` after phase-21 domain article differentiation → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- `npm run check` after phase-22 home hub scaffold → success (`tsc --noEmit`).
+- `npm run build` after phase-22 home hub scaffold → success; rebuilt the full split route set, project detail routes, compatibility pages, and `/studio`.
+- `grep dist/home/index.html` after phase-22 → confirmed `/home` now renders quick-access cards, current-board items, and a dedicated home scaffold panel.
+- `grep dist/studio/index.html` after phase-22 home hub scaffold → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- `npm run check` after phase-23 blog article differentiation → success (`tsc --noEmit`).
+- `npm run build` after phase-23 blog article differentiation → success; rebuilt the full split route set, project detail routes, compatibility pages, and `/studio`.
+- `npx tsc --noEmit --project tsconfig.json` via LSP diagnostics after phase-23 → 0 errors, 0 warnings.
+- `grep dist/blog/rebuilding-a-legacy-github-pages-site-with-astro/index.html` after phase-23 → confirmed the general technical article route now renders its own `Entry context` panel and blog-specific reading kicker.
+- `grep dist/studio/index.html` after phase-23 blog article differentiation → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- `npm run check` after phase-24 home hub features → success (`tsc --noEmit`).
+- `npm run build` after phase-24 home hub features → success; rebuilt the full split route set, project detail routes, compatibility pages, and `/studio`.
+- `grep dist/home/index.html` after phase-24 → confirmed `/home` now shows strengthened current-board values plus a `Next to update` section alongside the quick-access hub structure.
+- `grep dist/studio/index.html` after phase-24 home hub features → production output still contains the locked `/studio` notice and excludes the active editor markers.
 - `npm run check` after phase-22 home hub scaffold → success (`tsc --noEmit`).
 - `npm run build` after phase-22 home hub scaffold → success; rebuilt the full split route set, project detail routes, compatibility pages, and `/studio`.
 - `grep dist/home/index.html` after phase-22 → confirmed `/home` now renders quick-access cards, current-board items, and a dedicated home scaffold panel.
