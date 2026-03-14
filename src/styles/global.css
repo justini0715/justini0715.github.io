@@ -546,7 +546,8 @@
   }
 
   .project-meta-panel,
-  .forty-two-meta-panel {
+  .forty-two-meta-panel,
+  .technical-article-meta-panel {
     gap: 1rem;
   }
 

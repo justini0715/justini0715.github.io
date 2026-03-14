@@ -1,6 +1,7 @@
 ---
 import { render } from 'astro:content';
 import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import TechnicalArticleMetaPanel from '../../components/blog/TechnicalArticleMetaPanel.astro';
 import { getAdjacentSeriesPosts, getGeneralPosts, getPostPath } from '../../lib/content';
 
 export async function getStaticPaths() {
@@ -30,22 +31,10 @@ const seriesContext = post.data.seriesTitle
         <p class="eyebrow">Technical blog</p>
         <h1>{post.data.title}</h1>
         <p>{post.data.description}</p>
-        <div class="post-meta-row">
-          <span class="chip">{formattedDate}</span>
-          <span class="chip">{post.data.category}</span>
-          {post.data.seriesTitle && <span class="muted">Series · {post.data.seriesTitle}</span>}
-        </div>
+        <p class="page-kicker">일반 기술 글은 학습/정리 중심의 노트로 다루며, 프로젝트 과제 글보다 더 가볍고 개념 중심의 읽기 흐름을 유지한다.</p>
       </div>
 
-      <aside class="panel utility-panel">
-        <p class="eyebrow">Entry context</p>
-        <p class="meta-note">{seriesContext}</p>
-        {post.data.tags.length > 0 && (
-          <ul class="inline-tags">
-            {post.data.tags.map((tag) => <li>{tag}</li>)}
-          </ul>
-        )}
-      </aside>
+      <TechnicalArticleMetaPanel post={post} formattedDate={formattedDate} seriesContext={seriesContext} />
     </div>
   </section>
 
