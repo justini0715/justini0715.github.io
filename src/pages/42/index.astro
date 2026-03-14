@@ -64,7 +64,7 @@ const recentPosts = posts.slice(0, 3);
           <section class="panel hub-lane-panel">
             <div class="hub-lane-panel__head">
               <p class="eyebrow">{group.title}</p>
-              <h3>{group.items.length} entry{group.items.length > 1 ? 'ies' : ''}</h3>
+              <h3>{group.items.length} {group.items.length > 1 ? 'entries' : 'entry'}</h3>
             </div>
             <div class="hub-stack-cluster">
               {group.items.map((post) => (
