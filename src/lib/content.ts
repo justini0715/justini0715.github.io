@@ -157,7 +157,7 @@ export function getRelatedGeneralPosts(posts: BlogEntry[], current: BlogEntry, l
     .filter((post) => post.id !== current.id)
     .map((post) => {
       const sameCategory = Number(post.data.category === current.data.category);
-      const sharedTags = post.data.tags.filter((tag) => current.data.tags.includes(tag)).length;
+      const sharedTags = post.data.tags.filter((tag: string) => current.data.tags.includes(tag)).length;
       const score = sameCategory * 10 + sharedTags;
       return { post, score };
     })
