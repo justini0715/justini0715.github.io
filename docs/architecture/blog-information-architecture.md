@@ -2,8 +2,12 @@
 
 ## Top-level routes
 - `/`
+- `/home`
 - `/about`
 - `/projects`
+- `/projects/[slug]`
+- `/42`
+- `/42/[slug]`
 - `/blog`
 - `/blog/[slug]`
 - `/404`
@@ -11,26 +15,24 @@
 ## Navigation model
 Primary nav:
 - Home
-- About
 - Projects
+- 42
 - Blog
+- About
 
 Secondary links:
 - GitHub
-- Email
-- Resume (optional)
+- profile image → `/about`
 
-## Home
-Blocks:
-- hero
-- featured projects
-- recent posts
-- quick bio
-- CTA to blog/projects
+## Route roles
+- `/` → 첫 방문자를 분기시키는 showcase / gateway
+- `/home` → 현재 집중 중인 작업과 최근 업데이트를 모아두는 personal hub
+- `/projects` → 프로젝트 상태 / 대표 작업 / 개별 case study 진입점
+- `/42` → 42 전용 허브와 읽기 순서 아카이브
+- `/blog` → 일반 기술 블로그와 개념 정리 archive
 
 ## Blog taxonomy
-Suggested categories:
-- `42`
+General blog categories:
 - `project`
 - `devlog`
 - `setup`
@@ -38,21 +40,32 @@ Suggested categories:
 
 Suggested metadata per post:
 - title
-- date
-- summary
+- description
+- pubDate
+- updatedDate (optional)
 - category
 - tags
-- series
 - draft
 
 ## 42 structure
+42 글은 일반 blog와 분리해 `/42` 아래에서만 읽는다.
+
 Each 42 post should support:
 - project name
-- series group if relevant
-- difficulty / constraints (optional)
+- series group
+- series order
+- difficulty / constraints
 - lessons learned
+- real repository evidence
+
+Current 42 series keys:
+- `42-core`
+- `42-systems`
+- `42-graphics`
+- `42-infra`
+- `42-cpp`
 
 Recommended URL style:
-- `/blog/42-libft`
-- `/blog/42-ft-printf`
-- `/blog/42-minishell`
+- `/42/42-libft`
+- `/42/42-ft-printf`
+- `/42/42-minishell`

@@ -7,8 +7,8 @@
 - Domain target: `https://changwpa.kro.kr`
 
 ## Current Phase
-- Phase: Phase 40 — Remove Studio
-- Branch: `phase/40-remove-studio`
+- Phase: Phase 41 — 42 Archive Survey Fill
+- Branch: `phase/41-42-archive-docs-fill`
 - Status: Complete
 
 ## Official Phase List
@@ -52,16 +52,17 @@
 38. Phase 38 — Korean Editing Manual
 39. Phase 39 — Studio Local Runtime Fix
 40. Phase 40 — Remove Studio
+41. Phase 41 — 42 Archive Survey Fill
 
 ## Current Phase Scope
-- Remove the `/studio` route and its local-only editor implementation from the project.
-- Shift the repo fully to direct file-based editing through `src/pages` and `src/content` instead of a custom writing tool.
-- Update README and local manuals so future edits follow the direct-edit workflow only.
+- Survey the real 42 repositories under `/home/iostream/Desktop/42-repo-workspace` and use code/comments/docs as evidence.
+- Expand the site’s 42 archive so the dedicated `/42` route is backed by a much fuller set of Korean writeups.
+- Fill the 42 series map and align the visible 42 series taxonomy with the newly surveyed project set.
 
 ## Current Phase Non-Scope
-- Reworking the public IA or design system again.
-- Adding a replacement CMS, backend, auth, or admin workflow.
-- Changing existing content collections beyond removing the Studio authoring layer.
+- Reworking the public layout again or touching unrelated non-42 pages.
+- Rewriting the project collection or general technical blog content in the same phase.
+- Inventing unsupported claims where the local 42 repo evidence is missing; incomplete repos should be labeled honestly.
 
 ## Architecture Summary
 - Astro static output with content collections for blog posts and projects.
@@ -74,15 +75,16 @@
 - blog taxonomy: `42`, `project`, `devlog`, `setup`, `retrospective`.
 
 ## Deliverables Checklist
-- [x] `/studio` route and Studio runtime files removed
-- [x] README and editing manual now point to direct file-based editing only
-- [x] sitemap / route-class logic no longer carry Studio-specific behavior
-- [x] Phase 40 verification completed
+- [x] 42 series map expanded from placeholder notes into a concrete Korean survey map
+- [x] 42 posts added for the surveyed workspace projects with Korean writeups
+- [x] existing 42 posts refreshed into the same Korean structure
+- [x] 42 hub series taxonomy updated to include the surveyed lanes
+- [x] Phase 41 verification completed
 
 ## Verification Plan
-1. Run local type checks and a full static build after removing Studio.
-2. Confirm `/studio` is no longer built and that the rest of the public routes still build cleanly.
-3. Confirm the README and Korean editing manual now describe direct file-based editing instead of the removed Studio flow.
+1. Run local type checks and a full static build after adding the 42 archive content.
+2. Confirm the 42 hub and 42 detail routes build for the newly added slugs.
+3. Confirm the Korean series map and the public 42 series taxonomy stay aligned.
 
 ## Work Log
 - Cloned the remote user-site repository into the writable workspace.
@@ -460,6 +462,9 @@
 - Added `docs/runbooks/사이트-수정-실전-메뉴얼.md` as a detailed Korean manual covering routing, page creation, shared UI, content collections, Studio behavior, verification commands, Git workflow, and troubleshooting.
 - Kept the phase docs-only so the site behavior itself does not change while future edits become much easier to perform safely.
 - `git diff --check` after phase-38 Korean editing manual → success.
+- `npm run check` after phase-41 42 archive survey fill → success (`tsc --noEmit`).
+- `npm run build` after phase-41 42 archive survey fill → success; built the expanded `/42` route set including libft, get_next_line, ft_printf, born2beroot, pipex, push_swap, philosopher, minishell, fdf, cub3d, inception, webserv, cpp modules 00-04, and cpp module 05.
+- built-output checks against `dist/42/index.html`, `dist/42/42-libft/index.html`, `dist/42/42-cub3d/index.html`, and `dist/42/42-cpp-module-05/index.html` → confirmed the new Korean archive entries and the updated 42 lane structure render in the static output.
 
 - Started `phase/39-studio-local-runtime-fix-v2` after the user reported that Studio buttons like save and folder connect did nothing in local dev.
 - Found the root cause: the seed payload script in `WritingStudioApp.astro` was rendering the literal `{JSON.stringify(initialPosts)}` text instead of actual JSON, so `JSON.parse(...)` threw before any button listeners were attached.
@@ -473,3 +478,9 @@
 - Updated the public build config, README, and Korean editing manual to reflect the new direct file-based editing workflow.
 - `npm run check` after phase-40 remove studio → success (`tsc --noEmit`).
 - `npm run build` after phase-40 remove studio → success; rebuilt the public route set without `/studio`.
+
+- Started `phase/41-42-archive-docs-fill` after the user asked for a full Korean survey of the local 42 workspace under `/home/iostream/Desktop/42-repo-workspace`.
+- Audited the local 42 repositories, READMEs, comments, and visible code structure for libft, get_next_line, ft_printf, born2beroot, pipex, push_swap, philosopher, minishell, fdf, cub3d, inception, webserv, and the C++ module repositories.
+- Expanded `docs/content/42-series-map.md` into a concrete Korean map covering 42 Core, Systems, Graphics, Infra, and C++ lanes, with explicit local survey paths and writing principles.
+- Added Korean 42 archive entries for the newly surveyed projects and refreshed the existing push_swap / philosopher writeups so the full `/42` surface is backed by repository-evidence-based posts.
+- Extended the visible 42 taxonomy with a new `42-cpp` lane so the public series overview matches the surveyed repository set.
