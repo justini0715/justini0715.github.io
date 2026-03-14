@@ -2,6 +2,7 @@
 title: "Inception"
 description: "A Docker Compose-based infrastructure project with Nginx, WordPress, MariaDB, TLS, and local operations workflows."
 summary: "A portfolio-facing infrastructure case study built around service boundaries, container orchestration, and deployment thinking."
+updatedDate: 2026-03-13
 stack:
   - Docker
   - Docker Compose
@@ -11,6 +12,9 @@ stack:
   - Bash
 badge: "42 infra"
 status: "Archived implementation, documented for portfolio use"
+state: "stable"
+focus: "Deployment architecture, service boundaries, and documentation quality."
+nextStep: "Expand the infrastructure case notes and connect them to related deployment writeups."
 featured: true
 order: 1
 repoUrl: "https://github.com/justini0715/inception"

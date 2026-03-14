@@ -3,10 +3,11 @@ import ArchiveLayout from '../../layouts/ArchiveLayout.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
 import SectionTitle from '../../components/SectionTitle.astro';
 import SplitHero from '../../components/site/SplitHero.astro';
-import { getProjects, groupProjectsByBadge } from '../../lib/content';
+import { getProjects, groupProjectsByBadge, groupProjectsByState } from '../../lib/content';
 
 const projects = await getProjects();
 const projectGroups = groupProjectsByBadge(projects);
+const projectStates = groupProjectsByState(projects);
 const featuredCount = projects.filter((project) => project.data.featured).length;
 const uniqueStacks = new Set(projects.flatMap((project) => project.data.stack)).size;
 ---
@@ -64,6 +65,35 @@ const uniqueStacks = new Set(projects.flatMap((project) => project.data.stack)).
       />
       <div class="card-grid">
         {projects.map((project) => <ProjectCard project={project} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tint">
+    <div class="container">
+      <SectionTitle
+        eyebrow="Project states"
+        title="현재 상태 기준으로 보는 프로젝트 판"
+        description="지금 유지 중인 프로젝트와 이미 아카이브된 프로젝트를 따로 보면, 다음에 어디를 손봐야 하는지 더 빨리 판단할 수 있다."
+      />
+
+      <div class="hub-lane-grid">
+        {projectStates.map((group) => (
+          <section class="panel hub-lane-panel">
+            <div class="hub-lane-panel__head">
+              <p class="eyebrow">{group.state}</p>
+              <h3>{group.items.length} project{group.items.length > 1 ? 's' : ''}</h3>
+            </div>
+            <div class="hub-stack-cluster">
+              {group.items.map((project) => (
+                <a class="hub-project-link" href={`/projects/${project.id}/`}>
+                  <strong>{project.data.title}</strong>
+                  <span>{project.data.focus ?? project.data.highlight}</span>
+                </a>
+              ))}
+            </div>
+          </section>
+        ))}
       </div>
     </div>
   </section>

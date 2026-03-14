@@ -56,6 +56,18 @@ export function groupProjectsByBadge(projects: ProjectEntry[]) {
   return [...groups.entries()].map(([badge, items]) => ({ badge, items }));
 }
 
+export function groupProjectsByState(projects: ProjectEntry[]) {
+  const groups = new Map<string, ProjectEntry[]>();
+
+  for (const project of projects) {
+    const key = project.data.state;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key)?.push(project);
+  }
+
+  return [...groups.entries()].map(([state, items]) => ({ state, items }));
+}
+
 export async function getFeaturedProjects(limit = 3) {
   return (await getProjects()).filter((project) => project.data.featured).slice(0, limit);
 }

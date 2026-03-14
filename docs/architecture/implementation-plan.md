@@ -7,8 +7,8 @@
 - Domain target: `https://changwpa.kro.kr`
 
 ## Current Phase
-- Phase: Phase 24 — Home Hub Features
-- Branch: `phase/24-home-hub-features`
+- Phase: Phase 25 — Projects Hub Features
+- Branch: `phase/25-projects-hub-features`
 - Status: Complete
 
 ## Official Phase List
@@ -35,13 +35,12 @@
 21. Phase 21 — Domain Article Differentiation
 22. Phase 22 — Home Hub Scaffold
 23. Phase 23 — Blog Article Differentiation
-24. Phase 24 — Home Hub Features
-24. Phase 24 — Home Hub Features
+25. Phase 25 — Projects Hub Features
 
 ## Current Phase Scope
-- Turn `/home` into a genuinely useful personal start page rather than a structural placeholder.
-- Add static-first features that improve repeated use: quick access, current board, and next-to-update guidance.
-- Keep the route split intact while making `/home` the place you would actually choose to open first.
+- Promote `/projects` from a strong archive into a more explicit status / materials hub.
+- Add project-level fields that expose current focus and next actions directly in content.
+- Keep the route/layout structure intact while making project state and project trajectory easier to read.
 
 ## Current Phase Non-Scope
 - Replacing the static content architecture with a hosted CMS.
@@ -61,6 +60,7 @@
 - Implementing backend-driven widgets or persistence for `/home` yet.
 - Adding real persistence or authenticated state for `/home`.
 - Reworking project or 42 article routing again; this phase is blog-article specific.
+- Splitting the 42/blog collections physically in this phase.
 
 ## Architecture Summary
 - Astro static output with content collections for blog posts and projects.
@@ -73,15 +73,15 @@
 - blog taxonomy: `42`, `project`, `devlog`, `setup`, `retrospective`.
 
 ## Deliverables Checklist
-- [x] pinned routes / quick-access surface hardened
-- [x] current board strengthened
-- [x] next-to-update module added
-- [x] Phase 24 verification completed
+- [x] project `state` / `focus` / `nextStep` structure added
+- [x] `/projects` status-oriented hub view improved
+- [x] `/projects/[slug]` project-state context improved
+- [x] Phase 25 verification completed
 
 ## Verification Plan
-1. Run local build and type checks after the home-feature pass.
-2. Verify `/home` now exposes clearer quick-access, current-board, and next-up structure.
-3. Verify the route remains static and still works as a personal hub without backend state.
+1. Run local build and type checks after the projects-hub feature pass.
+2. Verify `/projects` now surfaces project state, focus, or next-step information beyond plain card/archive browsing.
+3. Verify `/projects/[slug]` pages now expose clearer project trajectory metadata.
 4. Re-check `/studio` after any shared style/data changes for compatibility.
 5. Confirm production `/studio` remains locked and the public routes remain static-output compatible.
 
@@ -185,6 +185,9 @@
 - Added `TechnicalArticleMetaPanel` so project / 42 / general technical articles now each have their own article-side metadata pattern.
 - Started `phase/24-home-hub-features` to turn `/home` from a structural shell into a more useful personal start page.
 - Added static-first home feature data in `site.ts`, strengthened the current-board module, and introduced a “Next to update” block so `/home` now behaves more like a practical personal hub even without backend state.
+- Started `phase/25-projects-hub-features` to make `/projects` read more like a status/materials hub instead of only an archive grid.
+- Added project-level `state`, `focus`, `nextStep`, and `updatedDate` fields to the project content model and filled them into the existing project content files.
+- Added state-based grouping to the `/projects` hub and expanded project detail context so visitors can see what is stable, what is archived, and what should be updated next.
 - Started `phase/22-home-hub-scaffold` to make `/home` a more realistic personal hub shell before any user-specific functions exist.
 - Added quick-access cards, a current board summary, and a home scaffold panel so `/home` can evolve into a richer personal control surface without another structural rewrite.
 - Started `phase/21-domain-article-differentiation` so project detail pages and 42 detail pages stop looking like the same generic article type with only text changes.
@@ -305,6 +308,11 @@
 - `npm run build` after phase-24 home hub features → success; rebuilt the full split route set, project detail routes, compatibility pages, and `/studio`.
 - `grep dist/home/index.html` after phase-24 → confirmed `/home` now shows strengthened current-board values plus a `Next to update` section alongside the quick-access hub structure.
 - `grep dist/studio/index.html` after phase-24 home hub features → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- `npm run check` after phase-25 projects hub features → success (`tsc --noEmit`).
+- `npm run build` after phase-25 projects hub features → success; rebuilt the full split route set, project detail routes, compatibility pages, and `/studio`.
+- `npx tsc --noEmit --project tsconfig.json` via LSP diagnostics after phase-25 → 0 errors, 0 warnings.
+- `grep dist/projects/index.html dist/projects/inception/index.html` after phase-25 → confirmed `/projects` now renders project-state grouping and project detail pages expose `state`, `focus`, `next step`, and `updated` metadata.
+- `grep dist/studio/index.html` after phase-25 projects hub features → production output still contains the locked `/studio` notice and excludes the active editor markers.
 - `npm run check` after phase-22 home hub scaffold → success (`tsc --noEmit`).
 - `npm run build` after phase-22 home hub scaffold → success; rebuilt the full split route set, project detail routes, compatibility pages, and `/studio`.
 - `grep dist/home/index.html` after phase-22 → confirmed `/home` now renders quick-access cards, current-board items, and a dedicated home scaffold panel.
