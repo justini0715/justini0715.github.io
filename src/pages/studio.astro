@@ -18,7 +18,7 @@ async function loadStudioSeed() {
     try {
       const entries = await readdir(directory.path, { withFileTypes: true });
       for (const entry of entries) {
-        if (!entry.isFile() || !entry.name.endsWith('.md') || entry.name === '.gitkeep') continue;
+        if (!entry.isFile() || !/\.(md|mdx)$/i.test(entry.name) || entry.name === '.gitkeep') continue;
         const raw = await readFile(resolve(directory.path, entry.name), 'utf-8');
         posts.push(parsePostFile(entry.name, raw, directory.key));
       }
@@ -31,6 +31,7 @@ async function loadStudioSeed() {
     .sort((left, right) => right.pubDate.localeCompare(left.pubDate) || left.title.localeCompare(right.title))
     .map((post) => ({
       collection: post.collection,
+      extension: post.extension,
       slug: post.slug,
       title: post.title,
       description: post.description,
