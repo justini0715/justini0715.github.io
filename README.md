@@ -72,3 +72,4 @@ Then open the localhost URL printed by `npm run dev`, add `/studio`, connect the
 - `phase/14-public-reading-typography-polish`
 - `phase/15-route-ui-separation`
 - `phase/16-layout-component-split`
+- `phase/17-route-compatibility-hardening`

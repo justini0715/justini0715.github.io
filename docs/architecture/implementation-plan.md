@@ -7,8 +7,8 @@
 - Domain target: `https://changwpa.kro.kr`
 
 ## Current Phase
-- Phase: Phase 16 — Layout / Component Split
-- Branch: `phase/16-layout-component-split`
+- Phase: Phase 17 — Route Compatibility Hardening
+- Branch: `phase/17-route-compatibility-hardening`
 - Status: Complete
 
 ## Official Phase List
@@ -28,11 +28,12 @@
 14. Phase 14 — Public Reading & Typography Polish
 15. Phase 15 — Route / UI Separation
 16. Phase 16 — Layout / Component Split
+17. Phase 17 — Route Compatibility Hardening
 
 ## Current Phase Scope
-- Reduce repetition across the new route families by extracting role-based layouts and shared route hero/panel components.
-- Move the public shell responsibilities out of a single catch-all layout and introduce clearer route-level wrappers.
-- Keep the route split from phase 15 intact while making future iterations cheaper to maintain.
+- Preserve external/internal link stability after the route split by handling old 42 blog URLs safely.
+- Add compatibility behavior before deeper structural cleanup so the new route map does not strand old links.
+- Keep the route split from phase 15 intact while reducing migration risk for bookmarked/shared URLs.
 
 ## Current Phase Non-Scope
 - Replacing the static content architecture with a hosted CMS.
@@ -44,6 +45,7 @@
 - Another large copy/SEO rewrite immediately after phase 13.
 - Splitting the underlying content collection into separate physical `blog` and `forty-two` collections in this phase.
 - Reworking the route map again immediately after phase 15.
+- A full content-collection migration; this phase is compatibility-focused only.
 
 ## Architecture Summary
 - Astro static output with content collections for blog posts and projects.
@@ -56,17 +58,15 @@
 - blog taxonomy: `42`, `project`, `devlog`, `setup`, `retrospective`.
 
 ## Deliverables Checklist
-- [x] `PublicShell` 추출
-- [x] `LandingLayout` / `HubLayout` / `ArchiveLayout` / `ArticleLayout` 도입
-- [x] route hero / utility panel 공통 컴포넌트 추출
-- [x] landing entry card 공통 컴포넌트 추출
-- [x] Phase 16 verification completed
+- [x] old `/blog/42-*` URLs handled safely
+- [x] new `/42/*` routes remain canonical
+- [x] Phase 17 verification completed
 
 ## Verification Plan
-1. Run local build and type checks after the layout/component split.
-2. Verify landing/home/archive/article route families still render their intended surfaces.
-3. Confirm the new shared layout files are in use by the appropriate routes.
-4. Re-check `/studio` after shared layout extraction for compatibility.
+1. Run local build and type checks after the compatibility pass.
+2. Verify `/blog/42-push-swap/` and `/blog/42-philosopher/` no longer strand readers.
+3. Verify `/42/*` routes stay canonical and `/blog` still lists only non-42 content.
+4. Re-check `/studio` after any shared route helper changes for compatibility.
 5. Confirm production `/studio` remains locked and the public routes remain static-output compatible.
 
 ## Work Log
@@ -150,6 +150,9 @@
 - Started `phase/16-layout-component-split` immediately after the route split to stop the new route families from duplicating the same hero/aside patterns in each page file.
 - Extracted `PublicShell` out of the old `MainLayout` and introduced role-based wrappers (`LandingLayout`, `HubLayout`, `ArchiveLayout`, `ArticleLayout`) so the route families now have clearer structural boundaries.
 - Extracted shared route-building blocks (`SplitHero`, `UtilityListPanel`, `LandingEntryCard`) to reduce repeated landing/home/archive/article page markup and make later UI iteration cheaper.
+- Started `phase/17-route-compatibility-hardening` immediately after the split because old `/blog/42-*` links would otherwise break once the dedicated `/42` route family went live.
+- Added explicit legacy notice/redirect pages for the currently published 42 slugs under their old `/blog/...` paths, pointing readers to the new canonical `/42/...` routes.
+- Updated sitemap filtering so those compatibility pages are not promoted as first-class archive pages.
 
 ## Verification Results
 - `npm install -D astro @astrojs/sitemap @astrojs/check typescript` → dependencies installed successfully.
@@ -225,6 +228,11 @@
 - `find src/layouts -maxdepth 1 -type f` after phase-16 → confirmed `PublicShell`, `LandingLayout`, `HubLayout`, `ArchiveLayout`, and `ArticleLayout` now exist alongside `MainLayout`.
 - `grep dist/index.html dist/home/index.html dist/42/index.html dist/blog/index.html` after phase-16 → confirmed landing/home/archive routes still render their intended split surfaces after component extraction.
 - `grep dist/studio/index.html` after phase-16 layout/component split → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- `npm run check` after phase-17 compatibility hardening → success (`tsc --noEmit`).
+- `npm run build` after phase-17 compatibility hardening → success; built the full split route set plus `dist/blog/42-push-swap/index.html` and `dist/blog/42-philosopher/index.html` compatibility pages.
+- `npx tsc --noEmit --project tsconfig.json` via LSP diagnostics after phase-17 compatibility hardening → 0 errors, 0 warnings.
+- `grep dist/blog/42-push-swap/index.html dist/blog/42-philosopher/index.html` after phase-17 → confirmed both legacy pages render redirect/notice surfaces pointing to the new `/42/...` routes.
+- `grep dist/studio/index.html` after phase-17 compatibility hardening → production output still contains the locked `/studio` notice and excludes the active editor markers.
 
 ## Known Blockers / User-Action-Required Items
 - GitHub push/PR and Pages settings updates will require the user's GitHub auth later.
