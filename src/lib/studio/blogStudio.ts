@@ -1,7 +1,11 @@
 export const BLOG_CATEGORIES = ['42', 'project', 'devlog', 'setup', 'retrospective'] as const;
+export const TECH_BLOG_CATEGORIES = ['project', 'devlog', 'setup', 'retrospective'] as const;
 export type BlogCategory = (typeof BLOG_CATEGORIES)[number];
+export type TechBlogCategory = (typeof TECH_BLOG_CATEGORIES)[number];
 export const STUDIO_COLLECTION_KEYS = ['blog', 'forty-two'] as const;
 export type StudioCollectionKey = (typeof STUDIO_COLLECTION_KEYS)[number];
+export const MARKDOWN_EXTENSIONS = ['.md', '.mdx'] as const;
+export type MarkdownExtension = (typeof MARKDOWN_EXTENSIONS)[number];
 
 export const STUDIO_COLLECTION_META: Record<
   StudioCollectionKey,
@@ -31,6 +35,8 @@ export type StudioTemplateKind = 'tech' | '42' | 'blank';
 export interface StudioPost {
   collection: StudioCollectionKey;
   originalCollection: StudioCollectionKey;
+  extension: MarkdownExtension;
+  originalExtension: MarkdownExtension;
   slug: string;
   originalSlug: string;
   title: string;
@@ -116,6 +122,10 @@ export function collectionKeyForCategory(category: BlogCategory) {
   return category === '42' ? 'forty-two' : 'blog';
 }
 
+export function templateKindForCollection(collection: StudioCollectionKey): StudioTemplateKind {
+  return collection === 'forty-two' ? '42' : 'tech';
+}
+
 export function getCollectionDirectory(collection: StudioCollectionKey) {
   return STUDIO_COLLECTION_META[collection].directory;
 }
@@ -125,9 +135,9 @@ export function getPostRoute(post: Pick<StudioPost, 'category' | 'slug'>) {
   return `${routeBase}/${post.slug || 'post-slug'}/`;
 }
 
-export function getPostFilePath(post: Pick<StudioPost, 'category' | 'slug'>) {
+export function getPostFilePath(post: Pick<StudioPost, 'category' | 'slug' | 'extension'>) {
   const directory = getCollectionDirectory(collectionKeyForCategory(post.category));
-  return `${directory}/${post.slug || 'post-slug'}.md`;
+  return `${directory}/${post.slug || 'post-slug'}${post.extension}`;
 }
 
 export function normalizeTags(input: string[] | string) {
@@ -143,12 +153,15 @@ export function normalizeTags(input: string[] | string) {
 export function createPostTemplate(kind: StudioTemplateKind, seedTitle = ''): StudioPost {
   const baseTitle = kind === '42' ? (seedTitle ? `42 - ${seedTitle}` : '') : seedTitle;
   const slug = baseTitle ? slugifyTitle(baseTitle) : '';
-  const category = kind === '42' ? '42' : 'devlog';
+  const category: BlogCategory = kind === '42' ? '42' : 'devlog';
   const collection = collectionKeyForCategory(category);
+  const extension: MarkdownExtension = '.md';
 
   return {
     collection,
     originalCollection: collection,
+    extension,
+    originalExtension: extension,
     slug,
     originalSlug: '',
     title: baseTitle,
@@ -198,6 +211,10 @@ function parseInlineArray(value: string) {
   return normalizeTags(result);
 }
 
+function getExtension(fileName: string): MarkdownExtension {
+  return fileName.toLowerCase().endsWith('.mdx') ? '.mdx' : '.md';
+}
+
 export function parsePostFile(fileName: string, markdown: string, collection: StudioCollectionKey = 'blog'): StudioPost {
   const normalized = markdown.replace(/\r\n/g, '\n');
   let frontmatterBlock = '';
@@ -218,20 +235,25 @@ export function parsePostFile(fileName: string, markdown: string, collection: St
     fields.set(match[1], match[2]);
   }
 
-  const slug = fileName.replace(/\.md$/i, '');
+  const extension = getExtension(fileName);
+  const slug = fileName.replace(/\.(md|mdx)$/i, '');
   const series = parseString(fields.get('series') ?? '');
-  const category = parseString(fields.get('category') ?? 'devlog');
+  const rawCategory = parseString(fields.get('category') ?? 'devlog');
+  const category = (BLOG_CATEGORIES.includes(rawCategory as BlogCategory) ? rawCategory : collection === 'forty-two' ? '42' : 'devlog') as BlogCategory;
+  const resolvedCollection = collection === 'forty-two' || category === '42' ? 'forty-two' : 'blog';
 
   return {
-    collection,
-    originalCollection: collection,
+    collection: resolvedCollection,
+    originalCollection: resolvedCollection,
+    extension,
+    originalExtension: extension,
     slug,
     originalSlug: slug,
     title: parseString(fields.get('title') ?? slug),
     description: parseString(fields.get('description') ?? ''),
     pubDate: parseString(fields.get('pubDate') ?? currentDate()),
     updatedDate: parseString(fields.get('updatedDate') ?? ''),
-    category: (BLOG_CATEGORIES.includes(category as BlogCategory) ? category : 'devlog') as BlogCategory,
+    category,
     tags: parseInlineArray(fields.get('tags') ?? '[]'),
     series,
     seriesTitle: parseString(fields.get('seriesTitle') ?? seriesTitleFor(series)),
@@ -240,7 +262,7 @@ export function parsePostFile(fileName: string, markdown: string, collection: St
     featured: parseBoolean(fields.get('featured') ?? 'false'),
     draft: parseBoolean(fields.get('draft') ?? 'false'),
     body: body.trimStart(),
-    templateKind: category === '42' ? '42' : 'tech',
+    templateKind: resolvedCollection === 'forty-two' ? '42' : 'tech',
     dirty: false,
     deleted: false
   };
@@ -297,6 +319,12 @@ export function validatePost(post: StudioPost, posts: StudioPost[]): ValidationI
   if (!BLOG_CATEGORIES.includes(post.category)) {
     issues.push({ level: 'error', field: 'category', message: '허용된 카테고리만 사용할 수 있습니다.' });
   }
+  if (targetCollection === 'forty-two' && post.category !== '42') {
+    issues.push({ level: 'error', field: 'category', message: '42 글은 category가 반드시 42여야 합니다.' });
+  }
+  if (targetCollection === 'blog' && post.category === '42') {
+    issues.push({ level: 'error', field: 'category', message: '일반 기술 글은 42 category를 사용할 수 없습니다.' });
+  }
   if (post.category === '42' && !post.series.trim()) {
     issues.push({ level: 'warning', field: 'series', message: '42 글은 series를 채우는 것을 권장합니다.' });
   }
@@ -346,6 +374,8 @@ export function clonePost(post: StudioPost): StudioPost {
     ...post,
     collection,
     originalCollection: collection,
+    extension: post.extension,
+    originalExtension: post.extension,
     tags: [...post.tags],
     slug: slugifyTitle(`${post.slug}-copy`),
     originalSlug: '',

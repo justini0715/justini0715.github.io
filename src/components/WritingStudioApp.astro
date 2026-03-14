@@ -1,8 +1,9 @@
 ---
-import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS } from '../lib/studio/blogStudio';
+import { BLOG_CATEGORIES, CATEGORY_LABELS, SERIES_PRESETS, TECH_BLOG_CATEGORIES } from '../lib/studio/blogStudio';
 
 interface SeedPost {
   collection: 'blog' | 'forty-two';
+  extension: '.md' | '.mdx';
   slug: string;
   title: string;
   description: string;
@@ -34,17 +35,18 @@ const { initialPosts = [] } = Astro.props;
         <p class="eyebrow">원고 데스크</p>
         <div>
           <h1>Writing Studio</h1>
-          <p>원고부터 바로 쓰고, 라이브러리와 설정은 필요할 때만 여는 간결한 집필 화면입니다.</p>
+          <p id="studio-folder" class="studio-topbar__hint">저장 위치: 폴더 미연결</p>
         </div>
       </div>
 
       <div class="studio-topbar__status-block">
+        <p class="studio-topbar__label">현재 문서</p>
+        <strong id="studio-current-document" class="studio-topbar__document-title">새 글</strong>
         <div class="studio-topbar__status">
           <span id="studio-host-badge" class="studio-pill studio-pill--ok">로컬 전용</span>
           <span id="studio-connection-badge" class="studio-pill">폴더 연결 필요</span>
           <span id="studio-dirty-badge" class="studio-pill">파일 저장됨</span>
         </div>
-        <p id="studio-folder" class="studio-topbar__hint">저장 위치: 폴더 미연결</p>
         <p id="studio-folder-detail" class="studio-topbar__hint studio-topbar__hint--sub">blog · 42 디렉터리 상태를 아직 확인하지 못했습니다.</p>
       </div>
 
@@ -54,27 +56,6 @@ const { initialPosts = [] } = Astro.props;
           <button id="studio-connect" class="button button--ghost" type="button">폴더 연결</button>
           <button id="studio-save" class="button studio-save-button" type="button">저장</button>
         </div>
-        <details class="studio-tool-menu">
-          <summary class="studio-tool-menu__summary">새 글 · 도구</summary>
-          <div class="studio-tool-menu__panel">
-            <div class="studio-tool-menu__group">
-              <p class="studio-topbar__label">새 초안</p>
-              <div class="studio-tool-menu__actions">
-                <button class="studio-mini-button studio-preset" data-template="tech" type="button">새 기술 글</button>
-                <button class="studio-mini-button studio-preset" data-template="42" type="button">새 42 글</button>
-                <button class="studio-mini-button studio-preset" data-template="blank" type="button">빈 초안</button>
-              </div>
-            </div>
-            <div class="studio-tool-menu__group">
-              <p class="studio-topbar__label">문서 작업</p>
-              <div class="studio-tool-menu__actions">
-                <button id="studio-duplicate" class="studio-command" type="button">복제</button>
-                <button id="studio-download" class="studio-command" type="button">파일로 받기</button>
-                <button id="studio-restore" class="studio-command" type="button">임시저장 불러오기</button>
-              </div>
-            </div>
-          </div>
-        </details>
       </div>
     </header>
 
@@ -85,8 +66,8 @@ const { initialPosts = [] } = Astro.props;
         <div class="studio-library-head">
           <div>
             <p class="eyebrow">라이브러리</p>
-            <h3>기존 글과 새 초안</h3>
-            <p>필요할 때만 열어 이전 원고를 확인하고 새 문서를 시작합니다.</p>
+            <h3>새 문서와 기존 원고 열기</h3>
+            <p>새 일반 글, 새 42 글을 만들고 기존 글을 다시 여는 왼쪽 드로어입니다.</p>
           </div>
         </div>
 
@@ -124,18 +105,14 @@ const { initialPosts = [] } = Astro.props;
             <button id="studio-settings-toggle" class="studio-command" type="button">문서 설정</button>
             <button id="studio-notes-toggle" class="studio-command" type="button">점검</button>
           </div>
-
-          <details class="studio-inline-tools">
-            <summary class="studio-inline-tools__summary">빠른 삽입</summary>
-            <div class="studio-inline-tools__panel">
-              <button class="studio-command studio-toolbar" data-snippet="h2" type="button">H2</button>
-              <button class="studio-command studio-toolbar" data-snippet="h3" type="button">H3</button>
-              <button class="studio-command studio-toolbar" data-snippet="list" type="button">리스트</button>
-              <button class="studio-command studio-toolbar" data-snippet="quote" type="button">인용</button>
-              <button class="studio-command studio-toolbar" data-snippet="code" type="button">코드</button>
-              <button class="studio-command studio-toolbar" data-snippet="divider" type="button">구분선</button>
-            </div>
-          </details>
+          <div class="studio-command-strip__group studio-command-strip__group--tools">
+            <span class="studio-command-strip__label">빠른 삽입</span>
+            <button class="studio-command studio-toolbar" data-snippet="h2" type="button">H2</button>
+            <button class="studio-command studio-toolbar" data-snippet="list" type="button">리스트</button>
+            <button class="studio-command studio-toolbar" data-snippet="quote" type="button">인용</button>
+            <button class="studio-command studio-toolbar" data-snippet="code" type="button">코드 블록</button>
+            <button class="studio-command studio-toolbar" data-snippet="link" type="button">링크</button>
+          </div>
         </div>
 
         <form id="studio-form" class="studio-editor-form" autocomplete="off">
@@ -223,20 +200,32 @@ const { initialPosts = [] } = Astro.props;
             </div>
             <div class="studio-settings-grid">
               <label class="studio-field">
+                <span>문서 타입</span>
+                <select id="studio-document-type" class="studio-select">
+                  <option value="tech">일반 기술 글</option>
+                  <option value="42">42 글</option>
+                </select>
+              </label>
+              <label class="studio-field">
                 <span>공개 범위</span>
                 <select id="studio-visibility" class="studio-select">
                   <option value="public">공개</option>
                   <option value="private">비공개</option>
                 </select>
               </label>
-              <label class="studio-field">
+              <label id="studio-category-field" class="studio-field">
                 <span>카테고리</span>
                 <select id="studio-category" class="studio-select">
-                  {BLOG_CATEGORIES.map((category) => (
+                  {TECH_BLOG_CATEGORIES.map((category) => (
                     <option value={category}>{CATEGORY_LABELS[category]}</option>
                   ))}
                 </select>
               </label>
+              <div id="studio-fixed-category-note" class="studio-fixed-note" hidden>
+                <span>카테고리</span>
+                <strong>42</strong>
+                <small>42 글은 category가 자동으로 `42`로 고정됩니다.</small>
+              </div>
               <label class="studio-field">
                 <span>발행일</span>
                 <input id="studio-pubDate" class="studio-input" type="date" />
@@ -263,7 +252,7 @@ const { initialPosts = [] } = Astro.props;
             </div>
           </section>
 
-          <section class="studio-settings-card">
+          <section id="studio-series-card" class="studio-settings-card" hidden>
             <div class="studio-settings-card__head">
               <p class="eyebrow">시리즈</p>
               <p>42 시리즈나 연재 흐름을 부드럽게 유지합니다.</p>
@@ -303,11 +292,23 @@ const { initialPosts = [] } = Astro.props;
               </label>
               <label class="studio-checkbox"><input id="studio-featured" type="checkbox" /><span>홈/상단 추천에 표시</span></label>
             </div>
-            <label class="studio-field">
+            <label id="studio-difficulty-field" class="studio-field" hidden>
               <span>추가 메모</span>
               <input id="studio-difficulty" class="studio-input" type="text" placeholder="예: 이 글의 난이도, 후속 작업, 메모" />
             </label>
           </details>
+
+          <section class="studio-settings-card">
+            <div class="studio-settings-card__head">
+              <p class="eyebrow">문서 작업</p>
+              <p>복제, 다운로드, 임시저장 복구 같은 보조 작업은 설정 안으로 모아둡니다.</p>
+            </div>
+            <div class="studio-danger-row">
+              <button id="studio-duplicate" class="button button--ghost" type="button">복제</button>
+              <button id="studio-download" class="button button--ghost" type="button">Markdown 다운로드</button>
+              <button id="studio-restore" class="button button--ghost" type="button">임시저장 복구</button>
+            </div>
+          </section>
 
           <section class="studio-settings-card studio-settings-card--danger">
             <div class="studio-settings-card__head">
@@ -336,6 +337,7 @@ const { initialPosts = [] } = Astro.props;
             </div>
             <ul class="studio-checklist">
               <li>Chromium 데스크톱에서 로컬 폴더 쓰기가 가장 안정적입니다.</li>
+              <li>Safari / Firefox / mobile에서는 다운로드 저장 fallback으로 사용합니다.</li>
               <li>배포본에서는 editor가 잠기고 localhost에서만 활성화됩니다.</li>
               <li>저장은 <code>⌘/Ctrl + S</code> 단축키로도 가능합니다.</li>
               <li>저장 후 최종 반영은 git commit / push가 필요합니다.</li>
@@ -384,6 +386,7 @@ const { initialPosts = [] } = Astro.props;
     contentRootHandle: null,
     blogHandle: null,
     fortyTwoHandle: null,
+    supportsFileAccess: 'showDirectoryPicker' in window,
     posts: [],
     currentId: '',
     search: '',
@@ -411,6 +414,7 @@ const { initialPosts = [] } = Astro.props;
     libraryShell: $('#studio-library-shell'),
     folder: $('#studio-folder'),
     folderDetail: $('#studio-folder-detail'),
+    currentDocument: $('#studio-current-document'),
     fileChip: $('#studio-file-chip'),
     route: $('#studio-route'),
     search: $('#studio-search'),
@@ -419,7 +423,10 @@ const { initialPosts = [] } = Astro.props;
     library: $('#studio-library'),
     title: $('#studio-title'),
     description: $('#studio-description'),
+    documentType: $('#studio-document-type'),
     category: $('#studio-category'),
+    categoryField: $('#studio-category-field'),
+    fixedCategoryNote: $('#studio-fixed-category-note'),
     visibility: $('#studio-visibility'),
     pubDate: $('#studio-pubDate'),
     updatedDate: $('#studio-updatedDate'),
@@ -427,8 +434,10 @@ const { initialPosts = [] } = Astro.props;
     slug: $('#studio-slug'),
     slugify: $('#studio-slugify'),
     series: $('#studio-series'),
+    seriesCard: $('#studio-series-card'),
     seriesTitle: $('#studio-series-title'),
     seriesOrder: $('#studio-series-order'),
+    difficultyField: $('#studio-difficulty-field'),
     difficulty: $('#studio-difficulty'),
     body: $('#studio-body'),
     duplicate: $('#studio-duplicate'),
@@ -479,9 +488,12 @@ const { initialPosts = [] } = Astro.props;
   }
 
   function createSeedRecord(seed) {
+    const collection = seed.collection ?? collectionKeyForCategory(seed.category === '42' ? '42' : 'devlog');
     return makeRecord({
-      collection: seed.collection ?? collectionKeyForCategory(seed.category === '42' ? '42' : 'devlog'),
-      originalCollection: seed.collection ?? collectionKeyForCategory(seed.category === '42' ? '42' : 'devlog'),
+      collection,
+      originalCollection: collection,
+      extension: seed.extension ?? '.md',
+      originalExtension: seed.extension ?? '.md',
       slug: seed.slug,
       originalSlug: seed.slug,
       title: seed.title,
@@ -497,7 +509,7 @@ const { initialPosts = [] } = Astro.props;
       featured: Boolean(seed.featured),
       draft: Boolean(seed.draft),
       body: seed.body || '',
-      templateKind: seed.category === '42' ? '42' : 'tech',
+      templateKind: collection === 'forty-two' ? '42' : 'tech',
       dirty: false,
       deleted: false
     });
@@ -725,7 +737,7 @@ const { initialPosts = [] } = Astro.props;
     ]) {
       if (!directoryHandle) continue;
       for await (const [name, handle] of directoryHandle.entries()) {
-        if (handle.kind !== 'file' || !name.endsWith('.md') || name === '.gitkeep') continue;
+        if (handle.kind !== 'file' || !/\.(md|mdx)$/i.test(name) || name === '.gitkeep') continue;
         const file = await handle.getFile();
         loaded.push(makeRecord(parsePostFile(name, await file.text(), collectionKey)));
       }
@@ -737,17 +749,44 @@ const { initialPosts = [] } = Astro.props;
     renderAll();
   }
 
+  function isFortyTwoDocument(post) {
+    return post.collection === 'forty-two' || post.category === '42';
+  }
+
+  function syncDocumentTypeUI(post) {
+    const is42 = isFortyTwoDocument(post);
+    elements.documentType.value = is42 ? '42' : 'tech';
+    elements.categoryField.hidden = is42;
+    elements.fixedCategoryNote.hidden = !is42;
+    elements.seriesCard.hidden = !is42;
+    elements.difficultyField.hidden = !is42;
+  }
+
   function updateBadges() {
     const post = currentPost();
     const connectedCount = Number(Boolean(state.blogHandle)) + Number(Boolean(state.fortyTwoHandle));
-    setPill(elements.hostBadge, '로컬 작업중', 'ok');
-    setPill(elements.connectionBadge, connectedCount ? `${connectedCount}개 폴더 연결` : '폴더 연결 필요', connectedCount ? 'ok' : 'warn');
+    const fallbackMode = !state.supportsFileAccess;
+    setPill(elements.hostBadge, fallbackMode ? '다운로드 전용' : '로컬 작업중', fallbackMode ? 'warn' : 'ok');
+    setPill(
+      elements.connectionBadge,
+      fallbackMode ? '브라우저 fallback' : connectedCount ? `${connectedCount}개 폴더 연결` : '폴더 연결 필요',
+      fallbackMode ? 'warn' : connectedCount ? 'ok' : 'warn'
+    );
     setPill(elements.dirtyBadge, post?.dirty ? '임시저장' : '파일 저장됨', post?.dirty ? 'warn' : 'ok');
     elements.fileChip.textContent = post ? getPostFilePath(post) : `${getCollectionDirectory('blog')}/post-slug.md`;
-    elements.folder.textContent = state.repoHandle ? `저장 위치: ${state.repoHandle.name}` : '저장 위치: 폴더 미연결';
-    elements.folderDetail.textContent = collectionStatusText();
+    elements.currentDocument.textContent = post?.title?.trim() || '제목 없는 초안';
+    elements.folder.textContent = fallbackMode
+      ? '저장 방식: Markdown 다운로드'
+      : state.repoHandle
+        ? `저장 위치: ${state.repoHandle.name}`
+        : '저장 위치: 폴더 미연결';
+    elements.folderDetail.textContent = fallbackMode
+      ? 'Chrome / Edge / Brave가 아니면 로컬 폴더 저장 대신 다운로드 방식으로 동작합니다.'
+      : collectionStatusText();
     elements.libraryToggle.textContent = state.libraryOpen ? '라이브러리 닫기' : '라이브러리';
+    elements.connect.hidden = fallbackMode;
     elements.connect.textContent = connectedCount ? '폴더 변경' : '폴더 연결';
+    elements.save.textContent = fallbackMode ? '다운로드 저장' : '저장';
   }
 
   function selectPost(id) {
@@ -780,7 +819,7 @@ const { initialPosts = [] } = Astro.props;
   function fillForm(post) {
     elements.title.value = post.title;
     elements.description.value = post.description;
-    elements.category.value = post.category;
+    elements.category.value = post.category === '42' ? 'devlog' : post.category;
     elements.visibility.value = post.draft ? 'private' : 'public';
     elements.pubDate.value = post.pubDate;
     elements.updatedDate.value = post.updatedDate;
@@ -792,32 +831,41 @@ const { initialPosts = [] } = Astro.props;
     elements.difficulty.value = post.difficulty;
     elements.body.value = post.body;
     elements.route.textContent = getPostRoute(post);
+    syncDocumentTypeUI(post);
     renderSelectedTags(post);
   }
 
   function syncFromForm() {
     const post = currentPost();
     if (!post) return;
+    const documentType = elements.documentType.value;
     post.title = elements.title.value.trim();
     post.description = elements.description.value.trim();
-    post.category = elements.category.value;
+    post.category = documentType === '42' ? '42' : elements.category.value;
     post.draft = elements.visibility.value === 'private';
     post.pubDate = elements.pubDate.value;
     post.updatedDate = elements.updatedDate.value;
     post.featured = elements.featured.checked;
     post.slug = elements.slug.value.trim();
     post.collection = collectionKeyForCategory(post.category);
-    post.series = elements.series.value.trim();
-    post.seriesTitle = elements.seriesTitle.value.trim();
-    post.seriesOrder = elements.seriesOrder.value.trim();
-    post.difficulty = elements.difficulty.value.trim();
+    post.templateKind = documentType === '42' ? '42' : 'tech';
+    post.series = documentType === '42' ? elements.series.value.trim() : '';
+    post.seriesTitle = documentType === '42' ? elements.seriesTitle.value.trim() : '';
+    post.seriesOrder = documentType === '42' ? elements.seriesOrder.value.trim() : '';
+    post.difficulty = documentType === '42' ? elements.difficulty.value.trim() : '';
     post.body = elements.body.value;
     post.dirty = true;
     if (post.series && !post.seriesTitle) {
       post.seriesTitle = seriesTitleFor(post.series);
       elements.seriesTitle.value = post.seriesTitle;
     }
+    if (documentType !== '42') {
+      post.tags = post.tags.filter((tag) => tag.toLowerCase() !== '42');
+    } else if (!post.tags.includes('42')) {
+      post.tags = normalizeTags(['42', ...post.tags]);
+    }
     elements.route.textContent = getPostRoute(post);
+    syncDocumentTypeUI(post);
     saveSnapshot();
     renderLibrary();
     renderPanels();
@@ -1018,6 +1066,10 @@ const { initialPosts = [] } = Astro.props;
     const post = currentPost();
     if (!post) return;
     syncFromForm();
+    if (!state.supportsFileAccess) {
+      downloadCurrent();
+      return;
+    }
     if (!post.slug.trim() && post.title.trim()) {
       post.slug = slugifyTitle(post.title);
     }
@@ -1035,8 +1087,8 @@ const { initialPosts = [] } = Astro.props;
       return;
     }
 
-    const nextFileName = `${post.slug}.md`;
-    const previousFileName = post.originalSlug ? `${post.originalSlug}.md` : null;
+    const nextFileName = `${post.slug}${post.extension}`;
+    const previousFileName = post.originalSlug ? `${post.originalSlug}${post.originalExtension}` : null;
     const previousHandle = collectionHandleFor(post.originalCollection);
 
     try {
@@ -1053,6 +1105,7 @@ const { initialPosts = [] } = Astro.props;
       }
       post.collection = targetCollection;
       post.originalCollection = targetCollection;
+      post.originalExtension = post.extension;
       post.originalSlug = post.slug;
       post.dirty = false;
       clearSnapshot();
@@ -1072,7 +1125,7 @@ const { initialPosts = [] } = Astro.props;
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement('a');
     anchor.href = url;
-    anchor.download = `${post.slug || 'post'}.md`;
+    anchor.download = `${post.slug || 'post'}${post.extension}`;
     anchor.click();
     URL.revokeObjectURL(url);
     toast('Markdown 다운로드 완료', 'ok');
@@ -1102,7 +1155,7 @@ const { initialPosts = [] } = Astro.props;
       if (post.originalSlug) {
         const originalHandle = collectionHandleFor(post.originalCollection) ?? collectionHandleFor(collectionKeyForCategory(post.category));
         if (originalHandle) {
-          await originalHandle.removeEntry(`${post.originalSlug}.md`);
+          await originalHandle.removeEntry(`${post.originalSlug}${post.originalExtension}`);
         }
       }
       state.posts = state.posts.filter((candidate) => candidate.id !== post.id);
@@ -1204,11 +1257,10 @@ const { initialPosts = [] } = Astro.props;
   function applySnippet(kind) {
     const snippets = {
       h2: '\n## 새 섹션\n\n',
-      h3: '\n### 새 소제목\n\n',
       list: '\n- 항목 1\n- 항목 2\n- 항목 3\n',
       quote: '\n> 인용문\n',
       code: '\n```ts\n// code\n```\n',
-      divider: '\n---\n'
+      link: '\n[링크 텍스트](https://example.com)\n'
     };
     const target = elements.body;
     const snippet = snippets[kind];
@@ -1224,6 +1276,7 @@ const { initialPosts = [] } = Astro.props;
     [
       elements.title,
       elements.description,
+      elements.documentType,
       elements.category,
       elements.visibility,
       elements.pubDate,
@@ -1310,7 +1363,7 @@ const { initialPosts = [] } = Astro.props;
     elements.restore.disabled = !state.snapshotAvailable;
     renderAll();
     setSideMode('');
-    if ('showDirectoryPicker' in window) {
+    if (state.supportsFileAccess) {
       await connectRepo(false, true);
     } else {
       toast('이 브라우저는 로컬 폴더 직접 쓰기를 지원하지 않습니다. 다운로드 방식으로 사용해주세요.', 'warn');
@@ -1427,6 +1480,12 @@ const { initialPosts = [] } = Astro.props;
   .studio-topbar__hint--sub {
     font-size: 0.8rem;
     color: rgba(237, 242, 255, 0.55);
+  }
+
+  .studio-topbar__document-title {
+    color: var(--text);
+    font-size: 1rem;
+    line-height: 1.35;
   }
 
   .studio-topbar__actions .button {
@@ -1727,9 +1786,25 @@ const { initialPosts = [] } = Astro.props;
   .studio-title-field,
   .studio-subtitle-field,
   .studio-body-field,
-  .studio-field {
+  .studio-field,
+  .studio-fixed-note {
     display: grid;
     gap: 0.45rem;
+  }
+
+  .studio-fixed-note {
+    padding: 0.95rem 1rem;
+    border-radius: 18px;
+    border: 1px solid rgba(214, 184, 128, 0.12);
+    background: rgba(214, 184, 128, 0.08);
+  }
+
+  .studio-fixed-note strong {
+    color: var(--text);
+  }
+
+  .studio-fixed-note small {
+    color: var(--muted);
   }
 
   .studio-title-input,

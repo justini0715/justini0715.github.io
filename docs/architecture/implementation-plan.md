@@ -7,8 +7,8 @@
 - Domain target: `https://changwpa.kro.kr`
 
 ## Current Phase
-- Phase: Phase 31 — Public IA Refresh
-- Branch: `phase/31-public-ia-refresh`
+- Phase: Phase 32 — Studio IA Alignment
+- Branch: `phase/32-studio-ia-alignment`
 - Status: Complete
 
 ## Official Phase List
@@ -43,11 +43,12 @@
 29. Phase 29 — Dedicated Profile Page
 30. Phase 30 — Real Profile Image
 31. Phase 31 — Public IA Refresh
+32. Phase 32 — Studio IA Alignment
 
 ## Current Phase Scope
-- Clarify the public IA so each route immediately communicates its job without repeating hub content across pages.
-- Keep the current Astro + GitHub Pages route map, but simplify section structure, hero density, archive grouping, and card semantics across the public pages.
-- Refresh `/`, `/home`, `/projects`, `/42`, `/blog`, `/about`, and `404` around text-first reading and archive clarity.
+- Keep `/studio` as a single local-only editor route while tightening the IA around document type, save state, preview/settings/checks drawers, and browser fallback.
+- Separate general technical posts from 42 posts more clearly inside the studio form and saving model without changing the public collection layout.
+- Add `.mdx` loading support and preserve original source extensions when editing existing documents.
 
 ## Current Phase Non-Scope
 - Replacing the static content architecture with a hosted CMS.
@@ -55,9 +56,9 @@
 - Building a full multi-user publishing product.
 - Changing the underlying Markdown storage/file IO model.
 - Reworking the public route map again after the phase-15/27 split.
-- Adding new top-level routes, dynamic filters, search, or client-heavy archive behavior.
-- Replacing the current content collection model or doing backend/CMS work.
-- Reworking `/studio` behavior yet; studio alignment comes in the next phase.
+- Adding remote commit/push features, project-collection CRUD, or production editor exposure.
+- Introducing backend/auth/SSR/CMS behavior into the studio.
+- Rebuilding the studio into a multi-route admin dashboard.
 
 ## Architecture Summary
 - Astro static output with content collections for blog posts and projects.
@@ -70,18 +71,18 @@
 - blog taxonomy: `42`, `project`, `devlog`, `setup`, `retrospective`.
 
 ## Deliverables Checklist
-- [x] landing page reduced to showcase/gateway role only
-- [x] `/home` reduced to now-page hub sections only
-- [x] `/projects`, `/42`, and `/blog` restructured around clearer archive roles
-- [x] article/detail pages show clearer metadata and adjacent/related navigation
-- [x] compact footer and shared public UI semantics refreshed
-- [x] Phase 31 verification completed
+- [x] studio top bar centers on folder state, current document title, dirty/saved state, and save action
+- [x] quick insert controls reduced to H2/list/quote/code block/link
+- [x] technical-post vs 42-post editing rules separated inside the form
+- [x] `.md` and `.mdx` loading works while preserving original file extensions
+- [x] unsupported-browser fallback prefers Markdown download over folder save
+- [x] Phase 32 verification completed
 
 ## Verification Plan
-1. Run local type checks and a full static build after the public IA refresh.
-2. Confirm the landing page only exposes the gateway hero, current focus, GitHub CTA, and the four entry cards.
-3. Confirm `/home`, `/projects`, `/42`, `/blog`, `/about`, and `404` expose the intended section structure in built output.
-4. Re-check `/studio` after shared public-shell changes for compatibility.
+1. Run local type checks and a full static build after the studio IA changes.
+2. Confirm the local-only studio shell exposes the new top bar structure, drawer layout, and quick-insert controls in source/built dev assets.
+3. Confirm `.md` and `.mdx` seeds both load and that save/download paths preserve the original extension.
+4. Re-check production `/studio` to confirm the lock notice remains the only shipped UI.
 
 ## Work Log
 - Cloned the remote user-site repository into the writable workspace.
@@ -412,3 +413,14 @@
 - `npx tsc --noEmit --pretty false --project tsconfig.json` via LSP diagnostics after phase-31 → 0 errors, 0 warnings.
 - built-output checks against `/`, `/home`, `/projects`, `/projects/[slug]`, `/42`, `/42/[slug]`, `/blog`, `/blog/[slug]`, `/about`, and `/404` after phase-31 → confirmed the new gateway/now-page/archive/case-study section structures render as intended.
 - `grep dist/studio/index.html` after phase-31 public IA refresh → production output still contains the locked `/studio` notice and excludes the active editor markers.
+- Started `phase/32-studio-ia-alignment` from merged `main` after the public IA refresh was live.
+- Reduced the studio top bar to the core now-state signals: folder/save mode, current document title, dirty/saved state, and the primary save action, while keeping library access in the same bar.
+- Moved duplicate/download/restore into the document-settings drawer, simplified quick-insert controls to H2/list/quote/code block/link, and kept preview/settings/checks as the only right-side modes.
+- Separated technical-post vs 42-post editing inside the form with a document-type selector, a tech-only category selector, and 42-only series/difficulty fields.
+- Added `.mdx` seed/loading support and preserved original file extensions when reopening, saving, deleting, or downloading existing documents.
+- Added unsupported-browser fallback behavior so non-Chromium browsers use Markdown download as the primary save path while folder connection stays hidden.
+- `npm run check` after phase-32 studio IA alignment → success (`tsc --noEmit`).
+- `npm run build` after phase-32 studio IA alignment → success; rebuilt the full public route set plus the locked production `/studio` page.
+- `npx tsc --noEmit --pretty false --project tsconfig.json` via LSP diagnostics after phase-32 → 0 errors, 0 warnings.
+- source and dev-route checks after phase-32 → confirmed `studio-current-document`, `studio-document-type`, `.mdx` support, and the reduced quick-insert toolbar exist in the local dev studio UI.
+- `grep dist/studio/index.html` after phase-32 studio IA alignment → production output still contains only the locked `/studio` notice.
