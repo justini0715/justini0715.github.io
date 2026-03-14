@@ -434,8 +434,8 @@
     height: 100%;
     object-fit: cover;
     border-radius: 999px;
-    border: 1px solid rgba(231, 194, 141, 0.24);
-    background: linear-gradient(180deg, rgba(18, 27, 40, 0.98), rgba(11, 17, 26, 1));
+    border: 1px solid color-mix(in srgb, var(--accent-warm) 30%, transparent);
+    background: color-mix(in srgb, var(--bg-panel) 90%, transparent);
   }
 
   .profile-page-card {
@@ -443,10 +443,10 @@
     gap: 1.4rem;
     padding: clamp(1.2rem, 3vw, 1.8rem);
     border-radius: 1.7rem;
-    border: 1px solid rgba(231, 194, 141, 0.24);
+    border: 1px solid color-mix(in srgb, var(--accent-warm) 28%, transparent);
     background:
-      linear-gradient(180deg, rgba(29, 38, 54, 0.98), rgba(13, 20, 29, 1)),
-      linear-gradient(180deg, rgba(231, 194, 141, 0.08), rgba(171, 193, 255, 0.03));
+      linear-gradient(180deg, color-mix(in srgb, var(--bg-panel) 92%, white 1%), color-mix(in srgb, var(--bg-panel-strong) 94%, black 2%)),
+      linear-gradient(180deg, color-mix(in srgb, var(--accent-warm) 10%, transparent), color-mix(in srgb, var(--accent) 5%, transparent));
     box-shadow: 0 28px 80px rgba(2, 7, 16, 0.34);
   }
 
@@ -456,7 +456,7 @@
     inset: 0 auto auto 0;
     width: 100%;
     height: 1px;
-    background: linear-gradient(90deg, rgba(231, 194, 141, 0.38), rgba(171, 193, 255, 0));
+    background: linear-gradient(90deg, color-mix(in srgb, var(--accent-warm) 42%, transparent), color-mix(in srgb, var(--accent) 0%, transparent));
   }
 
   .profile-page-card,
@@ -486,7 +486,7 @@
     height: clamp(6rem, 13vw, 9rem);
     object-fit: cover;
     border-radius: 999px;
-    border: 1px solid rgba(231, 194, 141, 0.24);
+    border: 1px solid color-mix(in srgb, var(--accent-warm) 28%, transparent);
     background: transparent;
     box-shadow: 0 18px 44px rgba(2, 7, 16, 0.22);
   }
@@ -497,8 +497,8 @@
     gap: 0.8rem;
     padding: 1.05rem 1.1rem;
     border-radius: 1.2rem;
-    background: rgba(8, 13, 20, 0.3);
-    border: 1px solid rgba(196, 209, 235, 0.08);
+    background: color-mix(in srgb, var(--bg-panel) 78%, transparent);
+    border: 1px solid var(--line-soft);
   }
 
   .profile-page-card__sidebar {
@@ -513,9 +513,9 @@
   }
 
   .profile-page-card__chips .chip {
-    background: rgba(231, 194, 141, 0.08);
-    border-color: rgba(231, 194, 141, 0.18);
-    color: #f6dfbf;
+    background: color-mix(in srgb, var(--accent-warm) 12%, var(--bg-panel));
+    border-color: color-mix(in srgb, var(--accent-warm) 22%, transparent);
+    color: var(--accent-warm);
   }
 
   .button {
@@ -864,7 +864,7 @@
     gap: 0.95rem;
     align-content: start;
     min-height: 100%;
-    background: linear-gradient(180deg, rgba(14, 20, 30, 0.96), rgba(11, 17, 25, 0.98));
+    background: linear-gradient(180deg, color-mix(in srgb, var(--bg-panel) 94%, white 1%), color-mix(in srgb, var(--bg-panel-strong) 96%, black 2%));
   }
 
   .post-card__title {
@@ -877,7 +877,7 @@
 
   .post-card__title:hover {
     color: var(--accent-strong);
-    text-decoration-color: rgba(220, 229, 255, 0.35);
+    text-decoration-color: color-mix(in srgb, var(--accent-strong) 40%, transparent);
   }
 
   .post-card__summary {
@@ -910,15 +910,15 @@
     gap: 0.95rem;
     align-content: start;
     min-height: 100%;
-    background: linear-gradient(180deg, rgba(13, 20, 30, 0.97), rgba(9, 14, 22, 0.99));
-    border-color: rgba(196, 209, 235, 0.12);
+    background: linear-gradient(180deg, color-mix(in srgb, var(--bg-panel) 94%, white 1%), color-mix(in srgb, var(--bg-panel-strong) 96%, black 2%));
+    border-color: var(--line-soft);
   }
 
   .project-card__highlight {
     padding: 0.9rem 0.95rem;
     border-radius: var(--radius-md);
-    background: rgba(171, 193, 255, 0.04);
-    border: 1px solid rgba(171, 193, 255, 0.08);
+    background: color-mix(in srgb, var(--accent) 8%, var(--bg-panel));
+    border: 1px solid color-mix(in srgb, var(--accent) 14%, transparent);
   }
 
   .project-highlight {
@@ -954,7 +954,7 @@
   }
 
   .stat-card {
-    background: linear-gradient(180deg, rgba(14, 20, 31, 0.72), rgba(10, 15, 22, 0.9));
+    background: linear-gradient(180deg, color-mix(in srgb, var(--bg-panel) 76%, white 2%), color-mix(in srgb, var(--bg-panel-strong) 88%, black 2%));
   }
 
   .stat-card h3,
@@ -1014,6 +1014,48 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .landing-overview-grid,
+  .home-bento-grid,
+  .about-bento-grid,
+  .projects-bento-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
+  .landing-overview-card,
+  .about-bento-card,
+  .home-bento-card,
+  .projects-bento-grid__item {
+    min-width: 0;
+  }
+
+  .landing-overview-card {
+    grid-column: span 4;
+  }
+
+  .landing-overview-card--feature {
+    text-decoration: none;
+  }
+
+  .landing-overview-card--profile .inline-tags {
+    margin-top: 0.5rem;
+  }
+
+  .landing-grid--bento > * {
+    min-width: 0;
+  }
+
+  .landing-grid--bento > *:nth-child(1),
+  .landing-grid--bento > *:nth-child(2) {
+    grid-column: span 6;
+  }
+
+  .landing-grid--bento > *:nth-child(3),
+  .landing-grid--bento > *:nth-child(4) {
+    grid-column: span 6;
+  }
+
   .landing-card {
     display: grid;
     gap: 0.9rem;
@@ -1021,7 +1063,7 @@
     padding: 1.35rem;
     border-radius: var(--radius-md);
     border: 1px solid var(--line-soft);
-    background: linear-gradient(180deg, rgba(13, 20, 30, 0.92), rgba(9, 14, 22, 0.97));
+    background: linear-gradient(180deg, color-mix(in srgb, var(--bg-panel) 92%, white 2%), color-mix(in srgb, var(--bg-panel-strong) 95%, black 2%));
     box-shadow: var(--shadow-soft);
   }
 
@@ -1050,6 +1092,63 @@
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     max-width: 38rem;
+  }
+
+  .home-bento-card {
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .home-bento-card--focus {
+    grid-column: span 4;
+  }
+
+  .home-bento-card--feature {
+    grid-column: span 5;
+  }
+
+  .home-bento-card--updates {
+    grid-column: span 3;
+  }
+
+  .home-bento-card--notes,
+  .home-bento-card--forty-two {
+    grid-column: span 6;
+  }
+
+  .compact-link-list {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .compact-link-list__item {
+    display: grid;
+    gap: 0.28rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--line-faint);
+  }
+
+  .compact-link-list__item:first-child {
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .compact-link-list__item strong {
+    color: var(--text);
+  }
+
+  .compact-link-list__item span {
+    color: var(--text-soft);
+    font-size: 0.95rem;
+  }
+
+  .compact-link-list__item small {
+    color: var(--muted);
+    font-size: 0.82rem;
+  }
+
+  .compact-link-list__item:hover strong {
+    color: var(--accent-strong);
   }
 
   .archive-chip-row {
@@ -1126,13 +1225,62 @@
     gap: 0.8rem;
   }
 
+  .about-bento-card {
+    display: grid;
+    gap: 0.85rem;
+  }
+
+  .about-bento-card--bio {
+    grid-column: span 6;
+  }
+
+  .about-bento-grid > .about-bento-card:not(.about-bento-card--bio) {
+    grid-column: span 3;
+  }
+
+  .projects-bento-grid__item--feature {
+    grid-column: span 4;
+  }
+
+  .projects-bento-grid__item--states-overview {
+    grid-column: span 4;
+    display: grid;
+    gap: 1rem;
+  }
+
+  .projects-state-summary {
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .projects-state-summary__item {
+    display: grid;
+    gap: 0.25rem;
+    padding: 0.85rem 0.9rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--line-soft);
+    background: color-mix(in srgb, var(--bg-panel) 88%, transparent);
+  }
+
+  .projects-state-summary__item strong {
+    color: var(--text);
+    font-size: 0.9rem;
+  }
+
+  .projects-state-summary__item span {
+    color: var(--accent-strong);
+    font-family: var(--font-mono);
+    font-size: 1.1rem;
+  }
+
   .home-quick-card {
     display: grid;
     gap: 0.75rem;
     padding: 1.25rem;
     border-radius: var(--radius-md);
     border: 1px solid var(--line-soft);
-    background: linear-gradient(180deg, rgba(13, 20, 30, 0.9), rgba(9, 14, 22, 0.96));
+    background: linear-gradient(180deg, color-mix(in srgb, var(--bg-panel) 90%, white 2%), color-mix(in srgb, var(--bg-panel-strong) 95%, black 2%));
     box-shadow: var(--shadow-soft);
   }
 
@@ -1395,6 +1543,20 @@
     .route-forty-two-post .page-hero .hero__grid,
     .route-blog-post .page-hero .hero__grid {
       grid-template-columns: 1fr;
+    }
+
+    .landing-overview-grid,
+    .home-bento-grid,
+    .about-bento-grid,
+    .projects-bento-grid {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+
+    .landing-overview-card,
+    .home-bento-card,
+    .projects-bento-grid__item,
+    .about-bento-grid > .about-bento-card {
+      grid-column: span 6 !important;
     }
   }
 

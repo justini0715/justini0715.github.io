@@ -7,8 +7,8 @@
 - Domain target: `https://changwpa.kro.kr`
 
 ## Current Phase
-- Phase: Phase 34 — Theme / Typography / Shared Shell
-- Branch: `phase/34-theme-shell-modernization`
+- Phase: Phase 35 — Targeted Bento Layout
+- Branch: `phase/35-targeted-bento-layout`
 - Status: Complete
 
 ## Official Phase List
@@ -46,16 +46,17 @@
 32. Phase 32 — Studio IA Alignment
 33. Phase 33 — Profile Avatar Shape
 34. Phase 34 — Theme / Typography / Shared Shell
+35. Phase 35 — Targeted Bento Layout
 
 ## Current Phase Scope
-- Modernize the shared design system with dark-first adaptive tokens, fluid typography, and smoother shell transitions.
-- Replace the old IBM Plex Sans-heavy stack with Pretendard + Inter for body/headings while keeping IBM Plex Mono for metadata/code.
-- Upgrade the sticky header and shared surfaces with restrained glassmorphism, better hover depth, and reduced-motion-safe transitions.
+- Apply targeted Bento layout patterns to `/`, `/home`, `/about`, and `/projects` while keeping archive/article routes reading-first.
+- Keep the current route map and content intact, but refactor the key top-level pages into clearer card-based compositions with rounded surfaces and responsive stacking.
+- Preserve the gateway/now-page/profile/project-index roles that were already established in the IA pass.
 
 ## Current Phase Non-Scope
-- Reworking route-level information architecture yet; Bento and route composition changes come in the next phase.
-- Adding new top-level routes, backend/auth/SSR/CMS behavior, or client-side routing libraries.
-- Reworking `/studio` behavior beyond ensuring it still inherits the refreshed shared shell safely.
+- Applying strong Bento treatment to `/42`, `/blog`, or detail/article routes; those remain reading-first and will be refined next.
+- Reworking `/studio`, backend/auth/SSR/CMS behavior, or the content schema.
+- Adding client-heavy interactions beyond the existing lightweight hover/scroll behaviors.
 
 ## Architecture Summary
 - Astro static output with content collections for blog posts and projects.
@@ -68,16 +69,16 @@
 - blog taxonomy: `42`, `project`, `devlog`, `setup`, `retrospective`.
 
 ## Deliverables Checklist
-- [x] dark-first adaptive theme tokens added with system light-mode support
-- [x] Pretendard + Inter typography system applied in the shared shell
-- [x] sticky header, cards, and buttons refreshed with restrained glass / hover depth
-- [x] reduced-motion-safe transition rules added
-- [x] Phase 34 verification completed
+- [x] landing page now includes targeted Bento-style overview cards without losing the gateway role
+- [x] `/home` now renders its 5 now-page blocks inside a stronger Bento composition
+- [x] `/about` now reads like a Bento profile dossier
+- [x] `/projects` now opens with a Bento-style selected-work/state overview before the full index
+- [x] Phase 35 verification completed
 
 ## Verification Plan
-1. Run local type checks and a full static build after the shared-theme refactor.
-2. Confirm the built shell now loads Pretendard + Inter and emits dark/light adaptive theme metadata.
-3. Re-check the public routes and production `/studio` after the shared CSS refresh.
+1. Run local type checks and a full static build after the route-level Bento refactor.
+2. Confirm `/`, `/home`, `/about`, and `/projects` expose the intended Bento-card compositions in built output.
+3. Re-check `/studio` and the non-Bento archive routes for regressions.
 
 ## Work Log
 - Cloned the remote user-site repository into the writable workspace.
@@ -432,3 +433,9 @@
 - Refined the sticky header, chips, cards, buttons, and shared surfaces toward a softer glassy shell with slightly deeper hover motion.
 - `npm run check` after phase-34 theme/shell modernization → success (`tsc --noEmit`).
 - `npm run build` after phase-34 theme/shell modernization → success; rebuilt the full public route set plus the locked production `/studio` page.
+
+- Started `phase/35-targeted-bento-layout` from merged `main` after the shared theme/shell modernization was live.
+- Added targeted Bento-style overview grids to the landing page, personal home, about page, and project index without changing the route map or content collections.
+- Turned `/home` into a five-block now-page Bento composition, `/about` into a denser profile dossier, and `/projects` into a selected-work/state overview before the full grid.
+- `npm run check` after phase-35 targeted Bento layout → success (`tsc --noEmit`).
+- `npm run build` after phase-35 targeted Bento layout → success; rebuilt the full public route set plus the locked production `/studio` page.

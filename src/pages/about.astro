@@ -1,6 +1,5 @@
 ---
 import MainLayout from '../layouts/MainLayout.astro';
-import SectionTitle from '../components/SectionTitle.astro';
 import { currentFocus, focusAreas, profileCard, siteMeta, stackSummary, strengths } from '../data/site';
 ---
 
@@ -34,84 +33,53 @@ import { currentFocus, focusAreas, profileCard, siteMeta, stackSummary, strength
             </div>
           </div>
         </div>
-
-        <div class="profile-page-card__grid">
-          <section class="profile-page-card__section">
-            <p class="eyebrow">Detailed bio</p>
-            <p>
-              이 사이트는 결과만 전시하는 포트폴리오보다, 프로젝트를 실제로 진행하며 남긴 판단과 제약을 같이 보여주는 작업 아카이브에 가깝다.
-              저장소 구조, 구현 근거, 디버깅 과정, 회고, 다음 단계까지 한 흐름으로 남기는 방식을 선호한다.
-            </p>
-            <p>
-              그래서 Projects는 진행 중인 개발 프로젝트의 추이와 자료 허브 역할을 하고, 42는 과제별 맥락을 이어 읽는 전용 아카이브,
-              Blog는 알고리즘, 네트워크, 시스템 개념 정리처럼 개발하면서 공부한 내용을 쌓는 노트 공간으로 분리해 두고 있다.
-            </p>
-          </section>
-
-          <aside class="profile-page-card__sidebar">
-            <div class="profile-page-card__panel">
-              <p class="eyebrow">Current lanes</p>
-              <ul class="utility-list">
-                {currentFocus.map((item) => <li>{item}</li>)}
-              </ul>
-            </div>
-
-            <div class="profile-page-card__panel">
-              <p class="eyebrow">Highlights</p>
-              <div class="profile-page-card__chips">
-                {profileCard.highlights.map((item) => <span class="chip">{item}</span>)}
-              </div>
-            </div>
-          </aside>
-        </div>
       </article>
     </div>
   </section>
 
   <section class="section">
-    <div class="container two-column">
-      <div>
-        <SectionTitle
-          eyebrow="Working style"
-          title="설명보다 구조, 결과보다 맥락을 먼저 보여주는 방식"
-          description="포트폴리오도 아카이브처럼 운영하고, 글도 다음 작업과 이어지도록 남기는 편이다."
-        />
-        <div class="feature-grid feature-grid--compact">
-          {strengths.map((item) => (
-            <article class="card stat-card">
-              <p>{item}</p>
-            </article>
-          ))}
-        </div>
-      </div>
+    <div class="container about-bento-grid">
+      <article class="panel about-bento-card about-bento-card--bio">
+        <p class="eyebrow">Detailed bio</p>
+        <p>
+          이 사이트는 결과만 전시하는 포트폴리오보다, 프로젝트를 실제로 진행하며 남긴 판단과 제약을 같이 보여주는 작업 아카이브에 가깝다.
+          저장소 구조, 구현 근거, 디버깅 과정, 회고, 다음 단계까지 한 흐름으로 남기는 방식을 선호한다.
+        </p>
+        <p>
+          그래서 Projects는 진행 중인 개발 프로젝트의 추이와 자료 허브 역할을 하고, 42는 과제별 맥락을 이어 읽는 전용 아카이브,
+          Blog는 알고리즘, 네트워크, 시스템 개념 정리처럼 개발하면서 공부한 내용을 쌓는 노트 공간으로 분리해 두고 있다.
+        </p>
+      </article>
 
-      <aside class="panel utility-panel">
+      <article class="panel about-bento-card">
+        <p class="eyebrow">Current lanes</p>
+        <ul class="utility-list">
+          {currentFocus.map((item) => <li>{item}</li>)}
+        </ul>
+      </article>
+
+      <article class="panel about-bento-card">
+        <p class="eyebrow">Working style</p>
+        <ul class="utility-list">
+          {strengths.map((item) => <li>{item}</li>)}
+        </ul>
+      </article>
+
+      <article class="panel about-bento-card">
         <p class="eyebrow">Archive lanes</p>
         <ul class="utility-list">
           {focusAreas.map((item) => <li>{item}</li>)}
         </ul>
-      </aside>
-    </div>
-  </section>
+      </article>
 
-  <section class="section section--tint">
-    <div class="container two-column">
-      <div>
-        <SectionTitle
-          eyebrow="Stack snapshot"
-          title="유지 가능성과 반복 가능한 배포를 우선한 선택"
-          description="새로운 기술보다, 자주 고칠 수 있고 실제로 계속 운영 가능한 조합을 더 중요하게 본다."
-        />
-        <div class="feature-grid feature-grid--compact">
-          {stackSummary.map((item) => (
-            <article class="card stat-card">
-              <p>{item}</p>
-            </article>
-          ))}
-        </div>
-      </div>
+      <article class="panel about-bento-card">
+        <p class="eyebrow">Stack snapshot</p>
+        <ul class="utility-list">
+          {stackSummary.map((item) => <li>{item}</li>)}
+        </ul>
+      </article>
 
-      <aside class="panel utility-panel">
+      <article class="panel about-bento-card">
         <p class="eyebrow">Direct routes</p>
         <ul class="utility-list">
           <li><a href="/projects">Projects</a>에서 현재 만드는 것과 자료 흐름 보기</li>
@@ -119,7 +87,7 @@ import { currentFocus, focusAreas, profileCard, siteMeta, stackSummary, strength
           <li><a href="/blog">Blog</a>에서 일반 기술 노트와 개념 정리 읽기</li>
           <li><a href="/home">Home</a>에서 전체 허브와 다음 작업 보기</li>
         </ul>
-      </aside>
+      </article>
     </div>
   </section>
 </MainLayout>

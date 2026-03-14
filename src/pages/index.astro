@@ -2,8 +2,11 @@
 import LandingLayout from '../layouts/LandingLayout.astro';
 import SplitHero from '../components/site/SplitHero.astro';
 import LandingEntryCard from '../components/landing/LandingEntryCard.astro';
-import { siteMeta } from '../data/site';
+import TagChipList from '../components/site/TagChipList.astro';
+import { currentFocus, profileCard, siteMeta } from '../data/site';
+import { getFeaturedProjects, getProjectPath } from '../lib/content';
 
+const [featuredProject] = await getFeaturedProjects(1);
 const entryLanes = [
   {
     href: '/home',
@@ -60,7 +63,34 @@ const entryLanes = [
   </SplitHero>
 
   <section class="section">
-    <div class="container landing-grid">
+    <div class="container landing-overview-grid">
+      <article class="panel landing-overview-card landing-overview-card--profile">
+        <p class="eyebrow">Profile snapshot</p>
+        <h2>{profileCard.role}</h2>
+        <p>{profileCard.shortBio}</p>
+        <TagChipList items={profileCard.highlights} />
+      </article>
+
+      <article class="panel landing-overview-card">
+        <p class="eyebrow">Current focus</p>
+        <ul class="utility-list">
+          {currentFocus.slice(0, 3).map((item) => <li>{item}</li>)}
+        </ul>
+      </article>
+
+      {featuredProject && (
+        <a class="panel landing-overview-card landing-overview-card--feature" href={getProjectPath(featuredProject)}>
+          <p class="eyebrow">Featured work</p>
+          <h2>{featuredProject.data.title}</h2>
+          <p>{featuredProject.data.highlight}</p>
+          <span class="landing-card__link">케이스 보기 →</span>
+        </a>
+      )}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container landing-grid landing-grid--bento">
       {entryLanes.map((lane) => (
         <LandingEntryCard {...lane} />
       ))}
