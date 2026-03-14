@@ -30,7 +30,7 @@ const updatedDate = project.data.updatedDate?.toISOString().slice(0, 10) ?? '';
     {project.data.focus && <li>Constraints and focus: {project.data.focus}</li>}
     <li>Why it matters: {project.data.highlight}</li>
     {project.data.nextStep && <li>Next step: {project.data.nextStep}</li>}
-    <li><a href={project.data.repoUrl} target="_blank" rel="noreferrer">Repository ↗</a></li>
-    {project.data.demoUrl && <li><a href={project.data.demoUrl} target="_blank" rel="noreferrer">Demo ↗</a></li>}
+    <li><a href={project.data.repoUrl} target="_blank" rel="noreferrer" aria-label={`Open ${project.data.title} repository in a new tab`}>Repository ↗</a></li>
+    {project.data.demoUrl && <li><a href={project.data.demoUrl} target="_blank" rel="noreferrer" aria-label={`Open ${project.data.title} demo in a new tab`}>Demo ↗</a></li>}
   </ul>
 </aside>

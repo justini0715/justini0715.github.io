@@ -28,9 +28,9 @@ const projectPath = getProjectPath(project);
 
   <div class="project-links">
     <a href={projectPath}>Case detail →</a>
-    <a href={project.data.repoUrl} target="_blank" rel="noreferrer">Repository ↗</a>
+    <a href={project.data.repoUrl} target="_blank" rel="noreferrer" aria-label={`Open ${project.data.title} repository in a new tab`}>Repository ↗</a>
     {project.data.demoUrl && (
-      <a href={project.data.demoUrl} target="_blank" rel="noreferrer">Demo ↗</a>
+      <a href={project.data.demoUrl} target="_blank" rel="noreferrer" aria-label={`Open ${project.data.title} demo in a new tab`}>Demo ↗</a>
     )}
   </div>
 </article>

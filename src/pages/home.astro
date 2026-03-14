@@ -48,7 +48,7 @@ const formatDate = (value: Date) => new Intl.DateTimeFormat('en', { dateStyle: '
           <TagChipList items={featuredProject.data.stack} max={5} />
           <div class="project-links">
             <a href={getProjectPath(featuredProject)}>Case detail →</a>
-            <a href={featuredProject.data.repoUrl} target="_blank" rel="noreferrer">Repository ↗</a>
+            <a href={featuredProject.data.repoUrl} target="_blank" rel="noreferrer" aria-label={`Open ${featuredProject.data.title} repository in a new tab`}>Repository ↗</a>
           </div>
         </article>
       )}
