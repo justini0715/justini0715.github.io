@@ -7,8 +7,8 @@
 - Domain target: `https://changwpa.kro.kr`
 
 ## Current Phase
-- Phase: Phase 38 — Korean Editing Manual
-- Branch: `phase/38-korean-editing-manual`
+- Phase: Phase 39 — Studio Local Runtime Fix
+- Branch: `phase/39-studio-local-runtime-fix-v2`
 - Status: Complete
 
 ## Official Phase List
@@ -50,16 +50,17 @@
 36. Phase 36 — Archive / Article Experience
 37. Phase 37 — Performance / SEO / A11y Hardening
 38. Phase 38 — Korean Editing Manual
+39. Phase 39 — Studio Local Runtime Fix
 
 ## Current Phase Scope
-- Add a detailed Korean manual that explains how to modify the site later without re-learning the repo from scratch.
-- Document routing, page creation, shared component boundaries, content collections, Studio behavior, verification, and Git workflow in practical terms.
-- Leave the site implementation unchanged while making future self-serve editing easier.
+- Restore the local-only `/studio` runtime so the interactive buttons respond again in dev mode.
+- Fix the client-side initialization bug without changing the public production lock behavior.
+- Verify the local dev page renders a real JSON seed payload so the Studio script can boot successfully.
 
 ## Current Phase Non-Scope
-- Further UI refactors, route changes, schema changes, or Studio behavior changes.
-- Rewriting existing docs wholesale beyond adding the new manual and phase log entry.
-- Adding new runtime behavior, build tooling, or deployment config changes.
+- Reworking the public route map, design system, or Studio IA again.
+- Adding new Studio features beyond fixing the dead-button runtime regression.
+- Changing production `/studio` behavior; it must remain lock-only.
 
 ## Architecture Summary
 - Astro static output with content collections for blog posts and projects.
@@ -72,15 +73,15 @@
 - blog taxonomy: `42`, `project`, `devlog`, `setup`, `retrospective`.
 
 ## Deliverables Checklist
-- [x] Korean manual added with a Korean filename under `docs/runbooks/`
-- [x] routing, page creation, nav, content collections, styles, and Studio are explained in practical detail
-- [x] future editing workflow and common troubleshooting notes are included
-- [x] Phase 38 verification completed
+- [x] local Studio seed script now renders actual JSON instead of a literal template string
+- [x] client-side Studio initialization can parse the seed payload and attach button handlers again
+- [x] production `/studio` remains lock-only after the fix
+- [x] Phase 39 verification completed
 
 ## Verification Plan
-1. Verify the new manual file exists at the intended Korean path under `docs/runbooks/`.
-2. Run `git diff --check` to catch broken markdown formatting or whitespace issues in the new documentation changes.
-3. Confirm no production code paths changed in this phase.
+1. Run local type checks and a full static build after the Studio runtime fix.
+2. Confirm the local dev `/studio` HTML now contains a real JSON seed payload instead of the literal `{JSON.stringify(initialPosts)}` string.
+3. Re-check the production `/studio` page to confirm the lock notice remains intact.
 
 ## Work Log
 - Cloned the remote user-site repository into the writable workspace.
@@ -458,3 +459,10 @@
 - Added `docs/runbooks/사이트-수정-실전-메뉴얼.md` as a detailed Korean manual covering routing, page creation, shared UI, content collections, Studio behavior, verification commands, Git workflow, and troubleshooting.
 - Kept the phase docs-only so the site behavior itself does not change while future edits become much easier to perform safely.
 - `git diff --check` after phase-38 Korean editing manual → success.
+
+- Started `phase/39-studio-local-runtime-fix-v2` after the user reported that Studio buttons like save and folder connect did nothing in local dev.
+- Found the root cause: the seed payload script in `WritingStudioApp.astro` was rendering the literal `{JSON.stringify(initialPosts)}` text instead of actual JSON, so `JSON.parse(...)` threw before any button listeners were attached.
+- Switched the seed script to `set:html` with escaped JSON so the local Studio bootstraps correctly again.
+- `npm run check` after phase-39 Studio runtime fix → success (`tsc --noEmit`).
+- `npm run build` after phase-39 Studio runtime fix → success; rebuilt the public routes while keeping production `/studio` locked.
+- local dev `/studio` source check after phase-39 → confirmed the `studio-seed` script now contains actual JSON content instead of a literal template expression.
